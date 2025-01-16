@@ -239,6 +239,14 @@ module ApplicationHelper
     I18n.t 'user_mailer.welcome.hashtags_recent_count', people: number_with_delimiter(people), count: people
   end
 
+  def app_store_url_ios
+    'https://apps.apple.com/app/mastodon-for-iphone-and-ipad/id1571998974'
+  end
+
+  def app_store_url_android
+    'https://play.google.com/store/apps/details?id=org.joinmastodon.android'
+  end
+
   # glitch-soc addition to handle the multiple flavors
   def preload_locale_pack
     supported_locales = Themes.instance.flavour(current_flavour)['locales']
