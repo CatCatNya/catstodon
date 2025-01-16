@@ -4,8 +4,7 @@
 
 This Mastodon fork is based on the [glitch-soc Fork of Mastodon](https://github.com/glitch-soc/mastodon), historically
 with changes made to suit [CatCatNya~](https://catcatnya.com).
-Some changes may be contributed back to [glitch-soc](https://github.com/glitch-soc/mastodon). Non-security contributions
-to Vanilla Mastodon have ceased for Fediverse-political reasons.
+Some changes may be contributed back to [glitch-soc](https://github.com/glitch-soc/mastodon).
 
 To install, take a look at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/). The instructions and
 features are the same, except for the differences outlined below.
@@ -65,9 +64,11 @@ For production, it is suggested you run:
   emoji. ([Pull request](https://github.com/glitch-soc/mastodon/pull/1763))
 - Standalone share page: Dispatch fetchServer for maxChars. Fixes the bug where the standalone share page did not
   display the correct maximum character amount. ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
+- \[Glitch\] Fix `/share` not using server-set characters limit ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
 - Everything merged into vanilla Mastodon
 
 ## Contributions to Vanilla Mastodon
 
 - The period of retention of IP addresses and sessions was made
   configurable. ([Pull request](https://github.com/mastodon/mastodon/pull/18757))
+- Fix `/share` not using server-set characters limit ([Pull request](https://github.com/mastodon/mastodon/pull/33459))

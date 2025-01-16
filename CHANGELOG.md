@@ -7,12 +7,18 @@ All release dates, as well as most other dates, are intended to be read as "with
 ## [Unreleased] - UNRELEASED
 
 - Upstream changes
+  - This includes a ruby version bump to 3.4.1. Please install Ruby 3.4.1 before installing this version.
 - Emoji reaction patch changes
+
+## [v4.3.3+cat+1.0.0] - 2025-01-16
+
+- Upstream changes, including security changes. See https://github.com/glitch-soc/mastodon/releases/tag/v4.3.3.
 
 ## [v4.3.2+cat.1.0.1] - 2025-01-04
 
 - The character counter is now always below the text field, not somewhere among the action buttons
-- The standalone share page now has the correct amount of remaining characters. Previously, it would assume a maximum character count of 500.
+- The standalone share page now has the correct amount of remaining characters. Previously, it would assume a maximum
+  character count of 500.
 - Emoji reaction patch changes (removal of old, obsolete migration)
 
 ## [v4.3.2+cat.1.0.0] - 2024-12-30

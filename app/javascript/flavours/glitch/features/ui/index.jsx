@@ -100,6 +100,7 @@ const mapStateToProps = state => ({
   hicolorPrivacyIcons: state.getIn(['local_settings', 'hicolor_privacy_icons']),
   moved: state.getIn(['accounts', me, 'moved']) && state.getIn(['accounts', state.getIn(['accounts', me, 'moved'])]),
   firstLaunch: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
+  newAccount: !state.getIn(['accounts', me, 'note']) && !state.getIn(['accounts', me, 'bot']) && state.getIn(['accounts', me, 'following_count'], 0) === 0 && state.getIn(['accounts', me, 'statuses_count'], 0) === 0,
   username: state.getIn(['accounts', me, 'username']),
 });
 
@@ -144,6 +145,7 @@ class SwitchingColumnsArea extends PureComponent {
     children: PropTypes.node,
     location: PropTypes.object,
     singleColumn: PropTypes.bool,
+    forceOnboarding: PropTypes.bool,
   };
 
   UNSAFE_componentWillMount () {
@@ -174,14 +176,16 @@ class SwitchingColumnsArea extends PureComponent {
   };
 
   render () {
-    const { children, singleColumn } = this.props;
+    const { children, singleColumn, forceOnboarding } = this.props;
     const { signedIn } = this.props.identity;
     const pathName = this.props.location.pathname;
 
     let redirect;
 
     if (signedIn) {
-      if (singleColumn) {
+      if (forceOnboarding) {
+        redirect = <Redirect from='/' to='/start' exact />;
+      } else if (singleColumn) {
         redirect = <Redirect from='/' to='/home' exact />;
       } else {
         redirect = <Redirect from='/' to='/deck/getting-started' exact />;
@@ -292,6 +296,7 @@ class UI extends PureComponent {
     moved: PropTypes.map,
     layout: PropTypes.string.isRequired,
     firstLaunch: PropTypes.bool,
+    newAccount: PropTypes.bool,
     username: PropTypes.string,
     ...WithRouterPropTypes,
   };
@@ -615,7 +620,7 @@ class UI extends PureComponent {
 
   render () {
     const { draggingOver } = this.state;
-    const { children, isWide, location, layout, moved } = this.props;
+    const { children, isWide, location, layout, moved, firstLaunch, newAccount } = this.props;
 
     const className = classNames('ui', {
       'wide': isWide,
@@ -662,7 +667,7 @@ class UI extends PureComponent {
 
           <Header />
 
-          <SwitchingColumnsArea identity={this.props.identity} location={location} singleColumn={layout === 'mobile' || layout === 'single-column'}>
+          <SwitchingColumnsArea identity={this.props.identity} location={location} singleColumn={layout === 'mobile' || layout === 'single-column'} forceOnboarding={firstLaunch && newAccount}>
             {children}
           </SwitchingColumnsArea>
 
