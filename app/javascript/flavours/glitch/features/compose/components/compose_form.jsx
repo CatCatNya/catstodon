@@ -335,6 +335,7 @@ class ComposeForm extends ImmutablePureComponent {
                 />
                 <Button
                   type='submit'
+                  compact
                   text={intl.formatMessage(this.props.isEditing ? messages.saveChanges : (this.props.isInReply ? messages.reply : messages.publish))}
                   disabled={!this.canSubmit()}
                 />
