@@ -63,7 +63,7 @@ pt-PT:
         setting_system_scrollbars_ui: Aplica-se apenas a navegadores de desktop baseados no Safari e Chrome
         setting_use_blurhash: Os gradientes são baseados nas cores das imagens escondidas, mas ofuscam quaisquer pormenores
         setting_use_pending_items: Ocultar as atualizações da cronologia após um clique em vez de percorrer automaticamente a cronologia
-        username: Pode utilizar letras, números e traços inferiores (_)
+        username: Podes utilizar letras, números e traços inferiores (_)
         whole_word: Quando a palavra-chave ou expressão-chave é somente alfanumérica, ela só será aplicada se corresponder à palavra completa
       domain_allow:
         domain: Este domínio será capaz de obter dados desta instância e os dados dele recebidos serão processados e armazenados
@@ -233,6 +233,7 @@ pt-PT:
         setting_display_media_show_all: Mostrar todos
         setting_expand_spoilers: Expandir sempre as publicações marcadas com avisos de conteúdo
         setting_hide_network: Esconder a tua rede
+        setting_missing_alt_text_modal: Mostrar janela de confirmação antes de publicar multimédia sem texto alternativo
         setting_reduce_motion: Reduzir movimento em animações
         setting_system_font_ui: Usar o tipo de letra padrão do sistema
         setting_system_scrollbars_ui: Utilizar a barra de deslocação predefinida do sistema

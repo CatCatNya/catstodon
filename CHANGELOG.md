@@ -7,8 +7,16 @@ All release dates, as well as most other dates, are intended to be read as "with
 ## [Unreleased] - UNRELEASED
 
 - Upstream changes
-  - This includes a ruby version bump to 3.4.1. Please install Ruby 3.4.1 before installing this version.
+  - This includes a ruby version bump to 3.4.2. Please install Ruby 3.4.2 before installing this version.
 - Emoji reaction patch changes
+
+## [v4.3.3+cat+1.0.2] - 2025-02-25
+
+- Update emoji reactions patch
+
+## [v4.3.3+cat+1.0.1] - 2025-02-25
+
+- Bump Ruby version to 3.3.7
 
 ## [v4.3.3+cat+1.0.0] - 2025-01-16
 

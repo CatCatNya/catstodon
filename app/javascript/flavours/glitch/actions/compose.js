@@ -192,6 +192,9 @@ export function directCompose(account) {
   };
 }
 
+/**
+ * @param {null | string} overridePrivacy
+ */
 export function submitCompose(overridePrivacy = null) {
   return function (dispatch, getState) {
     let status     = getState().getIn(['compose', 'text'], '');
