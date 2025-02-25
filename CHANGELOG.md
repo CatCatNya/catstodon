@@ -4,6 +4,10 @@ All changes to Catstodon that aren't Mastodon or glitch-soc Mastodon changes wil
 
 All release dates, as well as most other dates, are intended to be read as "within the day, in UTC time."
 
+## [v4.3.3+cat+1.0.2] - 2025-02-25
+
+- Update emoji reactions patch
+
 ## [v4.3.3+cat+1.0.1] - 2025-02-25
 
 - Bump Ruby version to 3.3.7
