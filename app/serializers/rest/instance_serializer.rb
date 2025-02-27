@@ -87,11 +87,11 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       },
 
       polls: {
-        min_options: PollValidator::MIN_OPTIONS,
-        max_options: PollValidator::MAX_OPTIONS,
-        max_characters_per_option: PollValidator::MAX_OPTION_CHARS,
-        min_expiration: PollValidator::MIN_EXPIRATION,
-        max_expiration: PollValidator::MAX_EXPIRATION,
+        min_options: PollOptionsValidator::MIN_OPTIONS,
+        max_options: PollOptionsValidator::MAX_OPTIONS,
+        max_characters_per_option: PollOptionsValidator::MAX_OPTION_CHARS,
+        min_expiration: PollExpirationValidator::MIN_EXPIRATION,
+        max_expiration: PollExpirationValidator::MAX_EXPIRATION,
       },
 
       translation: {

@@ -42,11 +42,11 @@ class REST::V1::InstanceSerializer < ActiveModel::Serializer
 
   def poll_limits
     {
-      min_options: PollValidator::MIN_OPTIONS,
-      max_options: PollValidator::MAX_OPTIONS,
-      max_option_chars: PollValidator::MAX_OPTION_CHARS,
-      min_expiration: PollValidator::MIN_EXPIRATION,
-      max_expiration: PollValidator::MAX_EXPIRATION,
+      min_options: PollOptionsValidator::MIN_OPTIONS,
+      max_options: PollOptionsValidator::MAX_OPTIONS,
+      max_option_chars: PollOptionsValidator::MAX_OPTION_CHARS,
+      min_expiration: PollExpirationValidator::MIN_EXPIRATION,
+      max_expiration: PollExpirationValidator::MAX_EXPIRATION,
     }
   end
 
@@ -93,11 +93,11 @@ class REST::V1::InstanceSerializer < ActiveModel::Serializer
       },
 
       polls: {
-        min_options: PollValidator::MIN_OPTIONS,
-        max_options: PollValidator::MAX_OPTIONS,
-        max_characters_per_option: PollValidator::MAX_OPTION_CHARS,
-        min_expiration: PollValidator::MIN_EXPIRATION,
-        max_expiration: PollValidator::MAX_EXPIRATION,
+        min_options: PollOptionsValidator::MIN_OPTIONS,
+        max_options: PollOptionsValidator::MAX_OPTIONS,
+        max_characters_per_option: PollOptionsValidator::MAX_OPTION_CHARS,
+        min_expiration: PollExpirationValidator::MIN_EXPIRATION,
+        max_expiration: PollExpirationValidator::MAX_EXPIRATION,
       },
 
       reactions: {

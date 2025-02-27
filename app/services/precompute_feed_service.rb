@@ -6,6 +6,10 @@ class PrecomputeFeedService < BaseService
   def call(account)
     FeedManager.instance.populate_home(account)
     FeedManager.instance.populate_direct_feed(account)
+
+    account.owned_lists.each do |list|
+      FeedManager.instance.populate_list(list)
+    end
   ensure
     redis.del("account:#{account.id}:regeneration")
   end

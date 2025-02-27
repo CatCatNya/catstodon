@@ -7140,6 +7140,8 @@ a.status-card {
   }
 
   &--layout-3 {
+    min-height: calc(64px * 2 + 8px);
+
     & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
@@ -7159,6 +7161,8 @@ a.status-card {
   }
 
   &--layout-4 {
+    min-height: calc(64px * 2 + 8px);
+
     & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
