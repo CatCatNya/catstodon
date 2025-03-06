@@ -9,11 +9,11 @@ class ActivityPub::Activity::Like < ActivityPub::Activity
 
     return if maybe_process_embedded_reaction
 
-    return if @account.favourited?(original_status)
+    return if !original_status.account.local? || @account.favourited?(original_status)
 
     favourite = original_status.favourites.create!(account: @account)
 
-    LocalNotificationWorker.perform_async(original_status.account_id, favourite.id, 'Favourite', 'favourite')
+    LocalNotificationWorker.perform_async(original_status.account_id, favourite.id, 'Favourite', 'favourite') if original_status.account.local?
     Trends.statuses.register(original_status)
   end
 
@@ -34,7 +34,7 @@ class ActivityPub::Activity::Like < ActivityPub::Activity
     return true if @account.reacted?(original_status, name, custom_emoji)
 
     reaction = original_status.status_reactions.create!(account: @account, name: name, custom_emoji: custom_emoji)
-    LocalNotificationWorker.perform_async(original_status.account_id, reaction.id, 'StatusReaction', 'reaction')
+    LocalNotificationWorker.perform_async(original_status.account_id, reaction.id, 'StatusReaction', 'reaction') if original_status.account.local?
     true
   # account tried to react with disabled custom emoji. Returning true to discard activity.
   rescue ActiveRecord::RecordInvalid
