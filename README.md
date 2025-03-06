@@ -72,3 +72,7 @@ For production, it is suggested you run:
 - The period of retention of IP addresses and sessions was made
   configurable. ([Pull request](https://github.com/mastodon/mastodon/pull/18757))
 - Fix `/share` not using server-set characters limit ([Pull request](https://github.com/mastodon/mastodon/pull/33459))
+- Security: Domain blocks & rationales ignore user approval when visibility set as "users"
+  - [GitHub Security Advisory](https://github.com/mastodon/mastodon/security/advisories/GHSA-94h4-fj37-c825)
+  - [CVE-2025-27399](https://www.cve.org/CVERecord?id=CVE-2025-27399)
+  - [Commit (with improvements by ClearlyClaire)](https://github.com/mastodon/mastodon/commit/6b519cfefa93a923b19d0f20c292c7185f8fd5f5))
