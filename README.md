@@ -4,8 +4,7 @@
 
 This Mastodon fork is based on the [glitch-soc Fork of Mastodon](https://github.com/glitch-soc/mastodon), historically
 with changes made to suit [CatCatNya~](https://catcatnya.com).
-Some changes may be contributed back to [glitch-soc](https://github.com/glitch-soc/mastodon). Non-security contributions
-to Vanilla Mastodon have ceased for Fediverse-political reasons.
+Some changes may be contributed back to [glitch-soc](https://github.com/glitch-soc/mastodon).
 
 To install, take a look at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/). The instructions and
 features are the same, except for the differences outlined below.
@@ -63,9 +62,15 @@ For production, it is suggested you run:
   emoji. ([Pull request](https://github.com/glitch-soc/mastodon/pull/1763))
 - Standalone share page: Dispatch fetchServer for maxChars. Fixes the bug where the standalone share page did not
   display the correct maximum character amount. ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
+- \[Glitch\] Fix `/share` not using server-set characters limit ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
 - Everything merged into vanilla Mastodon
 
 ## Contributions to Vanilla Mastodon
 
 - The period of retention of IP addresses and sessions was made
   configurable. ([Pull request](https://github.com/mastodon/mastodon/pull/18757))
+- Fix `/share` not using server-set characters limit ([Pull request](https://github.com/mastodon/mastodon/pull/33459))
+- Security: Domain blocks & rationales ignore user approval when visibility set as "users"
+  - [GitHub Security Advisory](https://github.com/mastodon/mastodon/security/advisories/GHSA-94h4-fj37-c825)
+  - [CVE-2025-27399](https://www.cve.org/CVERecord?id=CVE-2025-27399)
+  - [Commit (with improvements by ClearlyClaire)](https://github.com/mastodon/mastodon/commit/6b519cfefa93a923b19d0f20c292c7185f8fd5f5))
