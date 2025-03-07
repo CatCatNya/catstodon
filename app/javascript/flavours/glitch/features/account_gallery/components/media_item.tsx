@@ -15,11 +15,15 @@ import {
   useBlurhash,
 } from 'flavours/glitch/initial_state';
 import type { Status, MediaAttachment } from 'flavours/glitch/models/status';
+import { useAppSelector } from 'flavours/glitch/store';
 
 export const MediaItem: React.FC<{
   attachment: MediaAttachment;
   onOpenMedia: (arg0: MediaAttachment) => void;
 }> = ({ attachment, onOpenMedia }) => {
+  const account = useAppSelector((state) =>
+    state.accounts.get(attachment.getIn(['status', 'account']) as string),
+  );
   const [visible, setVisible] = useState(
     (displayMedia !== 'hide_all' &&
       !attachment.getIn(['status', 'sensitive'])) ||
@@ -70,7 +74,7 @@ export const MediaItem: React.FC<{
     attachment.get('description')) as string | undefined;
   const previewUrl = attachment.get('preview_url') as string;
   const fullUrl = attachment.get('url') as string;
-  const avatarUrl = status.getIn(['account', 'avatar_static']) as string;
+  const avatarUrl = account?.avatar_static;
   const lang = status.get('language') as string;
   const blurhash = attachment.get('blurhash') as string;
   const statusUrl = status.get('url') as string;

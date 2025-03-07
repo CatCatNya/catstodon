@@ -19,44 +19,48 @@ import {
   unmuteAccount,
   pinAccount,
   unpinAccount,
-} from 'mastodon/actions/accounts';
-import { initBlockModal } from 'mastodon/actions/blocks';
-import { mentionCompose, directCompose } from 'mastodon/actions/compose';
+} from 'flavours/glitch/actions/accounts';
+import { initBlockModal } from 'flavours/glitch/actions/blocks';
+import { mentionCompose, directCompose } from 'flavours/glitch/actions/compose';
 import {
   initDomainBlockModal,
   unblockDomain,
-} from 'mastodon/actions/domain_blocks';
-import { openModal } from 'mastodon/actions/modal';
-import { initMuteModal } from 'mastodon/actions/mutes';
-import { initReport } from 'mastodon/actions/reports';
-import { Avatar } from 'mastodon/components/avatar';
-import { Badge, AutomatedBadge, GroupBadge } from 'mastodon/components/badge';
-import { Button } from 'mastodon/components/button';
-import { CopyIconButton } from 'mastodon/components/copy_icon_button';
+} from 'flavours/glitch/actions/domain_blocks';
+import { openModal } from 'flavours/glitch/actions/modal';
+import { initMuteModal } from 'flavours/glitch/actions/mutes';
+import { initReport } from 'flavours/glitch/actions/reports';
+import { Avatar } from 'flavours/glitch/components/avatar';
 import {
-  FollowersCounter,
-  FollowingCounter,
-  StatusesCounter,
-} from 'mastodon/components/counters';
-import { Icon } from 'mastodon/components/icon';
-import { IconButton } from 'mastodon/components/icon_button';
-import { LoadingIndicator } from 'mastodon/components/loading_indicator';
-import { ShortNumber } from 'mastodon/components/short_number';
-import DropdownMenuContainer from 'mastodon/containers/dropdown_menu_container';
-import { DomainPill } from 'mastodon/features/account/components/domain_pill';
-import AccountNoteContainer from 'mastodon/features/account/containers/account_note_container';
-import FollowRequestNoteContainer from 'mastodon/features/account/containers/follow_request_note_container';
-import { useIdentity } from 'mastodon/identity_context';
-import { autoPlayGif, me, domain as localDomain } from 'mastodon/initial_state';
-import type { Account } from 'mastodon/models/account';
-import type { DropdownMenu } from 'mastodon/models/dropdown_menu';
-import type { Relationship } from 'mastodon/models/relationship';
+  Badge,
+  AutomatedBadge,
+  GroupBadge,
+} from 'flavours/glitch/components/badge';
+import { Button } from 'flavours/glitch/components/button';
+import { CopyIconButton } from 'flavours/glitch/components/copy_icon_button';
+import { Icon } from 'flavours/glitch/components/icon';
+import { IconButton } from 'flavours/glitch/components/icon_button';
+import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
+import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
+import { DomainPill } from 'flavours/glitch/features/account/components/domain_pill';
+import AccountNoteContainer from 'flavours/glitch/features/account/containers/account_note_container';
+import FollowRequestNoteContainer from 'flavours/glitch/features/account/containers/follow_request_note_container';
+import { useIdentity } from 'flavours/glitch/identity_context';
+import {
+  autoPlayGif,
+  me,
+  domain as localDomain,
+} from 'flavours/glitch/initial_state';
+import type { Account } from 'flavours/glitch/models/account';
+import type { DropdownMenu } from 'flavours/glitch/models/dropdown_menu';
+import type { Relationship } from 'flavours/glitch/models/relationship';
 import {
   PERMISSION_MANAGE_USERS,
   PERMISSION_MANAGE_FEDERATION,
-} from 'mastodon/permissions';
-import { getAccountHidden } from 'mastodon/selectors/accounts';
-import { useAppSelector, useAppDispatch } from 'mastodon/store';
+} from 'flavours/glitch/permissions';
+import { getAccountHidden } from 'flavours/glitch/selectors/accounts';
+import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
+
+import { ActionBar } from '../../account/components/action_bar';
 
 import { MemorialNote } from './memorial_note';
 import { MovedNote } from './moved_note';
@@ -181,9 +185,9 @@ const titleFromAccount = (account: Account) => {
 const messageForFollowButton = (relationship?: Relationship) => {
   if (!relationship) return messages.follow;
 
-  if (relationship.get('following') && relationship.get('followed_by')) {
-    return messages.mutual;
-  } else if (relationship.get('following') || relationship.get('requested')) {
+  if (relationship.get('requested')) {
+    return messages.cancel_follow_request;
+  } else if (relationship.get('following')) {
     return messages.unfollow;
   } else if (relationship.get('followed_by')) {
     return messages.followBack;
@@ -683,7 +687,16 @@ export const AccountHeader: React.FC<{
 
   const info = [];
 
-  if (me !== account.id && relationship?.blocking) {
+  if (me !== account.id && relationship?.followed_by) {
+    info.push(
+      <span key='follows' className='relationship-tag'>
+        <FormattedMessage
+          id='account.follows_you'
+          defaultMessage='Follows you'
+        />
+      </span>,
+    );
+  } else if (me !== account.id && relationship?.blocking) {
     info.push(
       <span key='blocked' className='relationship-tag'>
         <FormattedMessage id='account.blocked' defaultMessage='Blocked' />
@@ -988,44 +1001,12 @@ export const AccountHeader: React.FC<{
                   ))}
                 </div>
               </div>
-
-              <div className='account__header__extra__links'>
-                <NavLink
-                  to={`/@${account.acct}`}
-                  title={intl.formatNumber(account.statuses_count)}
-                >
-                  <ShortNumber
-                    value={account.statuses_count}
-                    renderer={StatusesCounter}
-                  />
-                </NavLink>
-
-                <NavLink
-                  exact
-                  to={`/@${account.acct}/following`}
-                  title={intl.formatNumber(account.following_count)}
-                >
-                  <ShortNumber
-                    value={account.following_count}
-                    renderer={FollowingCounter}
-                  />
-                </NavLink>
-
-                <NavLink
-                  exact
-                  to={`/@${account.acct}/followers`}
-                  title={intl.formatNumber(account.followers_count)}
-                >
-                  <ShortNumber
-                    value={account.followers_count}
-                    renderer={FollowersCounter}
-                  />
-                </NavLink>
-              </div>
             </div>
           )}
         </div>
       </div>
+
+      <ActionBar account={account} />
 
       {!(hideTabs || hidden) && (
         <div className='account__section-headline'>
