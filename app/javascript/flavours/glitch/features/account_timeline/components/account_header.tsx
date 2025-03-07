@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 
-import { useLinks } from '@/hooks/useLinks';
 import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import LockIcon from '@/material-icons/400-24px/lock.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
@@ -44,6 +43,7 @@ import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_cont
 import { DomainPill } from 'flavours/glitch/features/account/components/domain_pill';
 import AccountNoteContainer from 'flavours/glitch/features/account/containers/account_note_container';
 import FollowRequestNoteContainer from 'flavours/glitch/features/account/containers/follow_request_note_container';
+import { useLinks } from 'flavours/glitch/hooks/useLinks';
 import { useIdentity } from 'flavours/glitch/identity_context';
 import {
   autoPlayGif,
