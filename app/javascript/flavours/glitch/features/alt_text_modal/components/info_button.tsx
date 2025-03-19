@@ -6,9 +6,9 @@ import classNames from 'classnames';
 
 import Overlay from 'react-overlays/Overlay';
 
-import { useSelectableClick } from '@/hooks/useSelectableClick';
 import QuestionMarkIcon from '@/material-icons/400-24px/question_mark.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
+import { useSelectableClick } from 'flavours/glitch/hooks/useSelectableClick';
 
 const messages = defineMessages({
   help: { id: 'info_button.label', defaultMessage: 'Help' },
