@@ -10,6 +10,11 @@ All release dates, as well as most other dates, are intended to be read as "with
   - This includes a ruby version bump to 3.4.2. Please install Ruby 3.4.2 before installing this version.
 - Emoji reaction patch changes
 
+## [v4.3.6+cat+1.0.0] - 2025-03-09
+
+- Upstream changes
+- Make high contrast theme light-text-color equal to dark-text-color
+
 ## [v4.3.4+cat+1.0.1] - 2025-03-06
 
 - Loosen federation of likes and emoji reactions

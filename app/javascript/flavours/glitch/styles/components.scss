@@ -7198,6 +7198,8 @@ img.modal-warning {
   }
 
   &--layout-3 {
+    min-height: calc(64px * 2 + 8px);
+
     & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
@@ -7217,6 +7219,8 @@ img.modal-warning {
   }
 
   &--layout-4 {
+    min-height: calc(64px * 2 + 8px);
+
     & > .media-gallery__item:nth-child(1) {
       border-end-end-radius: 0;
       border-start-end-radius: 0;
@@ -9719,6 +9723,7 @@ noscript {
   border: 1px solid $highlight-text-color;
   background: rgba($highlight-text-color, 0.15);
   overflow: hidden;
+  flex-shrink: 0;
 
   &__background-image {
     width: 125%;
