@@ -4,8 +4,9 @@ All changes to Catstodon that aren't Mastodon or glitch-soc Mastodon changes wil
 
 All release dates, as well as most other dates, are intended to be read as "within the day, in UTC time."
 
-## [v4.3.4+cat+1.0.2] - 2025-03-07
+## [v4.3.6+cat+1.0.0] - 2025-03-09
 
+- Upstream changes
 - Make high contrast theme light-text-color equal to dark-text-color
 
 ## [v4.3.4+cat+1.0.1] - 2025-03-06
