@@ -43,7 +43,7 @@ import {
 import DeprecatedSettingsModal from './deprecated_settings_modal';
 import DoodleModal from './doodle_modal';
 import { FavouriteModal } from './favourite_modal';
-import ImageModal from './image_modal';
+import { ImageModal } from './image_modal';
 import MediaModal from './media_modal';
 import { ModalPlaceholder } from './modal_placeholder';
 import VideoModal from './video_modal';

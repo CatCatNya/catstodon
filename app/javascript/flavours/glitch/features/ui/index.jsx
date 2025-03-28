@@ -16,6 +16,7 @@ import { focusApp, unfocusApp, changeLayout } from 'flavours/glitch/actions/app'
 import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'flavours/glitch/actions/markers';
 import { fetchNotifications } from 'flavours/glitch/actions/notification_groups';
 import { INTRODUCTION_VERSION } from 'flavours/glitch/actions/onboarding';
+import { AlertsController } from 'flavours/glitch/components/alerts_controller';
 import { HoverCardController } from 'flavours/glitch/components/hover_card_controller';
 import { Permalink } from 'flavours/glitch/components/permalink';
 import { PictureInPicture } from 'flavours/glitch/features/picture_in_picture';
@@ -36,7 +37,6 @@ import UploadArea from './components/upload_area';
 import ColumnsAreaContainer from './containers/columns_area_container';
 import LoadingBarContainer from './containers/loading_bar_container';
 import ModalContainer from './containers/modal_container';
-import NotificationsContainer from './containers/notifications_container';
 import {
   Compose,
   Status,
@@ -672,7 +672,7 @@ class UI extends PureComponent {
           </SwitchingColumnsArea>
 
           {layout !== 'mobile' && <PictureInPicture />}
-          <NotificationsContainer />
+          <AlertsController />
           {!disableHoverCards && <HoverCardController />}
           <LoadingBarContainer className='loading-bar' />
           <ModalContainer />

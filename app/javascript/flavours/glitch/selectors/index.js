@@ -15,20 +15,28 @@ export const makeGetStatus = () => {
       (state, { id }) => state.getIn(['accounts', state.getIn(['statuses', id, 'account'])]),
       (state, { id }) => state.getIn(['accounts', state.getIn(['statuses', state.getIn(['statuses', id, 'reblog']), 'account'])]),
       getFilters,
+      (_, { contextType }) => ['detailed', 'bookmarks', 'favourites'].includes(contextType),
     ],
 
-    (statusBase, statusReblog, accountBase, accountReblog, filters) => {
+    (statusBase, statusReblog, accountBase, accountReblog, filters, warnInsteadOfHide) => {
       if (!statusBase || statusBase.get('isLoading')) {
         return null;
       }
 
       let filtered = false;
+      let mediaFiltered = false;
       if ((accountReblog || accountBase).get('id') !== me && filters) {
         let filterResults = statusReblog?.get('filtered') || statusBase.get('filtered') || ImmutableList();
-        if (filterResults.some((result) => filters.getIn([result.get('filter'), 'filter_action']) === 'hide')) {
+        if (!warnInsteadOfHide && filterResults.some((result) => filters.getIn([result.get('filter'), 'filter_action']) === 'hide')) {
           return null;
         }
-        filterResults = filterResults.filter(result => filters.has(result.get('filter')));
+
+        let mediaFilters = filterResults.filter(result => filters.getIn([result.get('filter'), 'filter_action']) === 'blur');
+        if (!mediaFilters.isEmpty()) {
+          mediaFiltered = mediaFilters.map(result => filters.getIn([result.get('filter'), 'title']));
+        }
+
+        filterResults = filterResults.filter(result => filters.has(result.get('filter')) && filters.getIn([result.get('filter'), 'filter_action']) !== 'blur');
         if (!filterResults.isEmpty()) {
           filtered = filterResults.map(result => filters.getIn([result.get('filter'), 'title']));
         }
@@ -45,6 +53,7 @@ export const makeGetStatus = () => {
         map.set('reblog', statusReblog);
         map.set('account', accountBase);
         map.set('matched_filters', filtered);
+        map.set('matched_media_filters', mediaFiltered);
       });
     },
   );
@@ -59,28 +68,6 @@ export const makeGetPictureInPicture = () => {
     available,
   }));
 };
-
-const ALERT_DEFAULTS = {
-  dismissAfter: 5000,
-  style: false,
-};
-
-const formatIfNeeded = (intl, message, values) => {
-  if (typeof message === 'object') {
-    return intl.formatMessage(message, values);
-  }
-
-  return message;
-};
-
-export const getAlerts = createSelector([state => state.get('alerts'), (_, { intl }) => intl], (alerts, intl) =>
-  alerts.map(item => ({
-    ...ALERT_DEFAULTS,
-    ...item,
-    action: formatIfNeeded(intl, item.action, item.values),
-    title: formatIfNeeded(intl, item.title, item.values),
-    message: formatIfNeeded(intl, item.message, item.values),
-  })).toArray());
 
 export const makeGetNotification = () => createSelector([
   (_, base)             => base,
