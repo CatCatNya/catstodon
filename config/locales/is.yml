@@ -309,6 +309,7 @@ is:
       title: Atvikaskrá
       unavailable_instance: "(heiti léns ekki tiltækt)"
     announcements:
+      back: Til baka í auglýsingar
       destroyed_msg: Það tókst að eyða auglýsingunni!
       edit:
         title: Breyta auglýsingu
@@ -317,6 +318,10 @@ is:
       new:
         create: Búa til auglýsingu
         title: Ný auglýsing
+      preview:
+        disclaimer: Þar sem notendur geta ekki afþakkað þær ætti aðeins að nota tilkynningar í tölvupósti fyrir mikilvægar upplýsingar á borð við persónuleg gagnabrot eða lokanir á netþjónum.
+        explanation_html: 'Tölvupósturinn verður sendur til <strong>%{display_count} notenda</strong>. Eftirfarandi texti verður í meginmáli póstsins:'
+        title: Forskoða tilkynninguna
       publish: Birta
       published_msg: Það tókst að birta auglýsinguna!
       scheduled_for: Áætlað %{time}
@@ -475,6 +480,36 @@ is:
       new:
         title: Flytja inn útilokanir léna
       no_file: Engin skrá valin
+    fasp:
+      debug:
+        callbacks:
+          created_at: Búið til
+          delete: Eyða
+          ip: IP-vistfang
+          request_body: Biðja um meginmál
+          title: Villuleita bakrakningar (callbacks)
+      providers:
+        active: Virkt
+        base_url: Grunnslóð
+        callback: Bakrakning (callback)
+        delete: Eyða
+        edit: Breyta þjónustuaðila
+        finish_registration: Ljúka skráningu
+        name: Nafn
+        providers: Þjónustuaðilar
+        public_key_fingerprint: Fingrafar dreifilykils
+        registration_requested: Beðið um skráningu
+        registrations:
+          confirm: Staðfesta
+          description: Þú fékkst skráningu frá FASP-þjónustuaðila. Hafnaðu þessu ef þú baðst ekki um þetta. Ef þú baðst um þetta, skaltu bera vandlega saman nöfn og fingraför lykla áður en þú staðfestir skráninguna.
+          reject: Hafna
+          title: Staðfesta FASP-skráningu
+        save: Vista
+        select_capabilities: Veldu eiginleika
+        sign_in: Skrá inn
+        status: Staða
+        title: Fediverse Auxiliary Service Providers þjónustuaðilar
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Að fylgja meðmælum hjálpar nýjum notendum að finna áhugavert efni á einfaldan máta</strong>. Þegar notandi hefur ekki átt í nægilegum samskiptum við aðra til að vera farinn að móta sér skoðanir á hverju hann vill fylgjast með, er mælt með að fylgjast með þessum aðgöngum. Þeir eru endurreiknaðir daglega út frá blöndu þeirra aðganga sem eru með hvað mestri þáttöku í umræðum og mesta fylgjendafjölda út frá hverju tungumáli."
       language: Fyrir tungumálið
@@ -870,6 +905,8 @@ is:
     system_checks:
       database_schema_check:
         message_html: Það eru fyrirliggjandi yfirfærslur á gagnagrunnum. Keyrðu þær til að tryggja að forritið hegði sér eins og skyldi
+      elasticsearch_analysis_index_mismatch:
+        message_html: Stillingar á Elasticsearch efnisskráningargreingu eru úreltar. Þú skalt endilega keyra <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Elasticsearch-klasinn er ekki í góðu standi (rauð staða), leitareiginleikar eru ekki tiltækir
       elasticsearch_health_yellow:
@@ -941,6 +978,7 @@ is:
         chance_to_review_html: "<strong>Sjálfvirkt útbúnu þjónustuskilmálarnir verða ekki birtir sjálfkrafa.</strong> Þú munt geta yfirfarið textann. Fylltu inn nauðsynlegar upplýsingar til að halda áfram to proceed."
         explanation_html: Sniðmátið fyrir þjónustuskilmála sem hér fylgir er einungis hugsat til upplýsingar og ætti ekki að taska sem lögfræðilegt álit varðandi hin ýmsu efni. Þú skalt endilega ráðfæra þig við löglærða í þínu umdæmi varðandi þau atriði sem eiga við um stöðu þína auk annarra spurninga um lögfræðileg mál sem þú gætir haft.
         title: Uppsetning þjónustuskilmála
+      going_live_on_html: Í beinni, þann %{date}
       history: Ferill
       live: Í beinni
       no_history: Það eru engar breytingar ennþá á þjónustuskilmálunum.
@@ -1908,6 +1946,10 @@ is:
     recovery_instructions_html: Ef þú tapar símanum þínum geturðu notað einn af endurheimtukóðunum hér fyrir neðan til að fá aftur samband við notandaaðganginn þinn. <strong>Geymdu endurheimtukóðana á öruggum stað</strong>. Sem dæmi gætirðu prentað þá út og geymt með öðrum mikilvægum skjölum.
     webauthn: Öryggislyklar
   user_mailer:
+    announcement_published:
+      description: 'Stjórnendur %{domain} eru að senda frá sér yfirlýsingu:'
+      subject: Auglýsing vegna þjónustu
+      title: Auglýsing vegna þjónustu %{domain}
     appeal_approved:
       action: Stillingar notandaaðgangs
       explanation: Áfrýjun refsingarinnar gagnvart aðgangnum þínum þann %{strike_date} sem þú sendir inn þann %{appeal_date} hefur verið samþykkt. Notandaaðgangurinn þinn er aftur í góðu lagi.
@@ -1940,6 +1982,8 @@ is:
     terms_of_service_changed:
       agreement: Með því að halda áfram að nota %{domain}, ert þú þar með að samþykkja þessa skilmála. Ef þú ert ósammála þessum uppfærðu skilmálum, geturðu hvenær sem er sagt upp samþykki þínu gagnvart %{domain} með því að eyða notandaaðgangi þínum.
       changelog: 'Í stuttu máli er það þetta sem þessi uppfærsla þýðir fyrir þig:'
+      description: 'Þú ert að fá þennan tölvupóst vegna þess að við erum að gera breytingar á þjónustuskilmálum á %{domain}. Þessar breytingar taka gildi þann %{date}. Við hvetjum þig til að kynna þér þessar breytingar hér:'
+      description_html: Þú ert að fá þennan tölvupóst vegna þess að við erum að gera breytingar á þjónustuskilmálum á %{domain}. Þessar breytingar taka gildi þann <strong>%{date}</strong>. Við hvetjum þig til að kynna þér <a href="%{path}" target="_blank">þessar breytingar hér</a>.
       sign_off: "%{domain}-teymið"
       subject: Breytingar á þjónustuskilmálum okkar
       subtitle: Þjónustuskilmálar eru að breytast á %{domain}

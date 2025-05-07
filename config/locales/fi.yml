@@ -309,6 +309,7 @@ fi:
       title: Tarkastusloki
       unavailable_instance: "(verkkotunnus ei saatavilla)"
     announcements:
+      back: Takaisin tiedotteisiin
       destroyed_msg: Tiedotteen poisto onnistui!
       edit:
         title: Muokkaa tiedotetta
@@ -317,6 +318,10 @@ fi:
       new:
         create: Luo tiedote
         title: Uusi tiedote
+      preview:
+        disclaimer: Koska käyttäjät eivät voi kieltäytyä niistä, sähköposti-ilmoitukset tulee rajata tärkeisiin tiedotteisiin, kuten ilmoituksiin henkilötietojen tietoturvaloukkauksista tai palvelimen sulkeutumisesta.
+        explanation_html: "<strong>%{display_count} käyttäjälle</strong> lähetetään sähköpostia. Sähköpostiviestiin sisällytetään seuraava teksti:"
+        title: Esikatsele tiedoteilmoitus
       publish: Julkaise
       published_msg: Tiedotteen julkaisu onnistui!
       scheduled_for: Ajoitettu %{time}
@@ -453,7 +458,7 @@ fi:
       domain: Verkkotunnus
       new:
         create: Lisää verkkotunnus
-        resolve: Selvitä verkkotunnus
+        resolve: Resolvoi verkkotunnus
         title: Estä uusi sähköpostiverkkotunnus
       no_email_domain_block_selected: Sähköpostiverkkotunnusten estoja ei muutettu, koska yhtäkään ei ollut valittuna
       not_permitted: Ei sallittu
@@ -475,6 +480,30 @@ fi:
       new:
         title: Tuo verkkotunnusten estoja
       no_file: Yhtäkään tiedostoa ei ole valittu
+    fasp:
+      debug:
+        callbacks:
+          created_at: Luotu
+          delete: Poista
+          ip: IP-osoite
+          title: Aloita takaisinkutsujen vianetsintä
+      providers:
+        base_url: Perus-URL
+        callback: Takaisinkutsu
+        delete: Poista
+        finish_registration: Viimeistele rekisteröinti
+        name: Nimi
+        public_key_fingerprint: Julkisen avaimen sormenjälki
+        registration_requested: Rekisteröintiä pyydetty
+        registrations:
+          confirm: Vahvista
+          reject: Hylkää
+          title: Vahvista FASP-rekisteröinti
+        save: Tallenna
+        select_capabilities: Valitse kyvykkyydet
+        sign_in: Kirjaudu sisään
+        status: Tila
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Seurantasuositukset auttavat uusia käyttäjiä löytämään nopeasti kiinnostavaa sisältöä</strong>. Kun käyttäjä ei ole ollut tarpeeksi vuorovaikutuksessa muiden kanssa, jotta hänelle olisi muodostunut henkilökohtaisia seuraamissuosituksia, suositellaan niiden sijaan näitä tilejä. Ne lasketaan päivittäin uudelleen yhdistelmästä tilejä, jotka ovat viime aikoina olleet aktiivisimmin sitoutuneita ja joilla on suurimmat paikalliset seuraajamäärät tietyllä kielellä."
       language: Kielelle
@@ -868,6 +897,8 @@ fi:
     system_checks:
       database_schema_check:
         message_html: Tietokannan siirto on vireillä. Suorita ne varmistaaksesi, että sovellus toimii odotetulla tavalla
+      elasticsearch_analysis_index_mismatch:
+        message_html: Elasticsearch-indeksin analysaattoriasetukset ovat vanhentuneet. Suorita <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Elasticsearch-klusteri on vikatilassa (punainen tila), joten hakuominaisuudet eivät ole käytettävissä
       elasticsearch_health_yellow:
@@ -939,6 +970,7 @@ fi:
         chance_to_review_html: "<strong>Luotuja käyttöehtoja ei julkaista automaattisesti.</strong> Sinulla on mahdollisuus tarkistaa lopputulos. Jatka täyttämällä tarvittavat tiedot."
         explanation_html: Tarjottu käyttöehtomalli on tarkoitettu vain tiedoksi, eikä sitä pidä tulkita oikeudellisena neuvontana missään yhteydessä. Käänny oman oikeusavustajasi puoleen tilanteessasi ja erityisissä oikeudellisissa kysymyksissäsi.
         title: Käyttöehtojen määritys
+      going_live_on_html: Voimassa %{date} alkaen
       history: Historia
       live: Julki
       no_history: Käyttöehtoihin ei ole vielä tehty muutoksia.
@@ -1904,6 +1936,10 @@ fi:
     recovery_instructions_html: Jos menetät puhelimesi, voit kirjautua tilillesi jollakin alla olevista palautuskoodeista. <strong>Pidä palautuskoodit hyvässä tallessa</strong>. Voit esimerkiksi tulostaa ne ja säilyttää muiden tärkeiden papereiden joukossa.
     webauthn: Suojausavaimet
   user_mailer:
+    announcement_published:
+      description: 'Palvelimen %{domain} ylläpito tiedottaa:'
+      subject: Palvelutiedote
+      title: Palvelimen %{domain} palvelutiedote
     appeal_approved:
       action: Tilin asetukset
       explanation: "%{appeal_date} lähettämäsi valitus tiliisi kohdistuvasta varoituksesta %{strike_date} on hyväksytty. Tilisi on jälleen hyvässä kunnossa."
@@ -1936,6 +1972,8 @@ fi:
     terms_of_service_changed:
       agreement: Jatkamalla palvelun %{domain} käyttöä hyväksyt nämä ehdot. Jos et hyväksy päivitettyjä ehtoja, voit milloin tahansa päättää sopimuksesi palvelun %{domain} kanssa poistamalla tilisi.
       changelog: 'Lyhyesti, mitä tämä päivitys tarkoittaa sinulle:'
+      description: 'Sait tämän sähköpostiviestin, koska muutamme palvelun %{domain} käyttöehtoja. Muutokset tulevat voimaan %{date}. Kehotamme tutustumaan päivitettyihin ehtoihin kokonaisuudessaan täällä:'
+      description_html: Sait tämän sähköpostiviestin, koska muutamme palvelun %{domain} käyttöehtoja. Muutokset tulevat voimaan <strong>%{date}</strong>. Kehotamme tutustumaan <a href="%{path}" target="_blank">päivitettyihin ehtoihin kokonaisuudessaan täällä</a>.
       sign_off: Palvelimen %{domain} tiimi
       subject: Käyttöehtojemme päivitykset
       subtitle: Palvelimen %{domain} käyttöehdot muuttuvat

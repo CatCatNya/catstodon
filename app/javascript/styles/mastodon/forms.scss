@@ -1,4 +1,5 @@
-$no-columns-breakpoint: 600px;
+@use 'variables' as *;
+@use 'functions' as *;
 
 code {
   font-family: $font-monospace, monospace;
@@ -350,6 +351,22 @@ code {
       display: inline-block;
       width: auto;
       flex: 0;
+    }
+  }
+
+  .input.date_of_birth .label_input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    input {
+      box-sizing: content-box;
+      width: 32px;
+      flex: 0;
+
+      &:last-child {
+        width: 64px;
+      }
     }
   }
 

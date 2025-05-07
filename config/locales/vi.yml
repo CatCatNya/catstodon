@@ -306,6 +306,7 @@ vi:
       title: Nhật ký kiểm duyệt
       unavailable_instance: "(tên máy chủ không khả dụng)"
     announcements:
+      back: Quay về thông báo
       destroyed_msg: Xóa thông báo thành công!
       edit:
         title: Sửa thông báo
@@ -314,6 +315,10 @@ vi:
       new:
         create: Tạo thông báo
         title: Tạo thông báo mới
+      preview:
+        disclaimer: Vì người dùng không thể chọn không nhận thông báo qua email nên thông báo qua email chỉ nên giới hạn ở những thông báo quan trọng như thông báo vi phạm dữ liệu cá nhân hoặc thông báo đóng máy chủ.
+        explanation_html: 'Gửi email tới <strong>%{display_count} thành viên</strong>. Nội dung sau đây sẽ được đưa vào email:'
+        title: Xem trước thông báo sẽ gửi
       publish: Đăng
       published_msg: Truyền đi thông báo thành công!
       scheduled_for: Đã lên lịch %{time}
@@ -467,6 +472,36 @@ vi:
       new:
         title: Nhập máy chủ chặn
       no_file: Không có tập tin nào được chọn
+    fasp:
+      debug:
+        callbacks:
+          created_at: Đã tạo lúc
+          delete: Xóa
+          ip: Địa chỉ IP
+          request_body: Nội dung yêu cầu
+          title: Debug Callback
+      providers:
+        active: Hoạt động
+        base_url: URL cơ sở
+        callback: Callback
+        delete: Xóa
+        edit: Chỉnh sửa nhà cung cấp
+        finish_registration: Hoàn tất đăng ký
+        name: Tên
+        providers: Nhà cung cấp
+        public_key_fingerprint: Public key fingerprint
+        registration_requested: Yêu cầu đăng ký
+        registrations:
+          confirm: Xác nhận
+          description: Bạn đã nhận được đăng ký từ FASP. Hãy từ chối nếu bạn không phải là người khởi tạo. Nếu bạn đã khởi tạo, hãy so sánh cẩn thận tên và dấu vân tay khóa trước khi xác nhận đăng ký.
+          reject: Từ chối
+          title: Xác nhận đăng ký FASP
+        save: Lưu
+        select_capabilities: Chọn khả năng
+        sign_in: Đăng nhập
+        status: Trạng thái
+        title: Fediverse Auxiliary Service Providers
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Gợi ý theo dõi giúp những người mới nhanh chóng tìm thấy những nội dung thú vị</strong>. Khi một người chưa đủ tương tác với những người khác để hình thành các đề xuất theo dõi được cá nhân hóa, thì những người này sẽ được đề xuất. Nó bao gồm những người có số lượt tương tác gần đây cao nhất và số lượng người theo dõi cao nhất cho một ngôn ngữ nhất định trong máy chủ."
       language: Theo ngôn ngữ
@@ -854,6 +889,8 @@ vi:
     system_checks:
       database_schema_check:
         message_html: Có cơ sở dữ liệu đang chờ xử lý. Xin khởi động nó để ứng dụng có thể hoạt động một cách ổn định nhất
+      elasticsearch_analysis_index_mismatch:
+        message_html: Chuẩn đoán chỉ mục Elasticsearch đã lỗi thời. Hãy chạy <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Cụm Elaticsearch không tốt (trạng thái đỏ), tính năng tìm kiếm không khả dụng
       elasticsearch_health_yellow:
@@ -925,6 +962,7 @@ vi:
         chance_to_review_html: "<strong>Các điều khoản dịch vụ đã tạo sẽ không được tự động công bố.</strong> Bạn sẽ cần xem lại trước. Vui lòng điền thông tin cần thiết để tiếp tục."
         explanation_html: Mẫu điều khoản dịch vụ được cung cấp chỉ nhằm mục đích cung cấp thông tin và không được hiểu là tư vấn pháp lý về bất kỳ vấn đề nào. Vui lòng tham khảo ý kiến ​​cố vấn pháp lý của riêng bạn về tình huống của bạn và các câu hỏi pháp lý cụ thể mà bạn có.
         title: Thiết lập Điều khoản Dịch vụ
+      going_live_on_html: Chính thức áp dụng từ %{date}
       history: Lịch sử
       live: Đang hiển thị
       no_history: Hiện tại chưa có ghi nhận thay đổi nào về các điều khoản dịch vụ.
@@ -1861,6 +1899,10 @@ vi:
     recovery_instructions_html: Nếu bạn bị mất điện thoại, hãy dùng một trong các mã khôi phục bên dưới để lấy lại quyền truy cập vào tài khoản của mình. <strong>Giữ mã khôi phục an toàn</strong>. Ví dụ, bạn có thể in chúng ra giấy.
     webauthn: Khóa bảo mật
   user_mailer:
+    announcement_published:
+      description: 'Quản trị viên %{domain} gửi một thông báo:'
+      subject: Thông báo dịch vụ
+      title: "%{domain} thông báo dịch vụ"
     appeal_approved:
       action: Cài đặt tài khoản
       explanation: Khiếu nại về tài khoản của bạn vào %{strike_date}, được gửi lúc %{appeal_date} đã được chấp nhận. Tài khoản của bạn đã có thể sử dụng bình thường.
@@ -1893,6 +1935,8 @@ vi:
     terms_of_service_changed:
       agreement: Tiếp tục sử dụng %{domain}, đồng nghĩa bạn đồng ý điều khoản dịch vụ. Nếu bạn không đồng ý với các điều khoản đã cập nhật, hãy xóa tài khoản %{domain} của bạn.
       changelog: 'Nhìn sơ qua, bản cập nhật này:'
+      description: 'Bạn nhận được email này vì chúng tôi đang thực hiện một số thay đổi đối với các điều khoản dịch vụ tại %{domain}. Thay đổi sẽ có hiệu lực từ %{date}. Hãy xem lại đầy đủ các điều khoản đã cập nhật tại đây:'
+      description_html: Bạn nhận được email này vì chúng tôi đang thực hiện một số thay đổi đối với các điều khoản dịch vụ tại %{domain}. Thay đổi sẽ có hiệu lực từ <strong>%{date}</strong>. Hãy xem lại <a href="%{path}" target="_blank">đầy đủ các điều khoản được cập nhật ở đây</a>.
       sign_off: Đội ngũ %{domain}
       subject: Cập nhật điều khoản dịch vụ
       subtitle: Điều khoản dịch vụ tại %{domain} đã thay đổi

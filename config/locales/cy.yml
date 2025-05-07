@@ -321,6 +321,7 @@ cy:
       title: Cofnod archwilio
       unavailable_instance: "(nid yw enw'r parth ar gael)"
     announcements:
+      back: Nôl i'r cyhoeddiadau
       destroyed_msg: Cyhoeddiad wedi'i ddileu'n llwyddiannus!
       edit:
         title: Golygu cyhoeddiad
@@ -329,6 +330,10 @@ cy:
       new:
         create: Creu cyhoeddiad
         title: Cyhoeddiad newydd
+      preview:
+        disclaimer: Gan nad oes modd i ddefnyddwyr eu hosgoi, dylai hysbysiadau e-bost gael eu cyfyngu i gyhoeddiadau pwysig fel tor-data personol neu hysbysiadau cau gweinydd.
+        explanation_html: 'Bydd yr e-bost yn cael ei anfon at <strong>%{display_count} defnyddiwr</strong> . Bydd y testun canlynol yn cael ei gynnwys yn yr e-bost:'
+        title: Hysbysiad rhagolwg cyhoeddiad
       publish: Cyhoeddi
       published_msg: Cyhoeddiad wedi'i gyhoeddi'n llwyddiannus!
       scheduled_for: Wedi'i amserlenni ar gyfer %{time}
@@ -507,6 +512,36 @@ cy:
       new:
         title: Mewnforio blociau parth
       no_file: Heb ddewis ffeil
+    fasp:
+      debug:
+        callbacks:
+          created_at: Crëwyd am
+          delete: Dileu
+          ip: Cyfeiriad IP
+          request_body: Corff y cais
+          title: Adalwasau Dadfygio
+      providers:
+        active: Gweithredol
+        base_url: URL sylfaen
+        callback: Adalwad
+        delete: Dileu
+        edit: Golygu Darparwr
+        finish_registration: Gorffen cofrestru
+        name: Enw
+        providers: Darparwyr
+        public_key_fingerprint: Ôl bys allwedd cyhoeddus
+        registration_requested: Cais am gofrestru
+        registrations:
+          confirm: Cadarnhau
+          description: Rydych wedi derbyn cofrestriad gan FASP. Gwrthodwch hyn os nad chi ofynnodd amdano. Os taw chi gychwynnodd hyn, cymharwch yr enw ac allwedd yr ôl bys yn ofalus cyn cadarnhau'r cofrestriad.
+          reject: Gwrthod
+          title: Cadarnhau Cofrestriad FASP
+        save: Cadw
+        select_capabilities: Dewis Galluoedd
+        sign_in: Mewngofnodi
+        status: Statws
+        title: Fediverse Auxiliary Service Providers
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Mae dilyn yr argymhellion yn helpu i ddefnyddwyr newydd ddod o hyd i gynnwys diddorol yn gyflym</strong>. Pan nad yw defnyddiwr wedi rhyngweithio digon ag eraill i ffurfio argymhellion dilyn personol, argymhellir y cyfrifon hyn yn lle hynny. Cânt eu hailgyfrifo'n ddyddiol o gymysgedd o gyfrifon gyda'r ymgysylltiadau diweddar uchaf a'r cyfrif dilynwyr lleol uchaf ar gyfer iaith benodol."
       language: Ar gyfer iaith
@@ -891,7 +926,7 @@ cy:
       deleted: Dilëwyd
       favourites: Ffefrynnau
       history: Hanes fersiynau
-      in_reply_to: Ymateb i
+      in_reply_to: Mewn ymateb i
       language: Iaith
       media:
         title: Cyfryngau
@@ -924,6 +959,8 @@ cy:
     system_checks:
       database_schema_check:
         message_html: Mae mudo cronfa ddata ar fin digwydd. Rhedwch nhw i sicrhau bod y rhaglen yn ymddwyn yn ôl y disgwyl
+      elasticsearch_analysis_index_mismatch:
+        message_html: Mae gosodiadau dadansoddwr mynegai Elasticsearch wedi dyddio. Rhedwch <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Mae clwstwr Elasticsearch yn afiach (statws coch), nid yw'r nodweddion chwilio ar gael
       elasticsearch_health_yellow:
@@ -995,6 +1032,7 @@ cy:
         chance_to_review_html: "<strong>Ni fydd y telerau gwasanaeth sy'n cael eu cynhyrchu'n cael eu cyhoeddi'n awtomatig.</strong> Bydd cyfle i chi adolygu'r canlyniadau. Cwblhewch y manylion angenrheidiol i symud ymlaen."
         explanation_html: Mae'r templed telerau gwasanaeth sy'n cael eu darparu at ddibenion gwybodaeth yn unig, ac ni ddylid ei ddehongli fel cyngor cyfreithiol ar unrhyw bwnc. Ymgynghorwch â'ch cyngor cyfreithiol eich hun ar eich sefyllfa ag unrhyw gwestiynau cyfreithiol penodol sydd gennych.
         title: Telerau Gosod Gwasanaeth
+      going_live_on_html: Byw, effeithiol %{date}
       history: Hanes
       live: Byw
       no_history: Nid oes unrhyw newidiadau i delerau gwasanaeth wedi'u cofnodi eto.
@@ -1412,7 +1450,7 @@ cy:
   filters:
     contexts:
       account: Proffilau
-      home: Cartref a rhestrau
+      home: Ffrwd gartref
       notifications: Hysbysiadau
       public: Ffrydiau cyhoeddus
       thread: Sgyrsiau
@@ -1754,7 +1792,7 @@ cy:
       subject: 'Dilynwr yn aros: %{name}'
       title: Cais dilynwr newydd
     mention:
-      action: Ateb
+      action: Ymateb
       body: 'Caswoch eich crybwyll gan %{name} yn:'
       subject: Cawsoch eich crybwyll gan %{name}
       title: Crywbylliad newydd
@@ -1923,7 +1961,7 @@ cy:
     back: Nôl i Mastodon
     delete: Dileu cyfrif
     development: Datblygu
-    edit_profile: Golygu proffil
+    edit_profile: Golygu'r proffil
     export: Allforio
     featured_tags: Prif hashnodau
     import: Mewnforio
@@ -2076,6 +2114,10 @@ cy:
     recovery_instructions_html: Os ydych chi'n colli mynediad i'ch ffôn, mae modd i chi ddefnyddio un o'r codau adfer isod i gael mynediad at eich cyfrif. <strong>Cadwch y codau adfer yn breifat</strong>. Er enghraifft, gallwch chi eu argraffu a'u cadw gyda dogfennau eraill pwysig.
     webauthn: Allweddi diogelwch
   user_mailer:
+    announcement_published:
+      description: 'Mae gweinyddwyr %{domain} yn gwneud cyhoeddiad:'
+      subject: Cyhoeddiad gwasanaeth
+      title: Cyhoeddiad gwasanaeth %{domain}
     appeal_approved:
       action: Gosodiadau Cyfrif
       explanation: Mae apêl y rhybudd yn erbyn eich cyfrif ar %{strike_date} a gyflwynwyd gennych ar %{appeal_date} wedi'i chymeradwyo. Mae eich cyfrif unwaith eto yn gadarnhaol.
@@ -2108,6 +2150,8 @@ cy:
     terms_of_service_changed:
       agreement: Drwy barhau i ddefnyddio %{domain}, rydych yn cytuno i'r telerau hyn. Os ydych yn anghytuno â'r telerau a ddiweddarwyd, gallwch derfynu eich cytundeb â %{domain} ar unrhyw adeg drwy ddileu eich cyfrif.
       changelog: 'Yn fyr, dyma beth mae''r diweddariad hwn yn ei olygu i chi:'
+      description: 'Rydych yn derbyn yr e-bost hwn oherwydd ein bod yn gwneud rhai newidiadau i''n telerau gwasanaeth yn %{domain}. Bydd y diweddariadau hyn yn dod i rym ar %{date}. Rydym yn eich annog i adolygu''r telerau diweddaraf yn llawn yma:'
+      description_html: Rydych yn derbyn yr e-bost hwn oherwydd ein bod yn gwneud rhai newidiadau i'n telerau gwasanaeth yn %{domain}. Bydd y diweddariadau hyn yn dod i rym ar <strong>%{date}</strong> . Rydym yn eich annog i adolygu'r <a href="%{path}" target="_blank">telerau diweddaraf yn llawn yma</a> .
       sign_off: Tîm %{domain}
       subject: Diweddariadau i'n telerau gwasanaeth
       subtitle: Mae telerau gwasanaeth %{domain} yn newid

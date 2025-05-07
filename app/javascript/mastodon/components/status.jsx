@@ -17,7 +17,7 @@ import RepeatIcon from '@/material-icons/400-24px/repeat.svg?react';
 import { ContentWarning } from 'mastodon/components/content_warning';
 import { FilterWarning } from 'mastodon/components/filter_warning';
 import { Icon }  from 'mastodon/components/icon';
-import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
+import { PictureInPicturePlaceholder } from 'mastodon/components/picture_in_picture_placeholder';
 import { withOptionalRouter, WithOptionalRouterPropTypes } from 'mastodon/utils/react_router';
 
 import Card from '../features/status/components/card';
@@ -70,7 +70,7 @@ export const defaultMediaVisibility = (status) => {
     status = status.get('reblog');
   }
 
-  return (displayMedia !== 'hide_all' && !status.get('sensitive') || displayMedia === 'show_all');
+  return !status.get('matched_media_filters') && (displayMedia !== 'hide_all' && !status.get('sensitive') || displayMedia === 'show_all');
 };
 
 const messages = defineMessages({
@@ -403,14 +403,7 @@ class Status extends ImmutablePureComponent {
     const connectReply = nextInReplyToId && nextInReplyToId === status.get('id');
     const matchedFilters = status.get('matched_filters');
 
-    if (featured) {
-      prepend = (
-        <div className='status__prepend'>
-          <div className='status__prepend__icon'><Icon id='thumb-tack' icon={PushPinIcon} /></div>
-          <FormattedMessage id='status.pinned' defaultMessage='Pinned post' />
-        </div>
-      );
-    } else if (status.get('reblog', null) !== null && typeof status.get('reblog') === 'object') {
+    if (status.get('reblog', null) !== null && typeof status.get('reblog') === 'object') {
       const display_name_html = { __html: status.getIn(['account', 'display_name_html']) };
 
       prepend = (
@@ -470,6 +463,7 @@ class Status extends ImmutablePureComponent {
                 defaultWidth={this.props.cachedMediaWidth}
                 visible={this.state.showMedia}
                 onToggleVisibility={this.handleToggleMediaVisibility}
+                matchedFilters={status.get('matched_media_filters')}
               />
             )}
           </Bundle>
@@ -490,14 +484,12 @@ class Status extends ImmutablePureComponent {
                 foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
                 accentColor={attachment.getIn(['meta', 'colors', 'accent'])}
                 duration={attachment.getIn(['meta', 'original', 'duration'], 0)}
-                width={this.props.cachedMediaWidth}
-                height={110}
-                cacheWidth={this.props.cacheMediaWidth}
                 deployPictureInPicture={pictureInPicture.get('available') ? this.handleDeployPictureInPicture : undefined}
                 sensitive={status.get('sensitive')}
                 blurhash={attachment.get('blurhash')}
                 visible={this.state.showMedia}
                 onToggleVisibility={this.handleToggleMediaVisibility}
+                matchedFilters={status.get('matched_media_filters')}
               />
             )}
           </Bundle>
@@ -522,6 +514,7 @@ class Status extends ImmutablePureComponent {
                 deployPictureInPicture={pictureInPicture.get('available') ? this.handleDeployPictureInPicture : undefined}
                 visible={this.state.showMedia}
                 onToggleVisibility={this.handleToggleMediaVisibility}
+                matchedFilters={status.get('matched_media_filters')}
               />
             )}
           </Bundle>

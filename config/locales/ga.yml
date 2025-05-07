@@ -318,6 +318,7 @@ ga:
       title: Loga iniúchta
       unavailable_instance: "(ainm fearainn ar fáil)"
     announcements:
+      back: Ar ais chuig fógraí
       destroyed_msg: D'éirigh leis an bhfógra a scriosadh!
       edit:
         title: Cuir fógra in eagar
@@ -326,6 +327,10 @@ ga:
       new:
         create: Cruthaigh fógra
         title: Fógra nua
+      preview:
+        disclaimer: Ós rud é nach féidir le húsáideoirí rogha an diúltaithe a dhéanamh dóibh, ba cheart fógraí ríomhphoist a theorannú do fhógraí tábhachtacha amhail fógraí maidir le sárú sonraí pearsanta nó dúnadh freastalaí.
+        explanation_html: 'Seolfar an ríomhphost chuig <strong>%{display_count} úsáideoir</strong>. Beidh an téacs seo a leanas san áireamh sa ríomhphost:'
+        title: Fógra réamhamhairc na fógraíochta
       publish: Foilsigh
       published_msg: D’éirigh leis an bhfógra a fhoilsiú!
       scheduled_for: Sceidealta le haghaidh %{time}
@@ -499,6 +504,36 @@ ga:
       new:
         title: Iompórtáil bloic fearainn
       no_file: Níor roghnaíodh aon chomhad
+    fasp:
+      debug:
+        callbacks:
+          created_at: Cruthaithe ag
+          delete: Scrios
+          ip: Seoladh IP
+          request_body: Comhlacht iarratais
+          title: Glaonna Dífhabhtaithe
+      providers:
+        active: Gníomhach
+        base_url: Bun-URL
+        callback: Glao ar ais
+        delete: Scrios
+        edit: Cuir Soláthraí in Eagar
+        finish_registration: Críochnaigh clárú
+        name: Ainm
+        providers: Soláthraithe
+        public_key_fingerprint: Méarloirg eochair phoiblí
+        registration_requested: Clárú iarrtha
+        registrations:
+          confirm: Deimhnigh
+          description: Fuair ​​tú clárú ó FASP. Diúltaigh é murar chuir tú tús leis seo. Má thionscain tú é seo, déan comparáid chúramach idir an t-ainm agus an eochair-mhéarlorg sula ndearbhaítear an clárúchán.
+          reject: Diúltaigh
+          title: Deimhnigh Clárú FASP
+        save: Sábháil
+        select_capabilities: Roghnaigh Cumais
+        sign_in: Sínigh Isteach
+        status: Stádas
+        title: Soláthraithe Seirbhíse Cúnta Fediverse
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Lean na moltaí cabhraíonn sé le húsáideoirí nua ábhar suimiúil a aimsiú go tapa</strong>. Nuair nach mbíonn go leor idirghníomhaithe ag úsáideoir le daoine eile chun moltaí pearsantaithe a leanúint, moltar na cuntais seo ina ionad sin. Déantar iad a athríomh ar bhonn laethúil ó mheascán de chuntais a bhfuil na rannpháirtíochtaí is airde acu le déanaí agus na háirimh áitiúla is airde leanúna do theanga ar leith."
       language: Don teanga
@@ -910,6 +945,8 @@ ga:
     system_checks:
       database_schema_check:
         message_html: Tá aistrithe bunachar sonraí ar feitheamh. Rith iad le do thoil chun a chinntiú go n-iompraíonn an t-iarratas mar a bhíothas ag súil leis
+      elasticsearch_analysis_index_mismatch:
+        message_html: Tá socruithe anailíseora innéacs Elasticsearch as dáta. Rith <code>tootctl search deploy --only-mapping --only=%{value}</code>le do thoil
       elasticsearch_health_red:
         message_html: Tá braisle Elasticsearch míshláintiúil (stádas dearg), níl gnéithe cuardaigh ar fáil
       elasticsearch_health_yellow:
@@ -981,6 +1018,7 @@ ga:
         chance_to_review_html: "<strong>Ní fhoilseofar na téarmaí seirbhíse ginte go huathoibríoch.</strong> Beidh deis agat na torthaí a athbhreithniú. Líon isteach na sonraí riachtanacha le leanúint ar aghaidh."
         explanation_html: Is chun críocha faisnéise amháin atá an teimpléad téarmaí seirbhíse a chuirtear ar fáil, agus níor cheart é a fhorléiriú mar chomhairle dlí ar aon ábhar. Téigh i gcomhairle le do chomhairle dlí féin maidir le do chás agus ceisteanna dlí ar leith atá agat.
         title: Téarmaí Socrú Seirbhíse
+      going_live_on_html: Beo, éifeachtach %{date}
       history: Stair
       live: Beo
       no_history: Níl aon athruithe taifeadta ar théarmaí seirbhíse fós.
@@ -2033,6 +2071,10 @@ ga:
     recovery_instructions_html: Má chailleann tú rochtain ar do ghuthán riamh, is féidir leat ceann de na cóid athshlánaithe thíos a úsáid chun rochtain a fháil ar do chuntas arís. <strong>Coinnigh na cóid athshlánaithe slán</strong>. Mar shampla, is féidir leat iad a phriontáil agus iad a stóráil le doiciméid thábhachtacha eile.
     webauthn: Eochracha slándála
   user_mailer:
+    announcement_published:
+      description: 'Tá riarthóirí %{domain} ag déanamh fógra:'
+      subject: Fógra seirbhíse
+      title: "%{domain} fógra seirbhíse"
     appeal_approved:
       action: Socruithe cuntas
       explanation: Ceadaíodh achomharc na stailce i gcoinne do chuntais ar %{strike_date} a chuir tú isteach ar %{appeal_date}. Tá seasamh maith ag do chuntas arís.
@@ -2065,6 +2107,8 @@ ga:
     terms_of_service_changed:
       agreement: Má leanann tú ar aghaidh ag úsáid %{domain}, tá tú ag aontú leis na téarmaí seo. Mura n-aontaíonn tú leis na téarmaí nuashonraithe, is féidir leat do chomhaontú le %{domain} a fhoirceannadh am ar bith trí do chuntas a scriosadh.
       changelog: 'Sracfhéachaint, seo é a chiallaíonn an nuashonrú seo duit:'
+      description: 'Tá an ríomhphost seo á fháil agat toisc go bhfuil roinnt athruithe á ndéanamh againn ar ár dtéarmaí seirbhíse ag %{domain}. Beidh na nuashonruithe seo i bhfeidhm ar %{date}. Molaimid duit athbhreithniú iomlán a dhéanamh ar na téarmaí nuashonraithe anseo:'
+      description_html: Tá an ríomhphost seo á fháil agat toisc go bhfuil roinnt athruithe á ndéanamh againn ar ár dtéarmaí seirbhíse ag %{domain}. Tiocfaidh na nuashonruithe seo i bhfeidhm ar <strong>%{date}</strong>. Molaimid duit athbhreithniú a dhéanamh ar na <a href="%{path}" target="_blank">téarmaí nuashonraithe ina n-iomláine anseo</a>.
       sign_off: Foireann %{domain}
       subject: Nuashonruithe ar ár dtéarmaí seirbhíse
       subtitle: Tá téarmaí seirbhíse %{domain} ag athrú
