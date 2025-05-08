@@ -821,6 +821,10 @@ body > [data-popper-placement] {
       flex: 0 1 auto;
       padding-top: 0;
       padding-bottom: 0;
+
+      .icon {
+        vertical-align: middle;
+      }
     }
   }
 
@@ -7491,6 +7495,13 @@ img.modal-warning {
     min-width: 300px;
     max-width: 400px;
     flex: 1 1 200px;
+  }
+}
+
+.fullwidth-columns .columns-area:not(.columns-area--mobile) {
+  .column {
+    flex: auto;
+    max-width: unset;
   }
 }
 
