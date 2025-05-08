@@ -16,7 +16,7 @@ RSpec.describe ActivityPub::Parser::StatusParser do
       type: 'Create',
       actor: ActivityPub::TagManager.instance.uri_for(sender),
       object: object_json,
-    }.with_indifferent_access
+    }.deep_stringify_keys
   end
 
   let(:object_json) do
@@ -47,6 +47,24 @@ RSpec.describe ActivityPub::Parser::StatusParser do
       reply: false,
       language: :en
     )
+  end
+
+  context 'when the likes collection is not inlined' do
+    let(:object_json) do
+      {
+        id: [ActivityPub::TagManager.instance.uri_for(sender), 'post1'].join('/'),
+        type: 'Note',
+        to: 'https://www.w3.org/ns/activitystreams#Public',
+        content: 'bleh',
+        published: 1.hour.ago.utc.iso8601,
+        updated: 1.hour.ago.utc.iso8601,
+        likes: 'https://example.com/collections/likes',
+      }
+    end
+
+    it 'does not raise an error' do
+      expect { subject.favourites_count }.to_not raise_error
+    end
   end
 
   describe '#quote_policy' do
