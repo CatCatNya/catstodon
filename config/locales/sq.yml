@@ -319,6 +319,7 @@ sq:
         create: Krijoni lajmërim
         title: Lajmërim i ri
       preview:
+        disclaimer: Ngaqë përdoruesit s’mund të zgjedhin lënien jashtë tyre, njoftimet me email do të kufizohen te njoftime të rëndësishme, të tilla si cenim të dhënash personale, ose njoftime mbylljesh shërbyesish.
         explanation_html: 'Email-i do të dërgohet te <strong>%{display_count} përdorues</strong>. Te email-i do të përfshihet teksti vijues:'
         title: Bëni paraparje të shënimit për njoftimin
       publish: Publikoje
@@ -479,6 +480,32 @@ sq:
       new:
         title: Importoni bllokime përkatësish
       no_file: S’u përzgjodh kartelë
+    fasp:
+      debug:
+        callbacks:
+          created_at: Krijuar më
+          delete: Fshije
+          ip: Adresë IP
+          request_body: Lëndë kërkese
+      providers:
+        active: Aktivë
+        delete: Fshije
+        edit: Përpunoni Shërbim
+        finish_registration: Përfundoje regjistrimin
+        name: Emër
+        providers: Shërbime
+        public_key_fingerprint: Shenja gishtash kyçi publik
+        registration_requested: Lyp regjistrim
+        registrations:
+          confirm: Ripohojeni
+          description: Morët një regjistrim nga një FASP. Nëse s’e filluat ju, hidheni tej. Nëse e filluat ju, krahasoni me kujdes emrin dhe shenjat e gishtave, para se të ripohoni regjistrimin.
+          reject: Hidhe tej
+          title: Ripohoni Regjistrim në FASP
+        save: Ruaje
+        select_capabilities: Përzgjidhni Aftësi
+        sign_in: Hyni
+        status: Gjendje
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Rekomandimet për ndjekje ndihmojnë përdoruesit e rinj të gjejnë shpejt lëndë me interes</strong>. Kur një përdorues nuk ka ndërvepruar mjaftueshëm me të tjerët, që të formohen rekomandime të personalizuara ndjekjeje, rekomandohen këto llogari. Ato përzgjidhen çdo ditë, prej një përzierje llogarish me shkallën më të lartë të angazhimit dhe numrin më të lartë të ndjekësve vendorë për një gjuhë të dhënë."
       language: Për gjuhën
@@ -869,6 +896,8 @@ sq:
     system_checks:
       database_schema_check:
         message_html: Ka migrime bazash të dhënash pezull. Ju lutemi, kryejini, për të qenë të sigurt se aplikacioni sillet siç priteet
+      elasticsearch_analysis_index_mismatch:
+        message_html: Rregulliemt për analizues treguesi Elasticsearch janë të vjetruara. Ju lutemi, ekzekutoni <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Grupi juaj i instancave Elasticsearch s’është i shëndetshëm (gjendje e verdhë), s’mund të përdoren veçoritë e kërkimit
       elasticsearch_health_yellow:

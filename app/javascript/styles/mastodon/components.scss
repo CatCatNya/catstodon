@@ -1,3 +1,8 @@
+@use 'sass:color';
+@use 'variables' as *;
+@use 'functions' as *;
+@use 'mixins' as *;
+
 .app-body {
   -webkit-overflow-scrolling: touch;
   -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -1845,18 +1850,22 @@ body > [data-popper-placement] {
 .detailed-status__wrapper-direct {
   .detailed-status,
   .detailed-status__action-bar {
-    background: mix($ui-base-color, $ui-highlight-color, 95%);
+    background: color.mix($ui-base-color, $ui-highlight-color, 95%);
   }
 
   &:focus {
     .detailed-status,
     .detailed-status__action-bar {
-      background: mix(lighten($ui-base-color, 4%), $ui-highlight-color, 95%);
+      background: color.mix(
+        lighten($ui-base-color, 4%),
+        $ui-highlight-color,
+        95%
+      );
     }
   }
 
   .detailed-status__action-bar {
-    border-top-color: mix(
+    border-top-color: color.mix(
       lighten($ui-base-color, 8%),
       $ui-highlight-color,
       95%
@@ -1877,27 +1886,19 @@ body > [data-popper-placement] {
 }
 
 .domain {
-  padding: 10px;
+  padding: 16px;
   border-bottom: 1px solid var(--background-border-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-  .domain__domain-name {
+  &__domain-name {
     flex: 1 1 auto;
-    display: block;
     color: $primary-text-color;
-    text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 21px;
     font-weight: 500;
   }
-}
-
-.domain__wrapper {
-  display: flex;
-}
-
-.domain_buttons {
-  height: 18px;
-  padding: 10px;
-  white-space: nowrap;
 }
 
 .account {
@@ -4784,19 +4785,6 @@ a.status-card {
   }
 }
 
-.relationship-tag {
-  color: $white;
-  margin-bottom: 4px;
-  display: block;
-  background-color: rgba($black, 0.45);
-  backdrop-filter: blur(10px) saturate(180%) contrast(75%) brightness(70%);
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
 .setting-toggle {
   display: flex;
   align-items: center;
@@ -5274,6 +5262,9 @@ a.status-card {
 
     &__results {
       &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
         cursor: pointer;
         color: $primary-text-color;
         font-size: 14px;
@@ -6278,7 +6269,7 @@ a.status-card {
 
     a {
       text-decoration: none;
-      color: $inverted-text-color;
+      color: $highlight-text-color;
       font-weight: 500;
 
       &:hover {
@@ -6497,55 +6488,38 @@ a.status-card {
 }
 
 .actions-modal {
+  border-radius: 8px 8px 0 0;
+  background: var(--dropdown-background-color);
+  backdrop-filter: var(--background-filter);
+  border-color: var(--dropdown-border-color);
+  box-shadow: var(--dropdown-shadow);
   max-height: 80vh;
   max-width: 80vw;
-
-  .actions-modal__item-label {
-    font-weight: 500;
-  }
 
   ul {
     overflow-y: auto;
     flex-shrink: 0;
-    max-height: 80vh;
+    padding-bottom: 8px;
+  }
 
-    &.with-status {
-      max-height: calc(80vh - 75px);
-    }
+  a,
+  button {
+    color: inherit;
+    display: flex;
+    padding: 16px;
+    font-size: 15px;
+    line-height: 21px;
+    background: transparent;
+    border: none;
+    align-items: center;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
 
-    li:empty {
-      margin: 0;
-    }
-
-    li:not(:empty) {
-      a {
-        color: $primary-text-color;
-        display: flex;
-        padding: 12px 16px;
-        font-size: 15px;
-        align-items: center;
-        text-decoration: none;
-
-        &,
-        button {
-          transition: none;
-        }
-
-        &.active,
-        &:hover,
-        &:active,
-        &:focus {
-          &,
-          button {
-            background: $ui-highlight-color;
-            color: $primary-text-color;
-          }
-        }
-
-        button:first-child {
-          margin-inline-end: 10px;
-        }
-      }
+    &:hover,
+    &:active,
+    &:focus {
+      background: var(--dropdown-border-color);
     }
   }
 }
@@ -6679,7 +6653,8 @@ a.status-card {
   pointer-events: none;
 }
 
-.media-gallery__alt__label {
+.media-gallery__alt__label,
+.relationship-tag {
   display: block;
   text-align: center;
   color: $white;
@@ -6698,6 +6673,11 @@ a.status-card {
   &--non-interactive {
     pointer-events: none;
   }
+}
+
+.relationship-tag {
+  text-transform: uppercase;
+  cursor: default;
 }
 
 .media-gallery__alt__popover {
@@ -6985,15 +6965,69 @@ a.status-card {
   overflow: hidden;
   box-sizing: border-box;
   position: relative;
-  background: var(--background-color);
+  background: var(--player-background-color, var(--background-color));
+  color: var(--player-foreground-color);
   border-radius: 8px;
   padding-bottom: 44px;
   width: 100%;
   outline: 1px solid var(--media-outline-color);
   outline-offset: -1px;
+  aspect-ratio: 16 / 9;
+  container: audio-player / inline-size;
+
+  &__controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 100%;
+
+    &__play {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      .player-button {
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .icon {
+        filter: var(--overlay-icon-shadow);
+      }
+    }
+
+    .player-button {
+      display: inline-block;
+      outline: 0;
+      padding: 5px;
+      flex: 0 0 auto;
+      background: transparent;
+      border: 0;
+      color: var(--player-foreground-color);
+      opacity: 0.75;
+
+      .icon {
+        width: 48px;
+        height: 48px;
+      }
+
+      &:active,
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__visualizer {
+    max-width: 200px;
+  }
 
   &.inactive {
-    audio,
+    .video-player__seek,
+    .audio-player__controls,
     .video-player__controls {
       visibility: hidden;
     }
@@ -7008,6 +7042,13 @@ a.status-card {
   .video-player__seek__buffer {
     background: currentColor;
     opacity: 0.2;
+  }
+
+  .video-player__seek__progress,
+  .video-player__seek__handle,
+  .video-player__volume__current,
+  .video-player__volume__handle {
+    background-color: var(--player-accent-color);
   }
 
   .video-player__buttons button,
@@ -7027,6 +7068,13 @@ a.status-card {
   .video-player__time-total,
   .video-player__time-current {
     color: currentColor;
+  }
+
+  @container audio-player (max-width: 400px) {
+    .video-player__time,
+    .player-button.video-player__download__icon {
+      display: none;
+    }
   }
 
   .video-player__seek::before,
@@ -7070,6 +7118,8 @@ a.status-card {
     height: 100% !important;
     margin: 0;
     aspect-ratio: auto !important;
+    outline: none;
+    border-radius: 0;
 
     video {
       width: 100% !important;
@@ -7093,6 +7143,17 @@ a.status-card {
       transparent
     );
     padding: 0 15px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease;
+
+    &.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .media-gallery__actions {
     opacity: 0;
     transition: opacity 0.1s ease;
 
@@ -7174,6 +7235,7 @@ a.status-card {
       background: transparent;
       border: 0;
       color: rgba($white, 0.75);
+      font-weight: 500;
 
       &:active,
       &:hover,
@@ -7251,7 +7313,7 @@ a.status-card {
       inset-inline-start: 0;
       top: 50%;
       transform: translate(0, -50%);
-      background: lighten($ui-highlight-color, 8%);
+      background: $white;
     }
 
     &__handle {
@@ -7264,7 +7326,7 @@ a.status-card {
       inset-inline-start: 0;
       margin-inline-start: -6px;
       transform: translate(0, -50%);
-      background: lighten($ui-highlight-color, 8%);
+      background: $white;
       box-shadow: 1px 2px 6px rgba($base-shadow-color, 0.2);
       opacity: 0;
 
@@ -7318,7 +7380,7 @@ a.status-card {
       height: 4px;
       border-radius: 4px;
       top: 14px;
-      background: lighten($ui-highlight-color, 8%);
+      background: $white;
     }
 
     &__buffer {
@@ -7334,7 +7396,7 @@ a.status-card {
       height: 12px;
       top: 10px;
       margin-inline-start: -6px;
-      background: lighten($ui-highlight-color, 8%);
+      background: $white;
       box-shadow: 1px 2px 6px rgba($base-shadow-color, 0.2);
 
       .no-reduce-motion & {
@@ -7343,6 +7405,7 @@ a.status-card {
 
       &.active {
         opacity: 1;
+        cursor: grabbing;
       }
     }
 
@@ -7350,6 +7413,28 @@ a.status-card {
       .video-player__seek__handle {
         opacity: 1;
       }
+    }
+  }
+
+  &__hotkey-indicator {
+    position: absolute;
+    top: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba($base-shadow-color, 0.45);
+    backdrop-filter: var(--background-filter);
+    color: $white;
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &__label {
+      font-size: 15px;
+      font-weight: 500;
     }
   }
 
@@ -7538,14 +7623,11 @@ a.status-card {
 }
 
 .radio-button__input.checked::before {
-  position: absolute;
-  left: 2px;
-  top: 2px;
   content: '';
   display: block;
   border-radius: 50%;
-  width: 12px;
-  height: 12px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
   background: $ui-highlight-color;
 }
 
@@ -7743,8 +7825,11 @@ noscript {
 
   &__info {
     position: absolute;
-    top: 10px;
-    inset-inline-start: 10px;
+    top: 20px;
+    inset-inline-end: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
   }
 
   &__image {
@@ -8079,13 +8164,9 @@ noscript {
   &__item {
     display: flex;
     align-items: center;
-    padding: 15px;
+    padding: 16px;
     border-bottom: 1px solid var(--background-border-color);
-    gap: 15px;
-
-    &:last-child {
-      border-bottom: 0;
-    }
+    gap: 8px;
 
     &__name {
       flex: 1 1 auto;
@@ -8192,7 +8273,7 @@ noscript {
   }
 
   &--compact &__item {
-    padding: 10px;
+    padding: 12px;
   }
 }
 
@@ -8408,7 +8489,7 @@ noscript {
     &.active {
       transition: all 100ms ease-in;
       transition-property: background-color, color;
-      background-color: mix(
+      background-color: color.mix(
         lighten($ui-base-color, 12%),
         $ui-highlight-color,
         80%
@@ -8480,22 +8561,32 @@ noscript {
   bottom: 20px;
   inset-inline-end: 20px;
   width: 300px;
+  box-shadow: var(--dropdown-shadow);
 
   &__footer {
     border-radius: 0 0 4px 4px;
-    background: lighten($ui-base-color, 4%);
-    padding: 10px;
-    padding-top: 12px;
+    background: var(--modal-background-variant-color);
+    backdrop-filter: var(--background-filter);
+    border: 1px solid var(--modal-border-color);
+    border-top: 0;
+    padding: 12px;
     display: flex;
     justify-content: space-between;
   }
 
   &__header {
     border-radius: 4px 4px 0 0;
-    background: lighten($ui-base-color, 4%);
-    padding: 10px;
+    background: var(--modal-background-variant-color);
+    backdrop-filter: var(--background-filter);
+    border: 1px solid var(--modal-border-color);
+    border-bottom: 0;
+    padding: 12px;
     display: flex;
     justify-content: space-between;
+
+    .icon-button {
+      padding: 6px;
+    }
 
     &__account {
       display: flex;
@@ -8504,7 +8595,7 @@ noscript {
     }
 
     .account__avatar {
-      margin-inline-end: 10px;
+      margin-inline-end: 8px;
     }
 
     .display-name {
@@ -8531,30 +8622,36 @@ noscript {
 }
 
 .picture-in-picture-placeholder {
+  border-radius: 8px;
   box-sizing: border-box;
-  border: 2px dashed var(--background-border-color);
-  background: $base-shadow-color;
+  border: 1px dashed var(--background-border-color);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
-  font-size: 16px;
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 21px;
   font-weight: 500;
   cursor: pointer;
-  color: $darker-text-color;
+  color: $dark-text-color;
   aspect-ratio: 16 / 9;
 
   .icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 10px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
   }
 
   &:hover,
-  &:focus,
-  &:active {
-    border-color: lighten($ui-base-color, 12%);
+  &:active,
+  &:focus {
+    color: $darker-text-color;
+  }
+
+  &:focus-visible {
+    outline: $ui-button-focus-outline;
+    border-color: transparent;
   }
 }
 
@@ -10375,6 +10472,10 @@ noscript {
 
       bdi {
         color: $darker-text-color;
+      }
+
+      .account__avatar {
+        flex: 0 0 auto;
       }
     }
 

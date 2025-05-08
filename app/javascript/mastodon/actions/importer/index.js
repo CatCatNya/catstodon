@@ -1,7 +1,6 @@
 import { createPollFromServerJSON } from 'mastodon/models/poll';
 
-import { importAccounts } from '../accounts_typed';
-
+import { importAccounts } from './accounts';
 import { normalizeStatus } from './normalizer';
 import { importPolls } from './polls';
 
@@ -71,7 +70,7 @@ export function importFetchedStatuses(statuses) {
       }
 
       if (status.poll?.id) {
-        pushUnique(polls, createPollFromServerJSON(status.poll, getState().polls.get(status.poll.id)));
+        pushUnique(polls, createPollFromServerJSON(status.poll, getState().polls[status.poll.id]));
       }
 
       if (status.card) {

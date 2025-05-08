@@ -325,6 +325,7 @@ cs:
         create: Vytvořit oznámení
         title: Nové oznámení
       preview:
+        disclaimer: Vzhledem k tomu, že se od nich uživatelé nemohou odhlásit, měla by být e-mailová upozornění omezena na důležitá oznámení, jako je narušení osobních údajů nebo oznámení o uzavření serveru.
         explanation_html: 'E-mail bude odeslán <strong>%{display_count} uživatelům</strong>. Následující text bude zahrnut do onoho e-mailu:'
         title: Náhled oznámení
       publish: Zveřejnit
@@ -495,6 +496,36 @@ cs:
       new:
         title: Importovat blokované domény
       no_file: Nebyl vybrán žádný soubor
+    fasp:
+      debug:
+        callbacks:
+          created_at: Vytvořeno
+          delete: Odstranit
+          ip: IP adresa
+          request_body: Tělo požadavku
+          title: Ladit callbacky
+      providers:
+        active: Aktivní
+        base_url: Základní URL
+        callback: Callback
+        delete: Smazat
+        edit: Upravit poskytovatele
+        finish_registration: Dokončit registraci
+        name: Jméno
+        providers: Poskytovatelé
+        public_key_fingerprint: Otisk veřejného klíče
+        registration_requested: Registrace požádána
+        registrations:
+          confirm: Potvrdit
+          description: Obdrželi jste registraci od FASP. Odmítněte ji, pokud jste ji neiniciovali. Pokud jste ji iniciovali, pečlivě porovnejte jméno a otisk klíče před jejím potvrzením.
+          reject: Zamítnout
+          title: Potvrdit registraci FASP
+        save: Uložit
+        select_capabilities: Vybrat možnosti
+        sign_in: Přihlásit se
+        status: Stav
+        title: Fediverse Auxiliary Service Providers
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Doporučená sledování pomáhají novým uživatelům rychle najít zajímavý obsah</strong>. Pokud uživatel neinteragoval s ostatními natolik, aby mu byla vytvořena doporučená sledování na míru, jsou použity tyto účty. Jsou přepočítávány na denní bázi ze směsi účtů s největším nedávným zapojením a nejvyšším počtem místních sledovatelů pro daný jazyk."
       language: Pro jazyk
@@ -900,6 +931,8 @@ cs:
     system_checks:
       database_schema_check:
         message_html: Na spuštění čekají databázové migrace. Nechte je prosím proběhnout pro zajištění očekávaného chování aplikace
+      elasticsearch_analysis_index_mismatch:
+        message_html: Nastavení analyzátoru Elasticsearch indexu je zastaralé. Prosím spusťte <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Elasticsearch cluster je nezdravý (červený stav), vyhledávací funkce jsou nedostupné
       elasticsearch_health_yellow:

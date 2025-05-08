@@ -18,8 +18,8 @@ import { getAverageFromBlurhash } from 'flavours/glitch/blurhash';
 import { GIFV } from 'flavours/glitch/components/gifv';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { IconButton } from 'flavours/glitch/components/icon_button';
-import Footer from 'flavours/glitch/features/picture_in_picture/components/footer';
-import Video from 'flavours/glitch/features/video';
+import { Footer } from 'flavours/glitch/features/picture_in_picture/components/footer';
+import { Video } from 'flavours/glitch/features/video';
 import { disableSwiping } from 'flavours/glitch/initial_state';
 
 import { ZoomableImage } from './zoomable_image';
@@ -204,9 +204,9 @@ class MediaModal extends ImmutablePureComponent {
             width={image.get('width')}
             height={image.get('height')}
             frameRate={image.getIn(['meta', 'original', 'frame_rate'])}
-            currentTime={currentTime || 0}
-            autoPlay={autoPlay || false}
-            volume={volume || 1}
+            startTime={currentTime || 0}
+            startPlaying={autoPlay || false}
+            startVolume={volume || 1}
             onCloseVideo={onClose}
             detailed
             alt={description}

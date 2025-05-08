@@ -51,12 +51,15 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     @unresolved_mentions  = []
     @silenced_account_ids = []
     @params               = {}
+    @quote                = nil
+    @quote_uri            = nil
 
     process_status_params
 
     raise Mastodon::RejectPayloadError if MediaAttachment.where(id: @params[:media_attachment_ids]).where(blurhash: Setting.reject_blurhash.split(/\r?\n/).compact_blank.uniq).present?
 
     process_tags
+    process_quote
     process_audience
 
     # Reject the status unless all the hashtags are usable:
@@ -67,6 +70,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
       attach_tags(@status)
       attach_mentions(@status)
       attach_counts(@status)
+      attach_quote(@status)
     end
 
     resolve_thread(@status)
@@ -91,7 +95,12 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
   end
 
   def process_status_params
-    @status_parser = ActivityPub::Parser::StatusParser.new(@json, followers_collection: @account.followers_url, object: @object)
+    @status_parser = ActivityPub::Parser::StatusParser.new(
+      @json,
+      followers_collection: @account.followers_url,
+      actor_uri: ActivityPub::TagManager.instance.uri_for(@account),
+      object: @object
+    )
 
     attachment_ids = process_attachments.take(Status::MEDIA_ATTACHMENTS_LIMIT).map(&:id)
 
@@ -113,6 +122,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
       media_attachment_ids: attachment_ids,
       ordered_media_attachment_ids: attachment_ids,
       poll: process_poll,
+      quote_approval_policy: @status_parser.quote_policy,
     }
   end
 
@@ -201,6 +211,16 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     end
   end
 
+  def attach_quote(status)
+    return if @quote.nil?
+
+    @quote.status = status
+    @quote.save
+    ActivityPub::VerifyQuoteService.new.call(@quote, fetchable_quoted_uri: @quote_uri, request_id: @options[:request_id])
+  rescue Mastodon::UnexpectedResponseError, *Mastodon::HTTP_CONNECTION_ERRORS
+    ActivityPub::RefetchAndVerifyQuoteWorker.perform_in(rand(30..600).seconds, @quote.id, @quote_uri, { 'request_id' => @options[:request_id] })
+  end
+
   def process_tags
     return if @object['tag'].nil?
 
@@ -213,6 +233,17 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
         process_emoji tag
       end
     end
+  end
+
+  def process_quote
+    return unless Mastodon::Feature.inbound_quotes_enabled?
+
+    @quote_uri = @status_parser.quote_uri
+    return if @quote_uri.blank?
+
+    approval_uri = @status_parser.quote_approval_uri
+    approval_uri = nil if unsupported_uri_scheme?(approval_uri)
+    @quote = Quote.new(account: @account, approval_uri: approval_uri)
   end
 
   def process_hashtag(tag)
@@ -430,11 +461,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
   def addresses_local_accounts?
     return true if @options[:delivered_to_account_id]
 
-    local_usernames = (audience_to + audience_cc).uniq.select { |uri| ActivityPub::TagManager.instance.local_uri?(uri) }.map { |uri| ActivityPub::TagManager.instance.uri_to_local_id(uri, :username) }
-
-    return false if local_usernames.empty?
-
-    Account.local.exists?(username: local_usernames)
+    ActivityPub::TagManager.instance.uris_to_local_accounts((audience_to + audience_cc).uniq).exists?
   end
 
   def tombstone_exists?

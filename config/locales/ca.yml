@@ -319,6 +319,7 @@ ca:
         create: Crea un anunci
         title: Nou anunci
       preview:
+        disclaimer: Com els usuaris no poden ometre-les, les notificacions per correu-e s'han de limitar a anuncis importants, com de violacions de dades personals o de tancament del servidor.
         explanation_html: 'S''enviarà el correu-e a <strong>%{display_count} usuaris</strong>. S''hi inclourà el text següent:'
         title: Vista prèvia de la notificació d'anunci
       publish: Publica
@@ -479,6 +480,36 @@ ca:
       new:
         title: Importa dominis bloquejats
       no_file: No s'ha seleccionat cap fitxer
+    fasp:
+      debug:
+        callbacks:
+          created_at: Data de creació
+          delete: Elimina
+          ip: Adreça IP
+          request_body: Solicita el cos
+          title: Depuració de les trucades
+      providers:
+        active: Actiu
+        base_url: URL base
+        callback: Torna la trucada
+        delete: Elimina
+        edit: Editeu el perfil
+        finish_registration: Final del registre
+        name: Nom
+        providers: Proveïdors
+        public_key_fingerprint: Empremta de clau pública
+        registration_requested: Petició de registre
+        registrations:
+          confirm: Confirma
+          description: Heu rebut un registre d'un FASP. Rebutgeu-lo si no l'heu iniciat. Si ho heu fet, compareu amb cura el nom i la clau d'empremta abans de confirmar el registre.
+          reject: Rebutja
+          title: Confirmeu el registre a FASP
+        save: Desa
+        select_capabilities: Seleccioneu les capacitats
+        sign_in: Inicieu la sessió
+        status: Estat
+        title: Proveïdors de Serveis Auxiliars del Fedivers
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Seguir les recomanacions ajuda als nous usuaris a trobar ràpidament contingut interessant</strong>. Quan un usuari no ha interactuat prou amb altres per a formar a qui seguir personalment, aquests comptes li seran recomanats. Es recalculen diàriament a partir d'una barreja de comptes amb els compromisos recents més alts i el nombre més alt de seguidors locals per a un idioma determinat."
       language: Per idioma
@@ -872,6 +903,8 @@ ca:
     system_checks:
       database_schema_check:
         message_html: Hi ha pendents migracions de la base de dades. Executeu-les per a assegurar que l'aplicació es comporta com s'espera
+      elasticsearch_analysis_index_mismatch:
+        message_html: La configuració de l'índex de l'analitzador d'Elasticsearch està desactualizada. Executa <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: El cluster de Elasticsearch no es saludable (estat vermell), les funcions de cerca no estan disponibles
       elasticsearch_health_yellow:

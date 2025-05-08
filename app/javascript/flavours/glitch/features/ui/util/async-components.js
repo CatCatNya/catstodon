@@ -70,6 +70,10 @@ export function AccountGallery () {
   return import(/* webpackChunkName: "flavours/glitch/async/account_gallery" */'../../account_gallery');
 }
 
+export function AccountFeatured() {
+  return import(/* webpackChunkName: "flavours/glitch/async/account_featured" */'../../account_featured');
+}
+
 export function Followers () {
   return import(/* webpackChunkName: "flavours/glitch/async/followers" */'../../followers');
 }

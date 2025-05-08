@@ -10,7 +10,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { HotKeys } from 'react-hotkeys';
 
 import { ContentWarning } from 'flavours/glitch/components/content_warning';
-import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
+import { PictureInPicturePlaceholder } from 'flavours/glitch/components/picture_in_picture_placeholder';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { withOptionalRouter, WithOptionalRouterPropTypes } from 'flavours/glitch/utils/react_router';
@@ -585,9 +585,6 @@ class Status extends ImmutablePureComponent {
                 foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
                 accentColor={attachment.getIn(['meta', 'colors', 'accent'])}
                 duration={attachment.getIn(['meta', 'original', 'duration'], 0)}
-                width={this.props.cachedMediaWidth}
-                height={110}
-                cacheWidth={this.props.cacheMediaWidth}
                 deployPictureInPicture={pictureInPicture.get('available') ? this.handleDeployPictureInPicture : undefined}
                 sensitive={status.get('sensitive')}
                 blurhash={attachment.get('blurhash')}
@@ -608,6 +605,7 @@ class Status extends ImmutablePureComponent {
             {Component => (<Component
               preview={attachment.get('preview_url')}
               frameRate={attachment.getIn(['meta', 'original', 'frame_rate'])}
+              aspectRatio={`${attachment.getIn(['meta', 'original', 'width'])} / ${attachment.getIn(['meta', 'original', 'height'])}`}
               blurhash={attachment.get('blurhash')}
               src={attachment.get('url')}
               alt={description}

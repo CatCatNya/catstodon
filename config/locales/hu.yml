@@ -319,6 +319,7 @@ hu:
         create: Közlemény létrehozása
         title: Új közlemény
       preview:
+        disclaimer: Mivel a felhasználók nem iratkozhatnak le róluk, az e-mailes értesítéseket érdemes a fontos bejelentésekre korlátozni, mint a személyes adatokat érintő adatvédelmi incidensek vagy a kiszolgáló bezárására vonatkozó értesítések.
         explanation_html: 'Az e-mail <strong>%{display_count} felhasználónak</strong> lesz elküldve. A következő szöveg fog szerepelni a levélben:'
         title: Közleményértesítés előnézete
       publish: Közzététel
@@ -479,6 +480,36 @@ hu:
       new:
         title: Domain tiltások importálása
       no_file: Nincs fájl kiválasztva
+    fasp:
+      debug:
+        callbacks:
+          created_at: Létrehozva
+          delete: Törlés
+          ip: IP-cím
+          request_body: Kérés törzse
+          title: Hibakeresési visszahívások
+      providers:
+        active: Aktív
+        base_url: Alapwebcím
+        callback: Visszahívás
+        delete: Törlés
+        edit: Szolgáltató szerkesztése
+        finish_registration: Regisztráció befejezése
+        name: Név
+        providers: Szolgáltatók
+        public_key_fingerprint: Nyilvános kulcs ujjlenyomata
+        registration_requested: Regisztráció kérve
+        registrations:
+          confirm: Megerősítés
+          description: Regisztrációt kaptál egy FASP-től. Ha nem te kérted, utasítsd el. Ha te kérted, akkor a regisztráció megerősítése előtt figyelmesen hasonlítsd össze a nevét és a kulcsának ujjlenyomatát.
+          reject: Elutasítás
+          title: FASP regisztráció megerősítése
+        save: Mentés
+        select_capabilities: Képességek kiválasztása
+        sign_in: Bejelentkezés
+        status: Állapot
+        title: A Födiverzum segédszolgáltatói
+      title: FASP
     follow_recommendations:
       description_html: "<strong>A követési ajánlatok segítik az új felhasználókat az érdekes tartalmak gyors megtalálásában</strong>. Ha egy felhasználó még nem érintkezett eleget másokkal ahhoz, hogy személyre szabott ajánlatokat kapjon, ezeket a fiókokat ajánljuk helyette. Ezeket naponta újraszámítjuk a nemrég legtöbb embert foglalkoztató, illetve legtöbb helyi követővel rendelkező fiókok alapján."
       language: Ezen a nyelven
@@ -872,6 +903,8 @@ hu:
     system_checks:
       database_schema_check:
         message_html: Vannak esedékes adatbázis migrációink. Kérlek, futtasd őket, hogy biztosítsd, hogy az alkalmazás megfelelően működjön
+      elasticsearch_analysis_index_mismatch:
+        message_html: Az Elasticsearch indexelemző beállításai elavultak. Futtasd a <code>tootctl search deploy --only-mapping --only=%{value}</code> parancsot.
       elasticsearch_health_red:
         message_html: Az Elasticsearch klaszter egészségtelen (piros állapotú), a keresési funkciók nem érhetők el
       elasticsearch_health_yellow:

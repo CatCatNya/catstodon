@@ -331,6 +331,7 @@ cy:
         create: Creu cyhoeddiad
         title: Cyhoeddiad newydd
       preview:
+        disclaimer: Gan nad oes modd i ddefnyddwyr eu hosgoi, dylai hysbysiadau e-bost gael eu cyfyngu i gyhoeddiadau pwysig fel tor-data personol neu hysbysiadau cau gweinydd.
         explanation_html: 'Bydd yr e-bost yn cael ei anfon at <strong>%{display_count} defnyddiwr</strong> . Bydd y testun canlynol yn cael ei gynnwys yn yr e-bost:'
         title: Hysbysiad rhagolwg cyhoeddiad
       publish: Cyhoeddi
@@ -511,6 +512,36 @@ cy:
       new:
         title: Mewnforio blociau parth
       no_file: Heb ddewis ffeil
+    fasp:
+      debug:
+        callbacks:
+          created_at: Crëwyd am
+          delete: Dileu
+          ip: Cyfeiriad IP
+          request_body: Corff y cais
+          title: Adalwasau Dadfygio
+      providers:
+        active: Gweithredol
+        base_url: URL sylfaen
+        callback: Adalwad
+        delete: Dileu
+        edit: Golygu Darparwr
+        finish_registration: Gorffen cofrestru
+        name: Enw
+        providers: Darparwyr
+        public_key_fingerprint: Ôl bys allwedd cyhoeddus
+        registration_requested: Cais am gofrestru
+        registrations:
+          confirm: Cadarnhau
+          description: Rydych wedi derbyn cofrestriad gan FASP. Gwrthodwch hyn os nad chi ofynnodd amdano. Os taw chi gychwynnodd hyn, cymharwch yr enw ac allwedd yr ôl bys yn ofalus cyn cadarnhau'r cofrestriad.
+          reject: Gwrthod
+          title: Cadarnhau Cofrestriad FASP
+        save: Cadw
+        select_capabilities: Dewis Galluoedd
+        sign_in: Mewngofnodi
+        status: Statws
+        title: Fediverse Auxiliary Service Providers
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Mae dilyn yr argymhellion yn helpu i ddefnyddwyr newydd ddod o hyd i gynnwys diddorol yn gyflym</strong>. Pan nad yw defnyddiwr wedi rhyngweithio digon ag eraill i ffurfio argymhellion dilyn personol, argymhellir y cyfrifon hyn yn lle hynny. Cânt eu hailgyfrifo'n ddyddiol o gymysgedd o gyfrifon gyda'r ymgysylltiadau diweddar uchaf a'r cyfrif dilynwyr lleol uchaf ar gyfer iaith benodol."
       language: Ar gyfer iaith
@@ -895,7 +926,7 @@ cy:
       deleted: Dilëwyd
       favourites: Ffefrynnau
       history: Hanes fersiynau
-      in_reply_to: Ymateb i
+      in_reply_to: Mewn ymateb i
       language: Iaith
       media:
         title: Cyfryngau
@@ -928,6 +959,8 @@ cy:
     system_checks:
       database_schema_check:
         message_html: Mae mudo cronfa ddata ar fin digwydd. Rhedwch nhw i sicrhau bod y rhaglen yn ymddwyn yn ôl y disgwyl
+      elasticsearch_analysis_index_mismatch:
+        message_html: Mae gosodiadau dadansoddwr mynegai Elasticsearch wedi dyddio. Rhedwch <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Mae clwstwr Elasticsearch yn afiach (statws coch), nid yw'r nodweddion chwilio ar gael
       elasticsearch_health_yellow:
@@ -1759,7 +1792,7 @@ cy:
       subject: 'Dilynwr yn aros: %{name}'
       title: Cais dilynwr newydd
     mention:
-      action: Ateb
+      action: Ymateb
       body: 'Caswoch eich crybwyll gan %{name} yn:'
       subject: Cawsoch eich crybwyll gan %{name}
       title: Crywbylliad newydd
@@ -1928,7 +1961,7 @@ cy:
     back: Nôl i Mastodon
     delete: Dileu cyfrif
     development: Datblygu
-    edit_profile: Golygu proffil
+    edit_profile: Golygu'r proffil
     export: Allforio
     featured_tags: Prif hashnodau
     import: Mewnforio

@@ -316,6 +316,7 @@ zh-TW:
         create: 新增公告
         title: 新增公告
       preview:
+        disclaimer: 由於使用者無法選擇退出，電子郵件通知應僅限於重要公告，例如個人資料洩露或伺服器關閉通知。
         explanation_html: 此 email 將寄至 <strong>%{display_count} 名使用者</strong>。以下文字將被包含於 e-mail 中：
         title: 預覽公告通知
       publish: 發布
@@ -471,6 +472,36 @@ zh-TW:
       new:
         title: 匯入網域黑名單
       no_file: 尚未選擇檔案
+    fasp:
+      debug:
+        callbacks:
+          created_at: 建立於
+          delete: 刪除
+          ip: IP 地址
+          request_body: Request body
+          title: 除錯 callback
+      providers:
+        active: 生效
+        base_url: Base URL
+        callback: Callback
+        delete: 刪除
+        edit: 編輯提供商
+        finish_registration: 完成註冊
+        name: 名稱
+        providers: 提供商
+        public_key_fingerprint: 公鑰指紋
+        registration_requested: 已請求註冊
+        registrations:
+          confirm: 確認
+          description: 您收到 FASP的註冊。若您未發起此請求，請拒絕它。若您發起了此請求，請仔細比較名稱與金鑰指紋再確認註冊。
+          reject: 拒絕
+          title: 確認 FASP 註冊
+        save: 儲存
+        select_capabilities: 選擇功能
+        sign_in: 登入
+        status: 狀態
+        title: 聯邦宇宙輔助服務提供商 (Fediverse Auxiliary Service Providers)
+      title: FASP
     follow_recommendations:
       description_html: "<strong>跟隨建議幫助新使用者們快速找到有趣的內容</strong>。當使用者沒有與其他帳號有足夠多的互動以建立個人化跟隨建議時，這些帳號將會被推薦。這些帳號將基於某選定語言之高互動與高本地跟隨者數量帳號而每日重新更新。"
       language: 對於語言
@@ -860,6 +891,8 @@ zh-TW:
     system_checks:
       database_schema_check:
         message_html: 發現尚待處理的資料庫遷移 (database migration)。請執行它們以確保應用程式如期運行。
+      elasticsearch_analysis_index_mismatch:
+        message_html: Elasticsearch 索引分析器設定 (index analyzer) 已過期。請執行 <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: Elasticsearch 叢集健康狀態異常 (紅色)，無法提供搜尋功能
       elasticsearch_health_yellow:
@@ -1595,7 +1628,7 @@ zh-TW:
           thousand: K
           trillion: T
   otp_authentication:
-    code_hint: 請輸入您驗證應用程式所產生的代碼以確認
+    code_hint: 請輸入您驗證應用程式所產生之 token 以確認
     description_html: 若您啟用使用驗證應用程式的<strong>兩階段驗證</strong>，您每次登入都需要輸入由您的手機所產生之 Token。
     enable: 啟用
     instructions_html: "<strong>請用您手機上的 Google Authenticator 或類似的 TOTP 應用程式掃描此 QR code</strong>。從現在開始，該應用程式將會產生您每次登入都必須輸入的 token。"

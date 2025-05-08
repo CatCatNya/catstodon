@@ -319,6 +319,7 @@ de:
         create: Ankündigung erstellen
         title: Neue Ankündigung
       preview:
+        disclaimer: Da sich Profile nicht davon abmelden können, sollten Benachrichtigungen per E-Mail auf wichtige Ankündigungen wie z. B. zu Datenpannen oder Serverabschaltung beschränkt sein.
         explanation_html: 'Die E-Mail wird an <strong>%{display_count} Nutzer*innen</strong> gesendet. Folgendes wird in der E-Mail enthalten sein:'
         title: Vorschau der Ankündigung
       publish: Veröffentlichen
@@ -327,7 +328,7 @@ de:
       scheduled_msg: Ankündigung ist zur Veröffentlichung vorgemerkt!
       title: Ankündigungen
       unpublish: Veröffentlichung rückgängig machen
-      unpublished_msg: Ankündigung erfolgreich unveröffentlicht!
+      unpublished_msg: Ankündigung ist jetzt nicht mehr sichtbar!
       updated_msg: Ankündigung erfolgreich aktualisiert!
     critical_update_pending: Kritisches Update ausstehend
     custom_emojis:
@@ -479,6 +480,33 @@ de:
       new:
         title: Domains importieren
       no_file: Keine Datei ausgewählt
+    fasp:
+      debug:
+        callbacks:
+          created_at: Erstellt am
+          delete: Entfernen
+          ip: IP-Adresse
+      providers:
+        active: Aktiv
+        base_url: Basis-URL
+        delete: Entfernen
+        edit: Anbieter bearbeiten
+        finish_registration: Registrierung abschließen
+        name: Name
+        providers: Anbieter
+        public_key_fingerprint: Fingerabdruck des öffentlichen Schlüssels
+        registration_requested: Registrierung angefordert
+        registrations:
+          confirm: Bestätigen
+          description: Sie haben eine Registrierung von einer FASP erhalten. Lehnen Sie ab, wenn Sie dies nicht initiiert haben. Wenn Sie dies initiiert haben, vergleichen Sie Namen und Fingerabdruck vor der Bestätigung der Registrierung.
+          reject: Ablehnen
+          title: FASP-Registrierung bestätigen
+        save: Speichern
+        select_capabilities: Leistungsfähigkeit auswählen
+        sign_in: Anmelden
+        status: Status
+        title: Fediverse Auxiliary Service Providers
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Follower-Empfehlungen helfen neuen Nutzer*innen, interessante Inhalte schnell zu finden</strong>. Wenn ein*e Nutzer*in noch nicht genug mit anderen interagiert hat, um personalisierte Follower-Empfehlungen zu erhalten, werden stattdessen diese Profile vorgeschlagen. Sie werden täglich, basierend auf einer Mischung aus am meisten interagierenden Konten und jenen mit den meisten Followern für eine bestimmte Sprache neu berechnet."
       language: Für Sprache
@@ -723,7 +751,7 @@ de:
         manage_appeals: Einsprüche verwalten
         manage_appeals_description: Erlaubt es Benutzer*innen, Entscheidungen der Moderator*innen zu widersprechen
         manage_blocks: Sperrungen verwalten
-        manage_blocks_description: Erlaubt Nutzer*innen das Sperren von E-Mail-Providern und IP-Adressen
+        manage_blocks_description: Erlaubt Nutzer*innen das Sperren von E-Mail-Anbietern und IP-Adressen
         manage_custom_emojis: Eigene Emojis verwalten
         manage_custom_emojis_description: Erlaubt es Benutzer*innen, eigene Emojis auf dem Server zu verwalten
         manage_federation: Föderation verwalten
@@ -816,7 +844,7 @@ de:
       destroyed_msg: Upload erfolgreich gelöscht!
     software_updates:
       critical_update: Kritisch — bitte zügig aktualisieren
-      description: Es wird empfohlen, deine Mastodon-Installation auf dem aktuellen Stand zu halten, um von den neuesten Fehlerbehebungen und Funktionen zu profitieren. Darüber hinaus ist es wichtig, Mastodon zeitnah zu aktualisieren, um Sicherheitslücken zu schließen. Aus diesen Gründen prüft Mastodon alle 30 Minuten auf Updates und du wirst entsprechend deiner Einstellungen per E-Mail informiert.
+      description: Es wird empfohlen, deine Mastodon-Installation auf dem aktuellen Stand zu halten, um von den neuesten Fehlerkorrekturen und Funktionen zu profitieren. Darüber hinaus ist es wichtig, Mastodon zeitnah zu aktualisieren, um Sicherheitslücken zu schließen. Aus diesen Gründen prüft Mastodon alle 30 Minuten auf Updates und du wirst deinen Einstellungen entsprechend per E-Mail informiert.
       documentation_link: Mehr erfahren
       release_notes: Versionshinweise
       title: Verfügbare Updates
@@ -824,7 +852,7 @@ de:
       types:
         major: Hauptversion
         minor: Nebenversion
-        patch: Revision — Fehlerbehebungen und einfach zu implementierende Änderungen
+        patch: Revision — Fehlerkorrekturen und einfach zu implementierende Änderungen
       version: Version
     statuses:
       account: Autor*in
@@ -872,6 +900,8 @@ de:
     system_checks:
       database_schema_check:
         message_html: Es gibt ausstehende Datenbankmigrationen. Bitte führe sie aus, um sicherzustellen, dass sich die Anwendung wie erwartet verhält
+      elasticsearch_analysis_index_mismatch:
+        message_html: 'Die Einstellungen für die Indexanalyse von Elasticsearch sind veraltet. Bitte führe diesen Code aus: <code>tootctl search deploy --only-mapping --only=%{value}</code>'
       elasticsearch_health_red:
         message_html: Elasticsearch-Cluster ist fehlerhaft (roter Status) – Suchfunktionen sind nicht verfügbar
       elasticsearch_health_yellow:
@@ -904,7 +934,7 @@ de:
         message_html: Ein kritisches Mastodon-Update ist verfügbar – bitte aktualisiere so schnell wie möglich.
       software_version_patch_check:
         action: Verfügbare Updates ansehen
-        message_html: Ein Mastodon-Update für Fehlerbehebungen ist verfügbar.
+        message_html: Ein Mastodon-Update für Fehlerkorrekturen ist verfügbar.
       upload_check_privacy_error:
         action: Für weitere Informationen hier klicken
         message_html: "<strong>Die Konfiguration deines Servers ist fehlerhaft. Die Privatsphäre deiner Benutzer*innen ist gefährdet.</strong>"
@@ -972,9 +1002,9 @@ de:
         allow: Link erlauben
         allow_provider: Herausgeber*in erlauben
         confirm_allow: Möchtest du die ausgewählten Links wirklich erlauben?
-        confirm_allow_provider: Möchtest du die ausgewählten Provider wirklich erlauben?
+        confirm_allow_provider: Möchtest du die ausgewählten Anbieter wirklich erlauben?
         confirm_disallow: Möchtest du die ausgewählten Links wirklich verbieten?
-        confirm_disallow_provider: Möchtest du die ausgewählten Provider wirklich verbieten?
+        confirm_disallow_provider: Möchtest du die ausgewählten Anbieter wirklich verbieten?
         description_html: Dies sind Links, die derzeit von zahlreichen Konten geteilt werden und die deinem Server aufgefallen sind. Die Benutzer*innen können darüber herausfinden, was in der Welt vor sich geht. Die Links werden allerdings erst dann öffentlich vorgeschlagen, wenn du die Herausgeber*innen genehmigt hast. Du kannst alternativ aber auch nur einzelne URLs zulassen oder ablehnen.
         disallow: Link verbieten
         disallow_provider: Herausgeber*in verbieten

@@ -319,6 +319,7 @@ es-AR:
         create: Crear anuncio
         title: Nuevo anuncio
       preview:
+        disclaimer: Como los usuarios no pueden excluirse de ellas, las notificaciones por correo electrónico deberían limitarse a anuncios importantes como la violación de datos personales o las notificaciones de cierre del servidor.
         explanation_html: 'El correo electrónico se enviará a <strong>%{display_count} usuarios</strong>. En el correo electrónico se incluirá el siguiente texto:'
         title: Previsualizar la notificación del anuncio
       publish: Publicar
@@ -479,6 +480,36 @@ es-AR:
       new:
         title: Importar bloques de dominio
       no_file: No hay ningún archivo seleccionado
+    fasp:
+      debug:
+        callbacks:
+          created_at: 'Fecha de creación:'
+          delete: Eliminar
+          ip: Dirección IP
+          request_body: Cuerpo de la solicitud
+          title: Depurar llamadas
+      providers:
+        active: Activo
+        base_url: Dirección web base
+        callback: Depuraciones
+        delete: Eliminar
+        edit: Editar proveedor
+        finish_registration: Finalizar registro
+        name: Nombre
+        providers: Proveedores
+        public_key_fingerprint: Huella de clave pública
+        registration_requested: Registro solicitado
+        registrations:
+          confirm: Confirmar
+          description: Recibiste un registro de un FASP (Fediverse Auxiliary Service Providers; Proveedores de Servicio Auxiliares del Fediverso). Rechazalo si no iniciaste esto. Si, en cambio, iniciaste esto, compará cuidadosamente el nombre y la huella de la clave antes de confirmar el registro.
+          reject: Rechazar
+          title: Confirmar registro FASP
+        save: Guardar
+        select_capabilities: Seleccionar capacidades
+        sign_in: Iniciar sesión
+        status: Estado
+        title: Proveedores de Servicios Auxiliares del Fediverso
+      title: FASP
     follow_recommendations:
       description_html: "<strong>Las recomendaciones de cuentas para seguir ayudan a los nuevos usuarios a encontrar rápidamente contenido interesante</strong>. Cuando un usuario no ha interactuado con otros lo suficiente como para formar recomendaciones personalizadas de seguimiento, se recomiendan estas cuentas, en su lugar. Se recalculan diariamente a partir de una mezcla de cuentas con las interacciones más recientes y el mayor número de seguidores para un idioma determinado."
       language: Por idioma
@@ -872,6 +903,8 @@ es-AR:
     system_checks:
       database_schema_check:
         message_html: Hay migraciones pendientes de la base de datos. Por favor, ejecutalas para asegurarte de que la aplicación funciona según lo esperado
+      elasticsearch_analysis_index_mismatch:
+        message_html: La configuración del analizador de índices Elasticsearch está desactualizada. Por favor, ejecutá <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: El estado del clúster de Elasticsearch no es saludable (estado rojo), las funciones de búsqueda no están disponibles
       elasticsearch_health_yellow:
