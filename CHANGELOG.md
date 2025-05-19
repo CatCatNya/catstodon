@@ -8,7 +8,17 @@ All release dates, as well as most other dates, are intended to be read as "with
 
 - Upstream changes
   - This includes a ruby version bump to 3.4.3. Please install Ruby 3.4.3 before installing this version.
-- Emoji reaction patch changes
+
+## [v4.3.8+cat+1.0.1] - 2025-05-19
+
+- Emoji reactions patch changes
+  - Emoji reactions now federate properly to Iceshrimp instances.
+  - Thanks Essem for adding the required namespaces to reaction ActivityPub objects!
+  - Thanks Elizabeth for reporting this being broken to the Iceshrimp project originally!
+
+## [v4.3.8+cat+1.0.0] - 2025-05-08
+
+- Upstream changes (security-related, please review upstream release notes for v4.3.7 and v4.3.8)
 
 ## [v4.3.6+cat+1.0.0] - 2025-03-09
 
