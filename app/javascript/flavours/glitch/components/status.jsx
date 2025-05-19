@@ -285,9 +285,8 @@ class Status extends ImmutablePureComponent {
     }
   };
 
-  handleMouseUp = e => {
+  handleHeaderClick = e => {
     // Only handle clicks on the empty space above the content
-
     if (e.target !== e.currentTarget && e.detail >= 1) {
       return;
     }
@@ -698,7 +697,7 @@ class Status extends ImmutablePureComponent {
             {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
 
             {(!muted) && (
-              <header onMouseUp={this.handleMouseUp} className='status__info'>
+              <header onClick={this.handleHeaderClick} onAuxClick={this.handleHeaderClick} className='status__info'>
                 <Permalink href={status.getIn(['account', 'url'])} to={`/@${status.getIn(['account', 'acct'])}`} title={status.getIn(['account', 'acct'])} data-hover-card-account={status.getIn(['account', 'id'])} className='status__display-name'>
                   <div className='status__avatar'>
                     {statusAvatar}

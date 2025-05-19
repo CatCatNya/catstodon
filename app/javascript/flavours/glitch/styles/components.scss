@@ -2170,6 +2170,7 @@ body > [data-popper-placement] {
   display: block;
   position: relative;
   border-radius: var(--avatar-border-radius);
+  background: var(--surface-background-color);
 
   img {
     width: 100%;
@@ -2243,6 +2244,33 @@ body > [data-popper-placement] {
 
 a .account__avatar {
   cursor: pointer;
+}
+
+.avatar-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.avatar-group--compact {
+  gap: 0;
+  flex-wrap: nowrap;
+
+  & > :not(:first-child) {
+    margin-inline-start: -12px;
+  }
+
+  & > :first-child {
+    transform: rotate(-4deg);
+  }
+
+  & > :nth-child(2) {
+    transform: rotate(-2deg);
+  }
+
+  .account__avatar {
+    box-shadow: 0 0 0 2px var(--background-color);
+  }
 }
 
 .account__avatar-overlay {
@@ -8439,6 +8467,20 @@ noscript {
       }
     }
   }
+
+  &__familiar-followers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-block: 16px;
+    color: $darker-text-color;
+
+    a:any-link {
+      font-weight: 500;
+      text-decoration: none;
+      color: $primary-text-color;
+    }
+  }
 }
 
 .account__contents {
@@ -10769,14 +10811,6 @@ noscript {
       font-size: 15px;
       line-height: 22px;
     }
-  }
-
-  &__avatar-group {
-    display: flex;
-    gap: 8px;
-    height: 28px;
-    overflow-y: hidden;
-    flex-wrap: wrap;
   }
 
   .status {
