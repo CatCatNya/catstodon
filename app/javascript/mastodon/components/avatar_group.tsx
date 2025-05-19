@@ -1,8 +1,8 @@
+import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
-import { Avatar } from 'flavours/glitch/components/avatar';
-import { NOTIFICATIONS_GROUP_MAX_AVATARS } from 'flavours/glitch/models/notification_group';
-import { useAppSelector } from 'flavours/glitch/store';
+import { Avatar } from 'mastodon/components/avatar';
+import { useAppSelector } from 'mastodon/store';
 
 const AvatarWrapper: React.FC<{ accountId: string }> = ({ accountId }) => {
   const account = useAppSelector((state) => state.accounts.get(accountId));
@@ -20,11 +20,14 @@ const AvatarWrapper: React.FC<{ accountId: string }> = ({ accountId }) => {
   );
 };
 
-export const AvatarGroup: React.FC<{ accountIds: string[] }> = ({
-  accountIds,
-}) => (
-  <div className='notification-group__avatar-group'>
-    {accountIds.slice(0, NOTIFICATIONS_GROUP_MAX_AVATARS).map((accountId) => (
+export const AvatarGroup: React.FC<{
+  accountIds: string[];
+  compact?: boolean;
+}> = ({ accountIds, compact = false }) => (
+  <div
+    className={classNames('avatar-group', { 'avatar-group--compact': compact })}
+  >
+    {accountIds.map((accountId) => (
       <AvatarWrapper key={accountId} accountId={accountId} />
     ))}
   </div>

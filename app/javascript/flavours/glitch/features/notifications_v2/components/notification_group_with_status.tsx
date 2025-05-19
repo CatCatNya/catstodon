@@ -7,12 +7,13 @@ import { HotKeys } from 'react-hotkeys';
 
 import { replyComposeById } from 'flavours/glitch/actions/compose';
 import { navigateToStatus } from 'flavours/glitch/actions/statuses';
+import { AvatarGroup } from 'flavours/glitch/components/avatar_group';
 import type { IconProp } from 'flavours/glitch/components/icon';
 import { Icon } from 'flavours/glitch/components/icon';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
+import { NOTIFICATIONS_GROUP_MAX_AVATARS } from 'flavours/glitch/models/notification_group';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
 
-import { AvatarGroup } from './avatar_group';
 import { DisplayedName } from './displayed_name';
 import { EmbeddedStatus } from './embedded_status';
 
@@ -98,7 +99,12 @@ export const NotificationGroupWithStatus: React.FC<{
         <div className='notification-group__main'>
           <div className='notification-group__main__header'>
             <div className='notification-group__main__header__wrapper'>
-              <AvatarGroup accountIds={accountIds} />
+              <AvatarGroup
+                accountIds={accountIds.slice(
+                  0,
+                  NOTIFICATIONS_GROUP_MAX_AVATARS,
+                )}
+              />
 
               {actions && (
                 <div className='notification-group__actions'>{actions}</div>
