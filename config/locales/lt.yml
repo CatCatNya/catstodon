@@ -1,7 +1,7 @@
 ---
 lt:
   about:
-    about_mastodon_html: 'Ateities socialinis tinklas: jokių reklamų, jokių įmonių sekimo, etiškas dizainas ir decentralizacija! Turėk savo duomenis su Mastodon.'
+    about_mastodon_html: 'Ateities socialinis tinklas: jokių reklamų ir įmonių sekimo, etiškas dizainas bei decentralizacija! Turėkite savo duomenis su „Mastodon“.'
     contact_missing: Nenustatyta
     contact_unavailable: Nėra
     hosted_on: "„Mastodon“ talpinamas domene %{domain}"
@@ -1300,7 +1300,6 @@ lt:
       post_action: Sukurti
       post_step: Sakyk labas pasauliui tekstu, nuotraukomis, vaizdo įrašais arba apklausomis.
       post_title: Sukūrk savo pirmąjį įrašą
-      share_action: Bendrinti
       share_step: Leisk draugams sužinoti, kaip tave rasti Mastodon.
       share_title: Bendrink savo Mastodon profilį
       sign_in_action: Prisijungti

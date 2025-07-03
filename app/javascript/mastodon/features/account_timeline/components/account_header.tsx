@@ -44,8 +44,8 @@ import { FormattedDateWrapper } from 'mastodon/components/formatted_date';
 import { Icon } from 'mastodon/components/icon';
 import { IconButton } from 'mastodon/components/icon_button';
 import { ShortNumber } from 'mastodon/components/short_number';
+import { AccountNote } from 'mastodon/features/account/components/account_note';
 import { DomainPill } from 'mastodon/features/account/components/domain_pill';
-import AccountNoteContainer from 'mastodon/features/account/containers/account_note_container';
 import FollowRequestNoteContainer from 'mastodon/features/account/containers/follow_request_note_container';
 import { useLinks } from 'mastodon/hooks/useLinks';
 import { useIdentity } from 'mastodon/identity_context';
@@ -418,7 +418,7 @@ export const AccountHeader: React.FC<{
       return arr;
     }
 
-    if (signedIn && account.id !== me && !account.suspended) {
+    if (signedIn && !account.suspended) {
       arr.push({
         text: intl.formatMessage(messages.mention, {
           name: account.username,
@@ -442,37 +442,7 @@ export const AccountHeader: React.FC<{
       arr.push(null);
     }
 
-    if (account.id === me) {
-      arr.push({
-        text: intl.formatMessage(messages.edit_profile),
-        href: '/settings/profile',
-      });
-      arr.push({
-        text: intl.formatMessage(messages.preferences),
-        href: '/settings/preferences',
-      });
-      arr.push(null);
-      arr.push({
-        text: intl.formatMessage(messages.follow_requests),
-        to: '/follow_requests',
-      });
-      arr.push({
-        text: intl.formatMessage(messages.favourites),
-        to: '/favourites',
-      });
-      arr.push({ text: intl.formatMessage(messages.lists), to: '/lists' });
-      arr.push({
-        text: intl.formatMessage(messages.followed_tags),
-        to: '/followed_tags',
-      });
-      arr.push(null);
-      arr.push({ text: intl.formatMessage(messages.mutes), to: '/mutes' });
-      arr.push({ text: intl.formatMessage(messages.blocks), to: '/blocks' });
-      arr.push({
-        text: intl.formatMessage(messages.domain_blocks),
-        to: '/domain_blocks',
-      });
-    } else if (signedIn) {
+    if (signedIn) {
       if (relationship?.following) {
         if (!relationship.muting) {
           if (relationship.showing_reblogs) {
@@ -611,8 +581,7 @@ export const AccountHeader: React.FC<{
     }
 
     if (
-      (account.id !== me &&
-        (permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS) ||
+      (permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS ||
       (isRemote &&
         (permissions & PERMISSION_MANAGE_FEDERATION) ===
           PERMISSION_MANAGE_FEDERATION)
@@ -799,7 +768,7 @@ export const AccountHeader: React.FC<{
       <Icon
         id='lock'
         icon={LockIcon}
-        title={intl.formatMessage(messages.account_locked)}
+        aria-label={intl.formatMessage(messages.account_locked)}
       />
     );
   }
@@ -873,19 +842,21 @@ export const AccountHeader: React.FC<{
             >
               <Avatar
                 account={suspended || hidden ? undefined : account}
-                size={90}
+                size={92}
               />
             </a>
 
             <div className='account__header__tabs__buttons'>
               {!hidden && bellBtn}
               {!hidden && shareBtn}
-              <Dropdown
-                disabled={menu.length === 0}
-                items={menu}
-                icon='ellipsis-v'
-                iconComponent={MoreHorizIcon}
-              />
+              {accountId !== me && (
+                <Dropdown
+                  disabled={menu.length === 0}
+                  items={menu}
+                  icon='ellipsis-v'
+                  iconComponent={MoreHorizIcon}
+                />
+              )}
               {!hidden && actionBtn}
             </div>
           </div>
@@ -912,6 +883,10 @@ export const AccountHeader: React.FC<{
             <div className='account__header__badges'>{badges}</div>
           )}
 
+          {account.id !== me && signedIn && !(suspended || hidden) && (
+            <FamiliarFollowers accountId={accountId} />
+          )}
+
           {!(suspended || hidden) && (
             <div className='account__header__extra'>
               <div
@@ -919,7 +894,7 @@ export const AccountHeader: React.FC<{
                 onClickCapture={handleLinkClick}
               >
                 {account.id !== me && signedIn && (
-                  <AccountNoteContainer accountId={accountId} />
+                  <AccountNote accountId={accountId} />
                 )}
 
                 {account.note.length > 0 && account.note !== '<p></p>' && (
@@ -1023,7 +998,6 @@ export const AccountHeader: React.FC<{
                   />
                 </NavLink>
               </div>
-              {signedIn && <FamiliarFollowers accountId={accountId} />}
             </div>
           )}
         </div>

@@ -937,7 +937,7 @@ RSpec.describe ActivityPub::Activity::Create do
         end
       end
 
-      context 'with an unverifiable quote of a known post', feature: :inbound_quotes do
+      context 'with an unverifiable quote of a known post' do
         let(:quoted_status) { Fabricate(:status) }
 
         let(:object_json) do
@@ -961,7 +961,7 @@ RSpec.describe ActivityPub::Activity::Create do
         end
       end
 
-      context 'with an unverifiable unknown post', feature: :inbound_quotes do
+      context 'with an unverifiable unknown post' do
         let(:unknown_post_uri) { 'https://unavailable.example.com/unavailable-post' }
 
         let(:object_json) do
@@ -989,7 +989,7 @@ RSpec.describe ActivityPub::Activity::Create do
         end
       end
 
-      context 'with a verifiable quote of a known post', feature: :inbound_quotes do
+      context 'with a verifiable quote of a known post' do
         let(:quoted_account) { Fabricate(:account, domain: 'quoted.example.com') }
         let(:quoted_status) { Fabricate(:status, account: quoted_account) }
         let(:approval_uri) { 'https://quoted.example.com/quote-approval' }

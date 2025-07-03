@@ -1,34 +1,23 @@
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
 
-import { Avatar } from 'flavours/glitch/components/avatar';
-import { useAppSelector } from 'flavours/glitch/store';
-
-const AvatarWrapper: React.FC<{ accountId: string }> = ({ accountId }) => {
-  const account = useAppSelector((state) => state.accounts.get(accountId));
-
-  if (!account) return null;
-
-  return (
-    <Link
-      to={`/@${account.acct}`}
-      title={`@${account.acct}`}
-      data-hover-card-account={account.id}
-    >
-      <Avatar account={account} size={28} />
-    </Link>
-  );
-};
+/**
+ * Wrapper for displaying a number of Avatar components horizontally,
+ * either spaced out (default) or overlapping (using the `compact` prop).
+ */
 
 export const AvatarGroup: React.FC<{
-  accountIds: string[];
   compact?: boolean;
-}> = ({ accountIds, compact = false }) => (
+  avatarHeight?: number;
+  children: React.ReactNode;
+}> = ({ children, compact = false, avatarHeight }) => (
   <div
     className={classNames('avatar-group', { 'avatar-group--compact': compact })}
+    style={
+      avatarHeight
+        ? ({ '--avatar-height': `${avatarHeight}px` } as React.CSSProperties)
+        : undefined
+    }
   >
-    {accountIds.map((accountId) => (
-      <AvatarWrapper key={accountId} accountId={accountId} />
-    ))}
+    {children}
   </div>
 );

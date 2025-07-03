@@ -15,10 +15,6 @@ import type { List as ImmutableList, Map as ImmutableMap } from 'immutable';
 import { useSpring, animated } from '@react-spring/web';
 import Textarea from 'react-textarea-autosize';
 import { length } from 'stringz';
-// eslint-disable-next-line import/extensions
-import tesseractWorkerPath from 'tesseract.js/dist/worker.min.js';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import tesseractCorePath from 'tesseract.js-core/tesseract-core.wasm.js';
 
 import { showAlertForError } from 'mastodon/actions/alerts';
 import { uploadThumbnail } from 'mastodon/actions/compose';
@@ -31,7 +27,7 @@ import { Audio } from 'mastodon/features/audio';
 import { CharacterCounter } from 'mastodon/features/compose/components/character_counter';
 import { Tesseract as fetchTesseract } from 'mastodon/features/ui/util/async-components';
 import { Video, getPointerPosition } from 'mastodon/features/video';
-import { me, reduceMotion } from 'mastodon/initial_state';
+import { me } from 'mastodon/initial_state';
 import type { MediaAttachment } from 'mastodon/models/media_attachment';
 import { useAppSelector, useAppDispatch } from 'mastodon/store';
 import { assetHost } from 'mastodon/utils/config';
@@ -114,7 +110,7 @@ const Preview: React.FC<{
       left: `${x * 100}%`,
       top: `${y * 100}%`,
     },
-    immediate: reduceMotion || draggingRef.current,
+    immediate: draggingRef.current,
   });
   const media = useAppSelector((state) =>
     (
@@ -350,9 +346,15 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
 
       fetchTesseract()
         .then(async ({ createWorker }) => {
+          const [tesseractWorkerPath, tesseractCorePath] = await Promise.all([
+            // eslint-disable-next-line import/extensions
+            import('tesseract.js/dist/worker.min.js?url'),
+            // eslint-disable-next-line import/no-extraneous-dependencies
+            import('tesseract.js-core/tesseract-core.wasm.js?url'),
+          ]);
           const worker = await createWorker('eng', 1, {
-            workerPath: tesseractWorkerPath as string,
-            corePath: tesseractCorePath as string,
+            workerPath: tesseractWorkerPath.default,
+            corePath: tesseractCorePath.default,
             langPath: `${assetHost}/ocr/lang-data`,
             cacheMethod: 'write',
           });
@@ -501,5 +503,4 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
     );
   },
 );
-
 AltTextModal.displayName = 'AltTextModal';

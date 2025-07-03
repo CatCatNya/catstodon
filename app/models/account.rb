@@ -85,9 +85,11 @@ class Account < ApplicationRecord
   include Account::Associations
   include Account::Avatar
   include Account::Counters
+  include Account::FaspConcern
   include Account::FinderConcern
   include Account::Header
   include Account::Interactions
+  include Account::Mappings
   include Account::Merging
   include Account::Search
   include Account::Sensitizes
@@ -161,6 +163,7 @@ class Account < ApplicationRecord
   after_update_commit :trigger_update_webhooks
 
   delegate :email,
+           :email_domain,
            :unconfirmed_email,
            :current_sign_in_at,
            :created_at,

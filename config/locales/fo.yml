@@ -578,6 +578,13 @@ fo:
         all: Allir
         limited: Avmarkaðir
         title: Umsjón
+      moderation_notes:
+        create: Legg umsjónarviðmerking afturat
+        created_msg: Umsjónarviðmerking fyri hesa eindina stovnað!
+        description_html: Vís ella skriva viðmerkingar til onnur umsjónarfólk ella teg sjálva/n í framtíðini
+        destroyed_msg: Umsjónarviðmerking fyri hesa eindina strikað!
+        placeholder: Upplýsingar um hesa eindina, framdar atgerðir ella eitthvørt annað, sum kann hjálpa tær við umsjónini av hesi eindini í framtíðini.
+        title: Umsjónarviðmerkingar
       private_comment: Privat viðmerking
       public_comment: Sjónlig viðmerking
       purge: Reinsa
@@ -786,17 +793,26 @@ fo:
       title: Leiklutir
     rules:
       add_new: Ger nýggja reglu
+      add_translation: Legg umseting afturat
       delete: Strika
       description_html: Sjálvt um tey flestu vilja vera við, at tey hava lisið og tikið undir við tænastutreytunum, so lesa tey flestu tær ikki fyrr enn eftir at ein trupulleiki stingur seg upp. <strong>Ger tað lættari at skimma ígjøgnum ambætarareglurnar við at veita tær í einum fløtum punkt-lista.</strong> Royn at gera einstøku reglurnar stuttar og einfaldar, samstundis sum at tær ikki blíva pettaðar ov nógv sundur.
       edit: Broyt reglur
       empty: Ongar ambætarareglur eru ásettar enn.
+      move_down: Flyt niður
+      move_up: Flyt upp
       title: Ambætarareglur
+      translation: Umseting
+      translations: Umsetingar
+      translations_explanation: Tað er valfrítt at leggja umsetingar afturat fyri reglurnar. Sjálvsetta svarið verður víst, um eingin umsett útgáva er tøk. Vinarliga tryggja, at umsetingar samsvara við sjálvsetta svarið.
     settings:
       about:
         manage_rules: Stýr ambætarareglum
         preamble: Gev útdýpandi upplýsingar um, hvussu ambætarin er rikin, umsýndur og fíggjaður.
         rules_hint: Eitt øki er burturav fyri reglur, sum brúkararnir hjá tær skulu fylgja.
         title: Um
+      allow_referrer_origin:
+        desc: Tá brúkarar tínir klikkja á leinki til uttanhýsis vevstøð, so kann kagin senda adressuna á tínum Mastodon ambætara við. Óvirkja hetta, um hetta kann eyðmerkja brúkarar tínar, t.d. um hetta er ein persónligur Mastodon ambætari.
+        title: Loyv uttanhýsis vevstøðum at síggja tín Mastodon ambætara sum ferðslukeldu
       appearance:
         preamble: Tillaga brúkaramarkamótið hjá Mastodon.
         title: Útsjónd
@@ -816,9 +832,9 @@ fo:
       discovery:
         follow_recommendations: Tilmæli um at fylgja
         preamble: At fáa áhugavert innihald í ljósmála er avgerandi fyri at nýggir brúkarar, sum kanska ongan kenna á Mastodon, kunnu koma væl umborð. Stýr, hvussu hentleikarnir at uppdaga ymiskt rigga á ambætaranum hjá tær.
+        privacy: Privatlív
         profile_directory: Vangaskrá
         public_timelines: Almennar tíðarlinjur
-        publish_discovered_servers: Kunnger uppdagaðu ambætararnar
         publish_statistics: Legg hagtøl út
         title: Uppdaging
         trends: Rák
@@ -2054,7 +2070,6 @@ fo:
       post_action: Skriva
       post_step: Sig hey við verðina við teksti, myndum, video ella spurnarkanningum.
       post_title: Stovna tín fyrsta post
-      share_action: Deil
       share_step: Lat vinir tínar vita, hvussu tey finna teg á Mastodon.
       share_title: Deil tín Mastodon vanga
       sign_in_action: Rita inn

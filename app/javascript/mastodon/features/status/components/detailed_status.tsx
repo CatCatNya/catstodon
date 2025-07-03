@@ -26,6 +26,7 @@ import { IconLogo } from 'mastodon/components/logo';
 import MediaGallery from 'mastodon/components/media_gallery';
 import { PictureInPicturePlaceholder } from 'mastodon/components/picture_in_picture_placeholder';
 import StatusContent from 'mastodon/components/status_content';
+import { QuotedStatus } from 'mastodon/components/status_quoted';
 import { VisibilityIcon } from 'mastodon/components/visibility_icon';
 import { Audio } from 'mastodon/features/audio';
 import scheduleIdleTask from 'mastodon/features/ui/util/schedule_idle_task';
@@ -226,7 +227,7 @@ export const DetailedStatus: React.FC<{
         />
       );
     }
-  } else if (status.get('card')) {
+  } else if (status.get('card') && !status.get('quote')) {
     media = (
       <Card
         sensitive={status.get('sensitive')}
@@ -306,7 +307,12 @@ export const DetailedStatus: React.FC<{
 
   return (
     <div style={outerStyle}>
-      <div ref={handleRef} className={classNames('detailed-status')}>
+      <div
+        ref={handleRef}
+        className={classNames('detailed-status', {
+          'status--has-quote': !!status.get('quote'),
+        })}
+      >
         {status.get('visibility') === 'direct' && (
           <div className='status__prepend'>
             <div className='status__prepend-icon-wrapper'>
@@ -373,6 +379,10 @@ export const DetailedStatus: React.FC<{
 
             {media}
             {hashtagBar}
+
+            {status.get('quote') && (
+              <QuotedStatus quote={status.get('quote')} />
+            )}
           </>
         )}
 

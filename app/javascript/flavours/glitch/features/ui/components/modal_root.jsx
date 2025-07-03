@@ -21,7 +21,6 @@ import {
   IgnoreNotificationsModal,
   AnnualReportModal,
 } from 'flavours/glitch/features/ui/util/async-components';
-import { getScrollbarWidth } from 'flavours/glitch/utils/scrollbar';
 
 import BundleContainer from '../containers/bundle_container';
 
@@ -97,16 +96,6 @@ export default class ModalRoot extends PureComponent {
   state = {
     backgroundColor: null,
   };
-
-  componentDidUpdate () {
-    if (this.props.type) {
-      document.body.classList.add('with-modals--active');
-      document.documentElement.style.marginRight = `${getScrollbarWidth()}px`;
-    } else {
-      document.body.classList.remove('with-modals--active');
-      document.documentElement.style.marginRight = '0';
-    }
-  }
 
   setBackgroundColor = color => {
     this.setState({ backgroundColor: color });
