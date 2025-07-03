@@ -4,7 +4,6 @@ import { parseIntFromEnvValue } from './utils.js';
 
 /**
  * @typedef RedisConfiguration
- * @property {string|undefined} namespace
  * @property {string|undefined} url
  * @property {import('ioredis').RedisOptions} options
  */
@@ -31,7 +30,11 @@ function hasSentinelConfiguration(env) {
  */
 function getSentinelConfiguration(env, commonOptions) {
   const redisDatabase = parseIntFromEnvValue(env.REDIS_DB, 0, 'REDIS_DB');
-  const sentinelPort = parseIntFromEnvValue(env.REDIS_SENTINEL_PORT, 26379, 'REDIS_SENTINEL_PORT');
+  const sentinelPort = parseIntFromEnvValue(
+    env.REDIS_SENTINEL_PORT,
+    26379,
+    'REDIS_SENTINEL_PORT',
+  );
 
   const sentinels = env.REDIS_SENTINELS.split(',').map((sentinel) => {
     const [host, port] = sentinel.split(':', 2);
@@ -43,7 +46,7 @@ function getSentinelConfiguration(env, commonOptions) {
       // Force support for both IPv6 and IPv4, by default ioredis sets this to 4,
       // only allowing IPv4 connections:
       // https://github.com/redis/ioredis/issues/1576
-      family: 0
+      family: 0,
     };
   });
 
@@ -64,15 +67,13 @@ function getSentinelConfiguration(env, commonOptions) {
  * @returns {RedisConfiguration} configuration for the Redis connection
  */
 export function configFromEnv(env) {
-  const redisNamespace = env.REDIS_NAMESPACE;
-
   // These options apply for both REDIS_URL based connections and connections
   // using the other REDIS_* environment variables:
   const commonOptions = {
     // Force support for both IPv6 and IPv4, by default ioredis sets this to 4,
     // only allowing IPv4 connections:
     // https://github.com/redis/ioredis/issues/1576
-    family: 0
+    family: 0,
     // Note: we don't use auto-prefixing of keys since this doesn't apply to
     // subscribe/unsubscribe which have "channel" instead of "key" arguments
   };
@@ -83,7 +84,6 @@ export function configFromEnv(env) {
     return {
       url: env.REDIS_URL,
       options: commonOptions,
-      namespace: redisNamespace
     };
   }
 
@@ -91,7 +91,6 @@ export function configFromEnv(env) {
   if (hasSentinelConfiguration(env)) {
     return {
       options: getSentinelConfiguration(env, commonOptions),
-      namespace: redisNamespace
     };
   }
 
@@ -111,7 +110,6 @@ export function configFromEnv(env) {
 
   return {
     options,
-    namespace: redisNamespace
   };
 }
 

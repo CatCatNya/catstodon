@@ -4,17 +4,14 @@ import { FormattedMessage } from 'react-intl';
 
 import { useParams } from 'react-router';
 
-import type { Map as ImmutableMap } from 'immutable';
 import { List as ImmutableList } from 'immutable';
 
 import { fetchEndorsedAccounts } from 'flavours/glitch/actions/accounts';
 import { fetchFeaturedTags } from 'flavours/glitch/actions/featured_tags';
-import { expandAccountFeaturedTimeline } from 'flavours/glitch/actions/timelines';
 import { Account } from 'flavours/glitch/components/account';
 import { ColumnBackButton } from 'flavours/glitch/components/column_back_button';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { RemoteHint } from 'flavours/glitch/components/remote_hint';
-import StatusContainer from 'flavours/glitch/containers/status_container';
 import { AccountHeader } from 'flavours/glitch/features/account_timeline/components/account_header';
 import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
 import Column from 'flavours/glitch/features/ui/components/column';
@@ -43,7 +40,6 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
 
   useEffect(() => {
     if (accountId) {
-      void dispatch(expandAccountFeaturedTimeline(accountId));
       void dispatch(fetchFeaturedTags({ accountId }));
       void dispatch(fetchEndorsedAccounts({ accountId }));
     }
@@ -52,10 +48,6 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
   const isLoading = useAppSelector(
     (state) =>
       !accountId ||
-      !!(state.timelines as ImmutableMap<string, unknown>).getIn([
-        `account:${accountId}:pinned`,
-        'isLoading',
-      ]) ||
       !!state.user_lists.getIn(['featured_tags', accountId, 'isLoading']),
   );
   const featuredTags = useAppSelector(
@@ -64,13 +56,6 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
         ['featured_tags', accountId, 'items'],
         ImmutableList(),
       ) as ImmutableList<TagMap>,
-  );
-  const featuredStatusIds = useAppSelector(
-    (state) =>
-      (state.timelines as ImmutableMap<string, unknown>).getIn(
-        [`account:${accountId}:pinned`, 'items'],
-        ImmutableList(),
-      ) as ImmutableList<string>,
   );
   const featuredAccountIds = useAppSelector(
     (state) =>
@@ -94,11 +79,7 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
     );
   }
 
-  if (
-    featuredStatusIds.isEmpty() &&
-    featuredTags.isEmpty() &&
-    featuredAccountIds.isEmpty()
-  ) {
+  if (featuredTags.isEmpty() && featuredAccountIds.isEmpty()) {
     return (
       <AccountFeaturedWrapper accountId={accountId}>
         <EmptyMessage
@@ -130,24 +111,6 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
             </h4>
             {featuredTags.map((tag) => (
               <FeaturedTag key={tag.get('id')} tag={tag} account={acct} />
-            ))}
-          </>
-        )}
-        {!featuredStatusIds.isEmpty() && (
-          <>
-            <h4 className='column-subheading'>
-              <FormattedMessage
-                id='account.featured.posts'
-                defaultMessage='Posts'
-              />
-            </h4>
-            {featuredStatusIds.map((statusId) => (
-              <StatusContainer
-                key={`f-${statusId}`}
-                // @ts-expect-error inferred props are wrong
-                id={statusId}
-                contextType='account'
-              />
             ))}
           </>
         )}

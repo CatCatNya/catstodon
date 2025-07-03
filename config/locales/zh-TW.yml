@@ -567,6 +567,13 @@ zh-TW:
         all: 全部
         limited: 限制
         title: 管管
+      moderation_notes:
+        create: 新增站務筆記
+        created_msg: 已成功新增站點管理筆記！
+        description_html: 檢視或替其他管理員與未來的自己留下筆記
+        destroyed_msg: 已成功刪除站點管理筆記！
+        placeholder: 關於此站點之資訊、已採取行動、或任何協助您將來管理此站點之事項。
+        title: 站務筆記
       private_comment: 私人留言
       public_comment: 公開留言
       purge: 清除
@@ -772,17 +779,26 @@ zh-TW:
       title: 角色
     rules:
       add_new: 新增規則
+      add_translation: 新增翻譯
       delete: 刪除
       description_html: 雖然大多數人皆宣稱已閱讀並同意服務條款，通常直到某些問題發生時人們從未讀過。<strong>以透過提供條列式規則的方式使您的伺服器規則可以一目了然。</strong>試著維持各項條款簡短而明瞭，但也試著不要將條款切割為許多分開的項目。
       edit: 編輯規則
       empty: 未曾定義任何伺服器規則
+      move_down: 向下移
+      move_up: 向上移
       title: 伺服器規則
+      translation: 翻譯
+      translations: 翻譯
+      translations_explanation: 您可以選擇性地替規則添加翻譯。若沒有翻譯版本，預設值將被顯示。請確保任何提供之翻譯與預設值內容同步。
     settings:
       about:
         manage_rules: 管理伺服器規則
         preamble: 提供關於此伺服器如何運作、管理、及金援之供詳細資訊。
         rules_hint: 這是關於您的使用者應遵循規則之專有區域。
         title: 關於
+      allow_referrer_origin:
+        desc: 當您的使用者點擊連結至外部網站時，他們的瀏覽器可能會將您 Mastodon 伺服器網址作為流量來源送出。若這將唯一識別您的使用者，請停用此選項，例如這是一個個人 Mastodon 伺服器。
+        title: 允許外部網站視您的 Mastodon 伺服器為流量來源
       appearance:
         preamble: 客製化 Mastodon 網頁介面。
         title: 外觀設定
@@ -804,9 +820,9 @@ zh-TW:
       discovery:
         follow_recommendations: 跟隨建議
         preamble: 呈現有趣的內容有助於 Mastodon 上一人不識的新手上路。控制各種不同的分類於您伺服器上如何被探索到。
+        privacy: 隱私權
         profile_directory: 個人檔案目錄
         public_timelines: 公開時間軸
-        publish_discovered_servers: 公開已知伺服器列表
         publish_statistics: 公開統計資料
         title: 探索
         trends: 熱門趨勢
@@ -1353,7 +1369,7 @@ zh-TW:
     add_new: 新增
     errors:
       limit: 您所推薦之主題標籤數量已達上限
-    hint_html: "<strong>於個人檔案上推薦您的推薦主題標籤</strong> 展示創意作品或者長期更新的專案的絕佳工具，推薦主題標籤於您個人資料頁面顯眼地展示，並且能快速存取您自己的嘟文。"
+    hint_html: "<strong>於個人檔案上展示您的推薦主題標籤</strong> 展示創意作品或者長期更新的專案的絕佳工具，推薦主題標籤於您個人資料頁面顯眼地展示，並且能快速存取您自己的嘟文。"
   filters:
     contexts:
       account: 個人檔案
@@ -1874,6 +1890,11 @@ zh-TW:
     does_not_match_previous_name: 與先前的名稱不吻合
   terms_of_service:
     title: 服務條款
+  terms_of_service_interstitial:
+    future_preamble_html: 我們已更新一些服務條款，其將於 <strong>%{date}</strong> 生效。我們建議您仔細檢視更新條款。
+    past_preamble_html: 自您上次訪問起，我們已更新一些服務條款。我們建議您仔細檢視更新條款。
+    review_link: 檢視服務條款
+    title: "%{domain} 之服務條款正在悄悄發生變化"
   themes:
     contrast: Mastodon（高對比）
     default: Mastodon（深色）
@@ -2016,7 +2037,6 @@ zh-TW:
       post_action: 撰寫
       post_step: 透過文字、照片、影片或投票向新世界打聲招呼吧。
       post_title: 撰寫您第一則嘟文
-      share_action: 分享
       share_step: 讓您的朋友們知道如何於 Mastodon 找到您。
       share_title: 分享您 Mastodon 個人檔案
       sign_in_action: 登入

@@ -126,7 +126,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   end
 
   def set_rules
-    @rules = Rule.ordered
+    @rules = Rule.ordered.includes(:translations)
   end
 
   def require_rules_acceptance!
@@ -138,7 +138,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     set_locale { render :rules }
   end
 
-  def is_flashing_format? # rubocop:disable Naming/PredicateName
+  def is_flashing_format? # rubocop:disable Naming/PredicatePrefix
     if params[:action] == 'create'
       false # Disable flash messages for sign-up
     else

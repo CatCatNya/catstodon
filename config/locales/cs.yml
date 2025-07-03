@@ -5,7 +5,7 @@ cs:
     contact_missing: Nenastaveno
     contact_unavailable: Neuvedeno
     hosted_on: Mastodon na doméně %{domain}
-    title: O aplikaci
+    title: O službě
   accounts:
     followers:
       few: Sledující
@@ -600,6 +600,13 @@ cs:
         all: Všechny
         limited: Omezený
         title: Moderování
+      moderation_notes:
+        create: Přidat moderační poznámku
+        created_msg: Moderační poznámka instance byla úspěšně vytvořena!
+        description_html: Zobrazit a zanechat poznámky pro ostatní moderátory a pro vás do budoucnosti
+        destroyed_msg: Moderační poznámka instance byla úspěšně smazána!
+        placeholder: Informace o této instanci, podniknutá opatření nebo cokoliv jiného, co vám pomůže v moderování této instance v budoucnosti.
+        title: Moderační poznámky
       private_comment: Soukromý komentář
       public_comment: Veřejný komentář
       purge: Odmazat
@@ -814,17 +821,26 @@ cs:
       title: Role
     rules:
       add_new: Přidat pravidlo
+      add_translation: Přidat překlad
       delete: Smazat
       description_html: Přestože většina tvrdí, že četla a souhlasí s podmínkami služby, lidé je obvykle nepročtou dříve, než vznikne problém. <strong>Usnadněte prohlížení pravidel vašeho serveru jejich poskytnutím v odrážkovém seznamu.</strong> Snažte se držet jednotlivá pravidla krátká a jednoduchá, ale zároveň je nerozdělovat do mnoha samostatných položek.
       edit: Upravit pravidlo
       empty: Zatím nebyla definována žádná pravidla serveru.
+      move_down: Posunout dolů
+      move_up: Přesunout nahoru
       title: Pravidla serveru
+      translation: Překlad
+      translations: Překlady
+      translations_explanation: Volitelně můžete též přidat překlady pravidel. Výchozí hodnota bude zobrazena, pokud není k dispozici žádná přeložená verze. Vždy se ujistěte, že jakýkoliv překlad je synchronizován s výchozí hodnotou.
     settings:
       about:
         manage_rules: Spravovat pravidla serveru
         preamble: Uveďte podrobné informace o tom, jak je server provozován, moderován, financován.
         rules_hint: Existuje vyhrazená oblast pro pravidla, u nichž se očekává, že je budou uživatelé dodržovat.
         title: O aplikaci
+      allow_referrer_origin:
+        desc: Když vaši uživatelé kliknou na odkazy na externí stránky, jejich prohlížeč může odeslat adresu vašeho Mastodon serveru, jako odkazujícího serveru. Zakažte tuto možnost, pokud by to jednoznačně identifikovalo vaše uživatele, např. pokud se jedná o osobní Mastodon server.
+        title: Povolit externím stránkám vidět váš Mastodon server, jako zdroj, ze kterého jdou návštěvníci
       appearance:
         preamble: Přizpůsobte si webové rozhraní Mastodon.
         title: Vzhled
@@ -844,9 +860,9 @@ cs:
       discovery:
         follow_recommendations: Doporučená sledování
         preamble: Povrchový zajímavý obsah je užitečný pro zapojení nových uživatelů, kteří možná neznají žádného Mastodona. Mějte pod kontrolou, jak různé objevovací funkce fungují na vašem serveru.
+        privacy: Soukromí
         profile_directory: Adresář profilů
         public_timelines: Veřejné časové osy
-        publish_discovered_servers: Zveřejnit objevené servery
         publish_statistics: Zveřejnit statistiku
         title: Objevujte
         trends: Trendy
@@ -2001,6 +2017,11 @@ cs:
     does_not_match_previous_name: se neshoduje s předchozím názvem
   terms_of_service:
     title: Podmínky služby
+  terms_of_service_interstitial:
+    future_preamble_html: Provádíme určité změny v našich podmínkách služby, které nabydou účinnosti na <strong>%{date}</strong>. Doporučujeme vám zkontrolovat aktualizované podmínky.
+    past_preamble_html: Od vaší poslední návštěvy jsme změnili podmínky služby. Doporučujeme vám zkontrolovat aktualizované podmínky.
+    review_link: Zkontrolovat podmínky užívání služby
+    title: Podmínky služby %{domain} se mění
   themes:
     contrast: Mastodon (vysoký kontrast)
     default: Mastodon (tmavý)
@@ -2142,7 +2163,6 @@ cs:
       post_action: Sepsat
       post_step: Řekněte světu ahoj pomocí textu, fotografií, videí nebo anket.
       post_title: Vytvořte svůj první příspěvek
-      share_action: Sdílet
       share_step: Dejte přátelům vědět, jak vás mohou na Mastodonu najít.
       share_title: Sdílejte svůj Mastodon profil
       sign_in_action: Přihlásit se

@@ -578,6 +578,13 @@ es-MX:
         all: Todos
         limited: Limitado
         title: Moderación
+      moderation_notes:
+        create: Añadir nota de moderación
+        created_msg: "¡Nota de moderación de instancia creada exitosamente!"
+        description_html: Ver y dejar notas para otros moderadores y a tu yo futuro
+        destroyed_msg: "¡Nota de moderación de instancia eliminada exitosamente!"
+        placeholder: Información acerca de esta instancia, acciones tomadas o cualquier otra cosa que te ayude a moderar esta instancia en el futuro.
+        title: Notas de moderación
       private_comment: Comentario privado
       public_comment: Comentario público
       purge: Purgar
@@ -786,17 +793,26 @@ es-MX:
       title: Roles
     rules:
       add_new: Añadir norma
+      add_translation: Agregar traducción
       delete: Eliminar
       description_html: Aunque la mayoría afirma haber leído y estar de acuerdo con los términos de servicio, la gente normalmente no los lee hasta después de que surja algún problema. <strong>Haz que sea más fácil ver las normas de tu servidor de un vistazo estipulándolas en una lista de puntos.</strong> Intenta que cada norma sea corta y sencilla, pero sin estar divididas en muchos puntos.
       edit: Editar norma
       empty: Aún no se han definido las normas del servidor.
+      move_down: Mover hacia abajo
+      move_up: Mover hacia arriba
       title: Normas del servidor
+      translation: Traducción
+      translations: Traducciones
+      translations_explanation: Opcionalmente, puedes añadir traducciones para las reglas. Se mostrará el valor por defecto si no hay ninguna versión traducida disponible. Por favor, asegúrate siempre de que cualquier traducción proporcionada esté sincronizada con el valor por defecto.
     settings:
       about:
         manage_rules: Administrar reglas del servidor
         preamble: Proporciona información detallada sobre cómo el servidor es operado, moderado y financiado.
         rules_hint: Hay un área dedicada para las reglas a las que se espera que tus usuarios se adhieran.
         title: Acerca de
+      allow_referrer_origin:
+        desc: Cuando tus usuarios hagan clic en enlaces a sitios externos, su navegador podría enviar la dirección de su servidor Mastodon como referencia. Deshabilita esta opción si esto pudiera identificar de forma exclusiva a tus usuarios, por ejemplo, si se trata de un servidor Mastodon personal.
+        title: Permitir que sitios externos vean tu servidor Mastodon como fuente de tráfico
       appearance:
         preamble: Personalizar la interfaz web de Mastodon.
         title: Apariencia
@@ -816,9 +832,9 @@ es-MX:
       discovery:
         follow_recommendations: Recomendaciones de cuentas
         preamble: Exponer contenido interesante a la superficie es fundamental para incorporar nuevos usuarios que pueden no conocer a nadie Mastodon. Controla cómo funcionan varias opciones de descubrimiento en tu servidor.
+        privacy: Privacidad
         profile_directory: Directorio de perfiles
         public_timelines: Lineas de tiempo públicas
-        publish_discovered_servers: Publicar servidores descubiertos
         publish_statistics: Publicar estadísticas
         title: Descubrimiento
         trends: Tendencias
@@ -1915,6 +1931,11 @@ es-MX:
     does_not_match_previous_name: no coincide con el nombre anterior
   terms_of_service:
     title: Condiciones del servicio
+  terms_of_service_interstitial:
+    future_preamble_html: Estamos realizando cambios en nuestros términos de servicio, que serán aplicados el <strong>%{date}</strong>. Te recomendamos que revises los términos actualizados.
+    past_preamble_html: Hemos cambiado nuestros términos de servicio desde tu última visita. Te animamos a que revises los términos actualizados.
+    review_link: Revisar los términos de servicio
+    title: Los términos de servicio de %{domain} van a cambiar
   themes:
     contrast: Alto contraste
     default: Mastodon
@@ -2054,7 +2075,6 @@ es-MX:
       post_action: Redacta
       post_step: Di hola al mundo con texto, fotos, vídeos o encuestas.
       post_title: Haz tu primera publicación
-      share_action: Comparte
       share_step: Dile a tus amigos cómo encontrarte en Mastodon.
       share_title: Comparte tu perfil de Mastodon
       sign_in_action: Regístrate

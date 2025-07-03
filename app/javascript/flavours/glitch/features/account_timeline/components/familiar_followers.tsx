@@ -1,15 +1,12 @@
-import { useEffect } from 'react';
-
 import { FormattedMessage } from 'react-intl';
 
 import { Link } from 'react-router-dom';
 
-import { fetchAccountsFamiliarFollowers } from '@/flavours/glitch/actions/accounts_familiar_followers';
 import { Avatar } from '@/flavours/glitch/components/avatar';
 import { AvatarGroup } from '@/flavours/glitch/components/avatar_group';
 import type { Account } from '@/flavours/glitch/models/account';
-import { getAccountFamiliarFollowers } from '@/flavours/glitch/selectors/accounts';
-import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
+
+import { useFetchFamiliarFollowers } from '../hooks/familiar_followers';
 
 const AccountLink: React.FC<{ account?: Account }> = ({ account }) => {
   if (!account) {
@@ -64,20 +61,11 @@ const FamiliarFollowersReadout: React.FC<{ familiarFollowers: Account[] }> = ({
 export const FamiliarFollowers: React.FC<{ accountId: string }> = ({
   accountId,
 }) => {
-  const dispatch = useAppDispatch();
-  const familiarFollowers = useAppSelector((state) =>
-    getAccountFamiliarFollowers(state, accountId),
-  );
+  const { familiarFollowers, isLoading } = useFetchFamiliarFollowers({
+    accountId,
+  });
 
-  const hasNoData = familiarFollowers === null;
-
-  useEffect(() => {
-    if (hasNoData) {
-      void dispatch(fetchAccountsFamiliarFollowers({ id: accountId }));
-    }
-  }, [dispatch, accountId, hasNoData]);
-
-  if (hasNoData || familiarFollowers.length === 0) {
+  if (isLoading || familiarFollowers.length === 0) {
     return null;
   }
 

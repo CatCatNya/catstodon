@@ -578,6 +578,13 @@ nl:
         all: Alles
         limited: Beperkt
         title: Moderatie
+      moderation_notes:
+        create: Moderatie-opmerking aanmaken
+        created_msg: Aanmaken van servermoderatie-opmerking geslaagd!
+        description_html: Opmerkingen bekijken, en voor jezelf en andere moderatoren achterlaten
+        destroyed_msg: Verwijderen van servermoderatie-opmerking geslaagd!
+        placeholder: Informatie over deze server, genomen acties of iets anders die jou kunnen helpen om deze server in de toekomst te moderen.
+        title: Moderatie-opmerkingen
       private_comment: Privé-opmerking
       public_comment: Openbare opmerking
       purge: Volledig verwijderen
@@ -683,7 +690,7 @@ nl:
         delete: Verwijderen
         placeholder: Beschrijf welke maatregelen zijn genomen of andere gerelateerde opmerkingen...
         title: Opmerkingen
-      notes_description_html: Bekijk en laat opmerkingen achter voor andere moderatoren en voor jouw toekomstige zelf
+      notes_description_html: Opmerkingen bekijken, en voor jezelf en andere moderatoren achterlaten
       processed_msg: 'Rapportage #%{id} succesvol afgehandeld'
       quick_actions_description_html: 'Neem een snelle maatregel of scroll naar beneden om de gerapporteerde inhoud te bekijken:'
       remote_user_placeholder: de externe gebruiker van %{instance}
@@ -786,17 +793,26 @@ nl:
       title: Rollen
     rules:
       add_new: Regel toevoegen
+      add_translation: Vertaling toevoegen
       delete: Verwijderen
       description_html: Hoewel de meeste mensen zeggen dat ze de gebruiksvoorwaarden hebben gelezen en er mee akkoord gaan, lezen mensen deze meestal niet totdat er een probleem optreedt. <strong>Maak het eenvoudiger om de regels van deze server in één oogopslag te zien, door ze puntsgewijs in een lijst te zetten.</strong> Probeer de verschillende regels kort en simpel te houden, maar probeer ze ook niet in verschillende items onder te verdelen.
       edit: Regel bewerken
       empty: Voor deze server zijn nog geen regels opgesteld.
+      move_down: Omlaag verplaatsen
+      move_up: Omhoog verplaatsen
       title: Serverregels
+      translation: Vertaling
+      translations: Vertalingen
+      translations_explanation: Je kunt eventueel vertalingen toevoegen voor de regels. De standaardwaarde wordt getoond als er geen vertaalde versie beschikbaar is. Zorg er altijd voor dat aanvullende vertalingen bijgewerkt blijven.
     settings:
       about:
         manage_rules: Serverregels beheren
         preamble: Geef uitgebreide informatie over hoe de server wordt beheerd, gemodereerd en gefinancierd.
         rules_hint: Er is een speciaal gebied voor regels waaraan uw gebruikers zich dienen te houden.
         title: Over
+      allow_referrer_origin:
+        desc: Wanneer je gebruikers op links naar externe sites klikken, kan hun browser het adres van jouw Mastodon-server als de referrer verzenden. Zet dit uit als dit jouw gebruikers uniek zou identificeren, bijvoorbeeld als dit een persoonlijke Mastodon-server is.
+        title: Externe sites toestaan om jouw Mastodon-server te zien als de bron
       appearance:
         preamble: Mastodons webomgeving aanpassen.
         title: Weergave
@@ -816,9 +832,9 @@ nl:
       discovery:
         follow_recommendations: Aanbevolen accounts
         preamble: Het tonen van interessante inhoud is van essentieel belang voor het aan boord halen van nieuwe gebruikers, die mogelijk niemand van Mastodon kennen. Bepaal hoe verschillende functies voor het ontdekken van inhoud en gebruikers op jouw server werken.
+        privacy: Privacy
         profile_directory: Gebruikersgids
         public_timelines: Openbare tijdlijnen
-        publish_discovered_servers: Ontdekte servers publiceren
         publish_statistics: Statistieken publiceren
         title: Ontdekken
         trends: Trends
@@ -1915,6 +1931,11 @@ nl:
     does_not_match_previous_name: komt niet overeen met de vorige naam
   terms_of_service:
     title: Gebruiksvoorwaarden
+  terms_of_service_interstitial:
+    future_preamble_html: We brengen enkele wijzigingen aan in onze gebruiksvoorwaarden, die van kracht worden op <strong>%{date}</strong>. We raden je aan om de bijgewerkte voorwaarden door te nemen.
+    past_preamble_html: We hebben onze gebruiksvoorwaarden gewijzigd sinds je laatste bezoek. We raden je aan om de bijgewerkte voorwaarden door te nemen.
+    review_link: De gebruiksvoorwaarden bekijken
+    title: De gebruiksvoorwaarden van %{domain} worden gewijzigd
   themes:
     contrast: Mastodon (hoog contrast)
     default: Mastodon (donker)
@@ -2054,7 +2075,6 @@ nl:
       post_action: Opstellen
       post_step: Zeg hallo tegen de wereld met tekst, foto's, video's of peilingen.
       post_title: Je eerste bericht schrijven
-      share_action: Delen
       share_step: Laat je vrienden weten waar je op Mastodon bent te vinden.
       share_title: Je Mastodonprofiel delen
       sign_in_action: Inloggen

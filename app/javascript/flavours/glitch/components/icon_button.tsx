@@ -27,6 +27,7 @@ interface Props {
   counter?: number;
   href?: string;
   ariaHidden?: boolean;
+  ariaControls?: string;
   label?: string;
   obfuscateCount?: boolean;
 }
@@ -54,6 +55,7 @@ export const IconButton = forwardRef<HTMLButtonElement, Props>(
       overlay = false,
       tabIndex = 0,
       ariaHidden = false,
+      ariaControls,
       label,
       obfuscateCount,
     },
@@ -158,6 +160,7 @@ export const IconButton = forwardRef<HTMLButtonElement, Props>(
         aria-label={title}
         aria-expanded={expanded}
         aria-hidden={ariaHidden}
+        aria-controls={ariaControls}
         title={title}
         className={classes}
         onClick={handleClick}

@@ -16,3 +16,16 @@ if ENV['REDIS_NAMESPACE']
 
   abort message
 end
+
+if ENV['MASTODON_USE_LIBVIPS'] == 'false'
+  warn <<~MESSAGE
+    WARNING: Mastodon support for ImageMagick is deprecated and will be removed in future versions. Please consider using libvips instead.
+  MESSAGE
+end
+
+if ENV.key?('WHITELIST_MODE')
+  warn(<<~MESSAGE.squish)
+    WARNING: The environment variable WHITELIST_MODE has been replaced with
+    LIMITED_FEDERATION_MODE. Please update your configuration.
+  MESSAGE
+end

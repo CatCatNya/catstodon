@@ -14,7 +14,6 @@ import { fetchPoll, vote } from 'flavours/glitch/actions/polls';
 import { Icon } from 'flavours/glitch/components/icon';
 import emojify from 'flavours/glitch/features/emoji/emoji';
 import { useIdentity } from 'flavours/glitch/identity_context';
-import { reduceMotion } from 'flavours/glitch/initial_state';
 import { makeEmojiMap } from 'flavours/glitch/models/custom_emoji';
 import type * as Model from 'flavours/glitch/models/poll';
 import type { Status } from 'flavours/glitch/models/status';
@@ -265,7 +264,6 @@ const PollOption: React.FC<PollOptionProps> = (props) => {
     to: {
       width: `${percent}%`,
     },
-    immediate: reduceMotion,
   });
 
   return (
@@ -320,7 +318,7 @@ const PollOption: React.FC<PollOptionProps> = (props) => {
               id='check'
               icon={CheckIcon}
               className='poll__voted__mark'
-              title={intl.formatMessage(messages.voted)}
+              aria-label={intl.formatMessage(messages.voted)}
             />
           </span>
         )}

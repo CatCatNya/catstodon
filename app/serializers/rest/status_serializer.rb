@@ -38,6 +38,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
 
   delegate :local?, to: :object
 
+  def quote
+    object.quote if object.quote&.acceptable?
+  end
+
   def id
     object.id.to_s
   end

@@ -6,8 +6,6 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 
-import { createSelector } from '@reduxjs/toolkit';
-import { List as ImmutableList } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
@@ -58,7 +56,7 @@ import {
 } from '../../actions/statuses';
 import ColumnHeader from '../../components/column_header';
 import { textForScreenReader, defaultMediaVisibility } from '../../components/status';
-import StatusContainer from '../../containers/status_container';
+import { StatusQuoteManager } from '../../components/status_quoted';
 import { deleteModal } from '../../initial_state';
 import { makeGetStatus, makeGetPictureInPicture } from '../../selectors';
 import { getAncestorsIds, getDescendantsIds } from 'flavours/glitch/selectors/contexts';
@@ -507,7 +505,7 @@ class Status extends ImmutablePureComponent {
     const { params: { statusId } } = this.props;
 
     return list.map((id, i) => (
-      <StatusContainer
+      <StatusQuoteManager
         key={id}
         id={id}
         expanded={this.state.threadExpanded}
