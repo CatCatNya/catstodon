@@ -4,10 +4,16 @@ All changes to Catstodon that aren't Mastodon or glitch-soc Mastodon changes wil
 
 All release dates, as well as most other dates, are intended to be read as "within the day, in UTC time."
 
-## [Unreleased] - UNRELEASED
+## [v4.4.0-rc.1+cat.1.0.0] - 2025-05-19
 
 - Upstream changes
-  - This includes a ruby version bump to 3.4.3. Please install Ruby 3.4.3 before installing this version.
+  - This includes a ruby version bump to 3.4.4. Please install Ruby 3.4.4 before installing this version.
+  - If you are upgrading from 4.3.x, read [upstream release notes](https://github.com/glitch-soc/mastodon/releases/tag/v4.4.0-rc.1).
+
+## [v4.3.9+cat+1.0.0] - 2025-07-03
+
+- Upstream changes
+- Bump preferred Ruby version to 3.3.8
 
 ## [v4.3.8+cat+1.0.1] - 2025-05-19
 
