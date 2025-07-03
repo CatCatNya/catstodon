@@ -4,7 +4,7 @@ All changes to Catstodon that aren't Mastodon or glitch-soc Mastodon changes wil
 
 All release dates, as well as most other dates, are intended to be read as "within the day, in UTC time."
 
-## [v4.4.0-rc.1+cat.1.0.0] - 2025-05-19
+## [v4.4.0-rc.1+cat.1.0.0] - 2025-07-03
 
 - Upstream changes
   - This includes a ruby version bump to 3.4.4. Please install Ruby 3.4.4 before installing this version.
