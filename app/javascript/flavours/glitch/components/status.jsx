@@ -463,8 +463,8 @@ class Status extends ImmutablePureComponent {
       onOpenMedia,
       notification,
       history,
-      isQuotedPost,
       identity,
+      isQuotedPost,
       ...other
     } = this.props;
     let attachments = null;
