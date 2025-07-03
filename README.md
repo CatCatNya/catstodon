@@ -19,8 +19,8 @@ For production, it is suggested you run:
 - any of the `stable/*` branches or stable tags
   - do note, however, that these branches/tags have a similar support cycle to upstream, and therefore also to vanilla
     Mastodon!
-  - New Catstodon-exclusive features will only be introduced to the main branch. The `stable` branches will _not_ get
-    backports of new features.
+  - New Catstodon-exclusive features will only be introduced to the `main` branch. The `stable` branches will _not_ get
+    backports of new features once `main` diverges from them significantly.
 - the `main` branch, which is comparable to "nightly" versions in vanilla Mastodon.
 
 ## Differences
