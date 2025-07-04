@@ -1,5 +1,32 @@
 # Catstodon
 
+## Disclaimer
+
+**This software is not "official" Mastodon.**
+
+<details>
+
+This software is a fork of [glitch-soc Mastodon](https://github.com/glitch-soc/mastodon), which itself is a fork
+of [Mastodon](https://joinmastodon.org).
+While a lot of source code is shared with the above two projects, by virtue of being based upon them, **we are not
+Mastodon, or any organization associated directly with it.**
+
+We wish to make very clear that we view our changed branding, which includes a changed logo that also contains a trunk
+and letter(s), as well as our mascot (a cat with a trunk)
+as **not infringing on the Mastodon trademark**. In fact, we are sure
+[calling our modified software "Mastodos" would not infringe on the Mastodon trademark, either](https://github.com/sk22/megalodon/commit/6e52ebc299ee635df6ab09058d97d4e1613b2013#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5)
+(see README.md on the commit).
+
+Further, we'd like to point out that **we are contributors to vanilla Mastodon**, as well as to glitch-soc
+Mastodon, too (see bottom of README for a list).
+
+tldr: We ain't Mastodon. Our logo is now distinct, and also has a trunk, but Mastodon does not own trunks, shapes with
+trunks, or letters on shapes with trunks. It also does not own Catstodon, which is a similar name, but that's because
+it's a cat with a trunk.
+
+Any leftover Mastodon illustrations will eventually be replaced with our own.
+</details>
+
 ## Introduction
 
 This Mastodon fork is based on the [glitch-soc Fork of Mastodon](https://github.com/glitch-soc/mastodon), historically
@@ -64,7 +91,8 @@ For production, it is suggested you run:
   emoji. ([Pull request](https://github.com/glitch-soc/mastodon/pull/1763))
 - Standalone share page: Dispatch fetchServer for maxChars. Fixes the bug where the standalone share page did not
   display the correct maximum character amount. ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
-- \[Glitch\] Fix `/share` not using server-set characters limit ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
+- \[Glitch\] Fix `/share` not using server-set characters
+  limit ([Pull request](https://github.com/glitch-soc/mastodon/pull/2929))
 - Everything merged into vanilla Mastodon
 
 ## Contributions to Vanilla Mastodon
