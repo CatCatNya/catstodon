@@ -40,7 +40,7 @@ module Mastodon
       components = [to_a.join('.')]
       components << "-#{prerelease}" if prerelease.present?
       components << "+#{build_metadata}" if build_metadata.present?
-      components << "+#{catstodon_revision}" if build_metadata.blank? && catstodon_revision.present?
+      components << "+cat.#{catstodon_revision}" if build_metadata.blank? && catstodon_revision.present?
       components.join
     end
 
