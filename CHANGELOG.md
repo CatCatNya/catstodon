@@ -4,6 +4,10 @@ All changes to Catstodon that aren't Mastodon or glitch-soc Mastodon changes wil
 
 All release dates, as well as most other dates, are intended to be read as "within the day, in UTC time."
 
+## [4.4.1+cat.1.0.1] - 2025-07-10
+
+- Don't override MASTODON_VERSION_METADATA anymore
+
 ## [v4.4.1+cat.1.0.0] - 2025-07-09
 
 - Upstream changes

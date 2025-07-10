@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def catstodon_revision
-      '1.0.0'
+      '1.0.1'
     end
 
     def prerelease
