@@ -6,6 +6,8 @@ All release dates, as well as most other dates, are intended to be read as "with
 
 ## [v4.3.11+cat+1.0.0] - 2025-08-12
 
+- Upstream changes
+
 ## [v4.3.9+cat+1.0.0] - 2025-07-03
 
 - Upstream changes
