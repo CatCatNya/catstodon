@@ -15,6 +15,7 @@ module Mastodon
   class InvalidParameterError < Error; end
   class SignatureVerificationError < Error; end
   class MalformedHeaderError < Error; end
+  class RecursionLimitExceededError < Error; end
 
   class UnexpectedResponseError < Error
     attr_reader :response

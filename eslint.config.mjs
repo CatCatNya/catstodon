@@ -374,6 +374,8 @@ export default tseslint.config([
       'import/no-default-export': 'warn',
 
       'jsdoc/require-jsdoc': 'off',
+      'jsdoc/require-param': 'off',
+      'jsdoc/require-returns': 'off',
 
       'react/prefer-stateless-function': 'warn',
       'react/function-component-definition': [

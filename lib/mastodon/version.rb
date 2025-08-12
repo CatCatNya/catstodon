@@ -13,7 +13,7 @@ module Mastodon
     end
 
     def patch
-      1
+      3
     end
 
     def default_prerelease
@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def catstodon_revision
-      '1.0.1'
+      '1.0.0'
     end
 
     def prerelease

@@ -1220,9 +1220,9 @@ ga:
     confirmation_dialogs: Dialóga deimhnithe
     discovery: Fionnachtain
     localization:
-      body: Aistríonn oibrithe deonacha Mastodon.
+      body: Oibrithe deonacha a dhéanann aistriúchán Mastodon.
       guide_link: https://crowdin.com/project/mastodon
-      guide_link_text: Is féidir le gach duine rannchuidiú.
+      guide_link_text: Is féidir le gach duine cur leis.
     sensitive_content: Ábhar íogair
   application_mailer:
     notification_preferences: Athraigh roghanna ríomhphoist
@@ -2004,8 +2004,8 @@ ga:
       ownership: Ní féidir postáil duine éigin eile a phionnáil
       reblog: Ní féidir treisiú a phinnáil
     quote_policies:
-      followers: Leantóirí agus úsáideoirí luaite
-      nobody: Úsáideoirí luaite amháin
+      followers: Do leanúna amháin
+      nobody: Aon duine
       public: Gach duine
     title: '%{name}: "%{quote}"'
     visibilities:
