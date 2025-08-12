@@ -110,6 +110,14 @@ export default class StatusPrepend extends PureComponent {
           values={{ name: link }}
         />
       );
+    case 'quote':
+      return (
+        <FormattedMessage
+          id='notification.label.quote'
+          defaultMessage='{name} quoted your post'
+          values={{ name: link }}
+        />
+      );
     }
     return null;
   };

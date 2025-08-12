@@ -578,6 +578,8 @@ pt-BR:
         all: Todos
         limited: Limitados
         title: Moderação
+      moderation_notes:
+        title: Notas de Moderação
       private_comment: Comentário privado
       public_comment: Comentário público
       purge: Limpar
@@ -1868,8 +1870,6 @@ pt-BR:
       ownership: As publicações dos outros não podem ser fixadas
       reblog: Um impulso não pode ser fixado
     quote_policies:
-      followers: Seguidores e usuários mencionados
-      nobody: Apenas usuários mencionados
       public: Todos
     title: '%{name}: "%{quote}"'
     visibilities:

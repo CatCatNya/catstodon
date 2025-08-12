@@ -10,15 +10,13 @@ import { createSelector } from '@reduxjs/toolkit';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { useDispatch, useSelector } from 'react-redux';
 
-
-import { HotKeys } from 'react-hotkeys';
-
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import { replyCompose } from 'flavours/glitch/actions/compose';
 import { markConversationRead, deleteConversation } from 'flavours/glitch/actions/conversations';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { muteStatus, unmuteStatus, toggleStatusSpoilers } from 'flavours/glitch/actions/statuses';
+import { Hotkeys } from 'flavours/glitch/components/hotkeys';
 import AttachmentList from 'flavours/glitch/components/attachment_list';
 import AvatarComposite from 'flavours/glitch/components/avatar_composite';
 import { IconButton } from 'flavours/glitch/components/icon_button';
@@ -178,7 +176,7 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
   };
 
   return (
-    <HotKeys handlers={handlers}>
+    <Hotkeys handlers={handlers}>
       <div className={classNames('conversation focusable muted', { unread })} tabIndex={0}>
         <div className='conversation__avatar' onClick={handleClick} role='presentation'>
           <AvatarComposite accounts={accounts} size={48} />
@@ -228,7 +226,7 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
           </div>
         </div>
       </div>
-    </HotKeys>
+    </Hotkeys>
   );
 };
 

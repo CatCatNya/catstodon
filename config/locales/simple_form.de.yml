@@ -56,11 +56,12 @@ de:
         scopes: Welche Schnittstellen der Applikation erlaubt sind. Wenn du einen Top-Level-Scope auswählst, dann musst du nicht jeden einzelnen darunter auswählen.
         setting_aggregate_reblogs: Beiträge, die erst kürzlich geteilt wurden, werden nicht noch einmal angezeigt (betrifft nur zukünftig geteilte Beiträge)
         setting_always_send_emails: Normalerweise werden Benachrichtigungen nicht per E-Mail versendet, wenn du gerade auf Mastodon aktiv bist
-        setting_default_quote_policy: Erwähnte Profile dürfen immer zitieren. Diese Einstellung gilt nur für Beiträge, die mit der zukünftigen Mastodon-Version erstellt wurden. Als Vorbereitung darauf kannst du bereits jetzt die Einstellung vornehmen
+        setting_default_quote_policy: Diese Einstellung gilt nur für Beiträge, die mit der zukünftigen Mastodon-Version erstellt wurden. Als Vorbereitung darauf kannst du bereits jetzt die Einstellung vornehmen.
         setting_default_sensitive: Medien, die mit einer Inhaltswarnung versehen worden sind, werden – je nach Einstellung – erst nach einem zusätzlichen Klick angezeigt
         setting_display_media_default: Medien mit Inhaltswarnung ausblenden
         setting_display_media_hide_all: Medien immer ausblenden
         setting_display_media_show_all: Medien mit Inhaltswarnung immer anzeigen
+        setting_emoji_style: 'Wie Emojis dargestellt werden: „Automatisch“ verwendet native Emojis, für veraltete Browser wird jedoch Twemoji verwendet.'
         setting_system_scrollbars_ui: Betrifft nur Desktop-Browser, die auf Chrome oder Safari basieren
         setting_use_blurhash: Der Farbverlauf basiert auf den Farben der ausgeblendeten Medien, verschleiert aber jegliche Details
         setting_use_pending_items: Neue Beiträge hinter einem Klick verstecken, anstatt automatisch zu scrollen
@@ -150,8 +151,8 @@ de:
       user:
         chosen_languages: Wenn du hier eine oder mehrere Sprachen auswählst, werden ausschließlich Beiträge in diesen Sprachen in deinen öffentlichen Timelines angezeigt
         date_of_birth:
-          one: Wir müssen sicherstellen, dass du mindestens %{count} Jahre alt bist, um Mastodon nutzen zu können. Wir werden diese Information nicht aufbewahren.
-          other: Wir müssen sicherstellen, dass du mindestens %{count} Jahre alt bist, um Mastodon nutzen zu können. Wir werden diese Information nicht aufbewahren.
+          one: Wir müssen sicherstellen, dass du mindestens %{count} Jahr alt bist, um %{domain} verwenden zu können. Wir werden diese Information nicht aufbewahren.
+          other: Wir müssen sicherstellen, dass du mindestens %{count} Jahre alt bist, um %{domain} verwenden zu können. Wir werden diese Information nicht aufbewahren.
         role: Die Rolle bestimmt, welche Berechtigungen das Konto hat.
       user_role:
         color: Farbe, die für diese Rolle in der gesamten Benutzerschnittstelle verwendet wird, als RGB im Hexadezimalsystem
@@ -159,6 +160,10 @@ de:
         name: Name der Rolle, der auch öffentlich als Badge angezeigt wird, sofern dies unten aktiviert ist
         permissions_as_keys: Benutzer*innen mit dieser Rolle haben Zugriff auf...
         position: Höhere Rollen entscheiden über Konfliktlösungen zu gewissen Situationen. Bestimmte Aktionen können nur mit geringfügigeren Rollen durchgeführt werden
+      username_block:
+        allow_with_approval: Anstatt Registrierungen komplett zu verhindern, benötigen übereinstimmende Treffer eine Genehmigung
+        comparison: Bitte beachte das Scunthorpe-Problem, wenn teilweise übereinstimmende Treffer gesperrt werden
+        username: Abgleich erfolgt unabhängig der Groß- und Kleinschreibung sowie gängiger Homoglyphen („4“ für „a“ oder „3“ für „e“)
       webhook:
         events: Zu sendende Ereignisse auswählen
         template: Erstelle deine eigenen JSON-Nutzdaten mit Hilfe von Variablen-Interpolation. Leer lassen für Standard-JSON.
@@ -241,12 +246,13 @@ de:
         setting_display_media_default: Standard
         setting_display_media_hide_all: Alle Medien ausblenden
         setting_display_media_show_all: Alle Medien anzeigen
+        setting_emoji_style: Emoji-Stil
         setting_expand_spoilers: Beiträge mit Inhaltswarnung immer ausklappen
         setting_hide_network: Follower und „Folge ich“ nicht anzeigen
         setting_missing_alt_text_modal: Bestätigungsdialog anzeigen, bevor Medien ohne Bildbeschreibung veröffentlicht werden
         setting_reduce_motion: Bewegung in Animationen verringern
         setting_system_font_ui: Standardschriftart des Browsers verwenden
-        setting_system_scrollbars_ui: Bildlaufleiste des Systems verwenden
+        setting_system_scrollbars_ui: Bildlaufleiste des Betriebssystems verwenden
         setting_theme: Design
         setting_trends: Heutige Trends anzeigen
         setting_unfollow_modal: Bestätigungsdialog beim Entfolgen eines Profils anzeigen
@@ -323,6 +329,7 @@ de:
         follow_request: Jemand möchte mir folgen
         mention: Ich wurde erwähnt
         pending_account: Ein neues Konto muss überprüft werden
+        quote: Jemand zitierte dich
         reblog: Mein Beitrag wurde geteilt
         report: Eine neue Meldung wurde eingereicht
         software_updates:
@@ -369,6 +376,10 @@ de:
         name: Name
         permissions_as_keys: Berechtigungen
         position: Priorität
+      username_block:
+        allow_with_approval: Registrierungen mit Genehmigung zulassen
+        comparison: Vergleichsmethode
+        username: Übereinstimmendes Wort
       webhook:
         events: Aktivierte Ereignisse
         template: Nutzdaten-Vorlage

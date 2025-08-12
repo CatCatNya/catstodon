@@ -234,6 +234,7 @@ uk:
         setting_display_media_default: За промовчанням
         setting_display_media_hide_all: Сховати всі
         setting_display_media_show_all: Показати всі
+        setting_emoji_style: Стиль емодзі
         setting_expand_spoilers: Завжди розгортати дописи з попередженнями про вміст
         setting_hide_network: Сховати вашу мережу
         setting_missing_alt_text_modal: Запитувати перед розміщенням медіа без альтернативного тексту
@@ -316,6 +317,7 @@ uk:
         follow_request: Коли хтось запитує дозвіл підписатися
         mention: Коли хтось згадує вас
         pending_account: Надсилати електронного листа, коли новий обліковий запис потребує розгляду
+        quote: Хтось процитував вас
         reblog: Коли хтось поширює ваш допис
         report: Нову скаргу надіслано
         software_updates:

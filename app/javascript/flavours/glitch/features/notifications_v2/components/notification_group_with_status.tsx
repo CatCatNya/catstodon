@@ -3,12 +3,11 @@ import type { JSX } from 'react';
 
 import classNames from 'classnames';
 
-import { HotKeys } from 'react-hotkeys';
-
 import { replyComposeById } from 'flavours/glitch/actions/compose';
 import { navigateToStatus } from 'flavours/glitch/actions/statuses';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { AvatarGroup } from 'flavours/glitch/components/avatar_group';
+import { Hotkeys } from 'flavours/glitch/components/hotkeys';
 import type { IconProp } from 'flavours/glitch/components/icon';
 import { Icon } from 'flavours/glitch/components/icon';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
@@ -91,7 +90,7 @@ export const NotificationGroupWithStatus: React.FC<{
   );
 
   return (
-    <HotKeys handlers={handlers}>
+    <Hotkeys handlers={handlers}>
       <div
         role='button'
         className={classNames(
@@ -149,6 +148,6 @@ export const NotificationGroupWithStatus: React.FC<{
           )}
         </div>
       </div>
-    </HotKeys>
+    </Hotkeys>
   );
 };

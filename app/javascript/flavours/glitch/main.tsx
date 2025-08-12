@@ -2,14 +2,18 @@ import { createRoot } from 'react-dom/client';
 
 import { Globals } from '@react-spring/web';
 
+import * as perf from '@/flavours/glitch/utils/performance';
 import { setupBrowserNotifications } from 'flavours/glitch/actions/notifications';
 import Mastodon from 'flavours/glitch/containers/mastodon';
 import { me, reduceMotion } from 'flavours/glitch/initial_state';
-import * as perf from 'flavours/glitch/performance';
 import ready from 'flavours/glitch/ready';
 import { store } from 'flavours/glitch/store';
 
-import { isProduction, isDevelopment } from './utils/environment';
+import {
+  isProduction,
+  isDevelopment,
+  isModernEmojiEnabled,
+} from './utils/environment';
 
 function main() {
   perf.start('main()');
@@ -27,6 +31,13 @@ function main() {
       Globals.assign({
         skipAnimation: true,
       });
+    }
+
+    if (isModernEmojiEnabled()) {
+      const { initializeEmoji } = await import(
+        '@/flavours/glitch/features/emoji'
+      );
+      initializeEmoji();
     }
 
     const root = createRoot(mountNode);
