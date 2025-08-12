@@ -74,8 +74,8 @@
  * @property {object} local_settings
  * @property {number} max_feed_hashtags
  * @property {number} poll_limits
- * @property {string[]} features
  * @property {number} max_reactions
+ * @property {string[]} features
  */
 
 const element = document.getElementById('initial-state');

@@ -165,16 +165,16 @@ class REST::StatusSerializer < ActiveModel::Serializer
     object.active_mentions.to_a.sort_by(&:id)
   end
 
+  def reactions
+    object.reactions(current_user&.account&.id)
+  end
+
   def quote_approval
     {
       automatic: object.quote_policy_as_keys(:automatic),
       manual: object.quote_policy_as_keys(:manual),
       current_user: object.quote_policy_for_account(current_user&.account),
     }
-  end
-
-  def reactions
-    object.reactions(current_user&.account&.id)
   end
 
   private
