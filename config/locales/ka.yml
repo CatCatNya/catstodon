@@ -436,9 +436,6 @@ ka:
       private: მხოლოდ-მიმდევრები
       private_long: აჩვენე მხოლოდ მიმდევრებს
       public: საჯარო
-      public_long: ხედავს ყველა
-      unlisted: ჩამოუთვლელი
-      unlisted_long: ხედავს ყველა, მაგრამ არ ჩანს საჯარო თაიმლაინებში
   stream_entries:
     sensitive_content: მგრძნობიარე კონტენტი
   themes:

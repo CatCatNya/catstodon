@@ -4,11 +4,15 @@ module Status::InteractionPolicyConcern
   extend ActiveSupport::Concern
 
   QUOTE_APPROVAL_POLICY_FLAGS = {
-    unknown: (1 << 0),
+    unsupported_policy: (1 << 0),
     public: (1 << 1),
     followers: (1 << 2),
     followed: (1 << 3),
   }.freeze
+
+  included do
+    before_validation :downgrade_quote_policy, if: -> { local? && !distributable? }
+  end
 
   def quote_policy_as_keys(kind)
     case kind
@@ -23,7 +27,7 @@ module Status::InteractionPolicyConcern
 
   # Returns `:automatic`, `:manual`, `:unknown` or `:denied`
   def quote_policy_for_account(other_account, preloaded_relations: {})
-    return :denied if other_account.nil?
+    return :denied if other_account.nil? || direct_visibility?
 
     following_author = nil
 
@@ -48,8 +52,12 @@ module Status::InteractionPolicyConcern
       return :manual if following_author
     end
 
-    return :unknown if (automatic_policy | manual_policy).anybits?(QUOTE_APPROVAL_POLICY_FLAGS[:unknown])
+    return :unknown if (automatic_policy | manual_policy).anybits?(QUOTE_APPROVAL_POLICY_FLAGS[:unsupported_policy])
 
     :denied
+  end
+
+  def downgrade_quote_policy
+    self.quote_approval_policy = 0
   end
 end

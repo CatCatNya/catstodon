@@ -46,7 +46,7 @@ const getAccounts = createSelector(
 
 const getStatus = makeGetStatus();
 
-export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) => {
+export const Conversation = ({ conversation, scrollKey }) => {
   const id = conversation.get('id');
   const unread = conversation.get('unread');
   const lastStatusId = conversation.get('last_status');
@@ -115,14 +115,6 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
     dispatch(deleteConversation(id));
   }, [dispatch, id]);
 
-  const handleHotkeyMoveUp = useCallback(() => {
-    onMoveUp(id);
-  }, [id, onMoveUp]);
-
-  const handleHotkeyMoveDown = useCallback(() => {
-    onMoveDown(id);
-  }, [id, onMoveDown]);
-
   const handleConversationMute = useCallback(() => {
     if (lastStatus.get('muted')) {
       dispatch(unmuteStatus(lastStatus.get('id')));
@@ -170,8 +162,6 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
   const handlers = {
     reply: handleReply,
     open: handleClick,
-    moveUp: handleHotkeyMoveUp,
-    moveDown: handleHotkeyMoveDown,
     toggleHidden: handleShowMore,
   };
 
@@ -233,6 +223,4 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
 Conversation.propTypes = {
   conversation: ImmutablePropTypes.map.isRequired,
   scrollKey: PropTypes.string,
-  onMoveUp: PropTypes.func,
-  onMoveDown: PropTypes.func,
 };

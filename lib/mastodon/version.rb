@@ -50,7 +50,7 @@ module Mastodon
 
     def api_versions
       {
-        mastodon: 6,
+        mastodon: Mastodon::Feature.outgoing_quotes_enabled? ? 7 : 6,
       }
     end
 

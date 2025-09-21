@@ -4,6 +4,11 @@ All changes to Catstodon that aren't Mastodon or glitch-soc Mastodon changes wil
 
 All release dates, as well as most other dates, are intended to be read as "within the day, in UTC time."
 
+## [4.4.4+cat.1.0.0] - 2025-09-21
+
+- Upstream changes
+- Bump Ruby version to 3.4.6
+
 ## [4.4.3+cat.1.0.0] - 2025-08-12
 
 - Upstream changes
@@ -23,6 +28,10 @@ All release dates, as well as most other dates, are intended to be read as "with
   - This includes a ruby version bump to 3.4.4. Please install Ruby 3.4.4 before installing this version.
   - If you are upgrading from 4.3.x,
     read [upstream release notes](https://github.com/glitch-soc/mastodon/releases/tag/v4.4.0-rc.1).
+
+## [v4.3.12+cat+1.0.0] - 2025-08-12
+
+- Upstream changes
 
 ## [v4.3.11+cat+1.0.0] - 2025-08-12
 
@@ -286,7 +295,6 @@ All release dates, as well as most other dates, are intended to be read as "with
 - Glitch-soc changes since and including 62bc36416f2d2defc77a501226afd0679b6ca252
 - Ruby version 3.3.1. Update your rbenv!
 - Mastodon/Catstodon now requires that these variables are set:
-
   - ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
   - ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
   - ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY

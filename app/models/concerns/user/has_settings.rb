@@ -131,6 +131,10 @@ module User::HasSettings
     integer_cast_setting('visible_reactions', 0)
   end
 
+  def setting_default_quote_policy
+    settings['default_quote_policy'] || 'public'
+  end
+
   def allows_report_emails?
     settings['notification_emails.report']
   end
