@@ -90,11 +90,16 @@ export function fetchStatusFail(id, error, skipLoading) {
 }
 
 export function redraft(status, raw_text, content_type) {
-  return {
-    type: REDRAFT,
-    status,
-    raw_text,
-    content_type,
+  return (dispatch, getState) => {
+    const maxOptions = getState().server.getIn(['server', 'configuration', 'polls', 'max_options']);
+
+    dispatch({
+      type: REDRAFT,
+      status,
+      raw_text,
+      content_type,
+      maxOptions,
+    });
   };
 }
 
