@@ -16,6 +16,7 @@ import { NotificationMention } from './notification_mention';
 import { NotificationModerationWarning } from './notification_moderation_warning';
 import { NotificationPoll } from './notification_poll';
 import { NotificationQuote } from './notification_quote';
+import { NotificationQuotedUpdate } from './notification_quoted_update';
 import { NotificationReaction } from './notification_reaction';
 import { NotificationReblog } from './notification_reblog';
 import { NotificationSeveredRelationships } from './notification_severed_relationships';
@@ -25,9 +26,7 @@ import { NotificationUpdate } from './notification_update';
 export const NotificationGroup: React.FC<{
   notificationGroupId: NotificationGroupModel['group_key'];
   unread: boolean;
-  onMoveUp: (groupId: string) => void;
-  onMoveDown: (groupId: string) => void;
-}> = ({ notificationGroupId, unread, onMoveUp, onMoveDown }) => {
+}> = ({ notificationGroupId, unread }) => {
   const notificationGroup = useAppSelector((state) =>
     state.notificationGroups.groups.find(
       (item) => item.type !== 'gap' && item.group_key === notificationGroupId,
@@ -43,14 +42,6 @@ export const NotificationGroup: React.FC<{
 
   const handlers = useMemo(
     () => ({
-      moveUp: () => {
-        onMoveUp(notificationGroupId);
-      },
-
-      moveDown: () => {
-        onMoveDown(notificationGroupId);
-      },
-
       openProfile: () => {
         if (accountId) dispatch(navigateToProfile(accountId));
       },
@@ -59,7 +50,7 @@ export const NotificationGroup: React.FC<{
         if (accountId) dispatch(mentionComposeById(accountId));
       },
     }),
-    [dispatch, notificationGroupId, accountId, onMoveUp, onMoveDown],
+    [dispatch, accountId],
   );
 
   if (!notificationGroup || notificationGroup.type === 'gap') return null;
@@ -132,6 +123,14 @@ export const NotificationGroup: React.FC<{
     case 'update':
       content = (
         <NotificationUpdate unread={unread} notification={notificationGroup} />
+      );
+      break;
+    case 'quoted_update':
+      content = (
+        <NotificationQuotedUpdate
+          unread={unread}
+          notification={notificationGroup}
+        />
       );
       break;
     case 'admin.sign_up':

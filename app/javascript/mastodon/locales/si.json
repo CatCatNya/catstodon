@@ -1,6 +1,7 @@
 {
   "about.blocks": "මැදිහත්කරණ සේවාදායක",
   "about.contact": "සබඳතාව:",
+  "about.default_locale": "Default",
   "about.disclaimer": "මාස්ටඩන් යනු නිදහස් විවෘත මූලාශ්‍ර මෘදුකාංගයකි. එය මාස්ටඩන් gGmbH හි වෙළඳ නාමයකි.",
   "about.domain_blocks.no_reason_available": "හේතුව ලබා ගත නොහැක.",
   "about.domain_blocks.preamble": "Mastodon සාමාන්‍යයෙන් ඔබට fediverse හි වෙනත් ඕනෑම සේවාදායකයකින් අන්තර්ගතයන් බැලීමට සහ පරිශීලකයින් සමඟ අන්තර් ක්‍රියා කිරීමට ඉඩ සලසයි. මෙම විශේෂිත සේවාදායකයේ සිදු කර ඇති ව්‍යතිරේක මේවාය.",
@@ -698,7 +699,6 @@
   "privacy.public.long": "මැස්ටෝඩන් වල සහ ඉන් පිටත ඕනෑම අයෙක්",
   "privacy.public.short": "ප්‍රසිද්ධ",
   "privacy.unlisted.additional": "මෙය හරියටම පොදු ලෙසම ක්‍රියා කරයි, ඔබ ගිණුම පුරා තෝරාගෙන සිටියත්, සජීවී සංග්‍රහ හෝ හැෂ් ටැග්, ගවේෂණය හෝ මැස්ටෝඩන් සෙවුම තුළ පළ කිරීම දිස් නොවේ.",
-  "privacy.unlisted.long": "ඇල්ගොරිතම රසික ගාස්තු අඩුයි",
   "privacy.unlisted.short": "නිහඬ මහජනතාව",
   "privacy_policy.last_updated": "අවසන් වරට යාවත්කාලීන කරන ලද්දේ {date}",
   "privacy_policy.title": "රහස්‍යතා ප්‍රතිපත්තිය",
@@ -838,7 +838,6 @@
   "status.pin": "පැතිකඩට අමුණන්න",
   "status.read_more": "තව කියවන්න",
   "status.reblog": "බූස්ට් කරන්න",
-  "status.reblog_private": "මුල් දෘශ්‍යතාව සමඟ වැඩි කරන්න",
   "status.reblogged_by": "{name} වැඩි කරන ලදී",
   "status.reblogs": "{count, plural, one {බූස්ට්} other {බූස්ට්}}",
   "status.reblogs.empty": "මෙම සටහන තවම කිසිවෙකු බූස්ට් කර නැත. යමෙකු එසේ කළ විට, ඔවුන් මෙහි පෙන්වනු ඇත.",

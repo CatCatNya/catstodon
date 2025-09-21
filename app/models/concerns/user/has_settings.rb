@@ -127,6 +127,10 @@ module User::HasSettings
     settings['hide_followers_count']
   end
 
+  def setting_default_quote_policy
+    settings['default_quote_policy'] || 'public'
+  end
+
   def setting_visible_reactions
     integer_cast_setting('visible_reactions', 0)
   end

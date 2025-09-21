@@ -688,9 +688,6 @@ ro:
     visibilities:
       private: Doar urmăritorii
       private_long: Arată doar urmăritorilor
-      public_long: Toată lumea poate vedea
-      unlisted: Nelistat
-      unlisted_long: Toată lumea poate vedea, dar nu este listată pe fluxurile publice
   stream_entries:
     sensitive_content: Conținut sensibil
   tags:

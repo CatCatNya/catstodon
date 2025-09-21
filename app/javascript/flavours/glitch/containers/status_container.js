@@ -6,6 +6,7 @@ import {
   mentionCompose,
   directCompose,
 } from 'flavours/glitch/actions/compose';
+import { quoteComposeById } from 'flavours/glitch/actions/compose_typed';
 import {
   initAddFilter,
 } from 'flavours/glitch/actions/filters';
@@ -36,6 +37,9 @@ import {
 import Status from 'flavours/glitch/components/status';
 import { deleteModal } from 'flavours/glitch/initial_state';
 import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
+import { isFeatureEnabled } from 'flavours/glitch/utils/environment';
+
+import { setStatusQuotePolicy } from '../actions/statuses_typed';
 
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
@@ -81,6 +85,12 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
       }
     });
   },
+  
+  onQuote (status) {
+    if (isFeatureEnabled('outgoing_quotes')) {
+      dispatch(quoteComposeById(status.get('id')));
+    }
+  },
 
   onReblog (status, e) {
     dispatch(toggleReblog(status.get('id'), e.shiftKey));
@@ -125,12 +135,28 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
     if (!deleteModal) {
       dispatch(deleteStatus(status.get('id'), withRedraft));
     } else {
-      dispatch(openModal({ modalType: 'CONFIRM_DELETE_STATUS', modalProps: { statusId: status.get('id'), withRedraft } }));
+      dispatch(openModal({
+        modalType: 'CONFIRM_DELETE_STATUS',
+        modalProps: {
+          statusId: status.get('id'),
+          withRedraft
+        }
+      }));
     }
   },
 
   onRevokeQuote (status) {
     dispatch(openModal({ modalType: 'CONFIRM_REVOKE_QUOTE', modalProps: { statusId: status.get('id'), quotedStatusId: status.getIn(['quote', 'quoted_status']) }}));
+  },
+
+  onQuotePolicyChange(status) {
+    const statusId = status.get('id');
+    const handleChange = (_, quotePolicy) => {
+      dispatch(
+        setStatusQuotePolicy({ policy: quotePolicy, statusId }),
+      );
+    }
+    dispatch(openModal({ modalType: 'COMPOSE_PRIVACY', modalProps: { statusId, onChange: handleChange } }));
   },
 
   onEdit (status) {

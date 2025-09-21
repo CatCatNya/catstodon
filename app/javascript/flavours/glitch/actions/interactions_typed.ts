@@ -2,11 +2,12 @@ import {
   apiReblog,
   apiUnreblog,
   apiRevokeQuote,
+  apiGetQuotes,
 } from 'flavours/glitch/api/interactions';
 import type { StatusVisibility } from 'flavours/glitch/models/status';
 import { createDataLoadingThunk } from 'flavours/glitch/store/typed_functions';
 
-import { importFetchedStatus } from './importer';
+import { importFetchedStatus, importFetchedStatuses } from './importer';
 
 export const reblog = createDataLoadingThunk(
   'status/reblog',
@@ -51,5 +52,21 @@ export const revokeQuote = createDataLoadingThunk(
     dispatch(importFetchedStatus(data));
 
     return discardLoadData;
+  },
+);
+
+export const fetchQuotes = createDataLoadingThunk(
+  'status/fetch_quotes',
+  async ({ statusId, next }: { statusId: string; next?: string }) => {
+    const { links, statuses } = await apiGetQuotes(statusId, next);
+
+    return {
+      links,
+      statuses,
+      replace: !next,
+    };
+  },
+  (payload, { dispatch }) => {
+    dispatch(importFetchedStatuses(payload.statuses));
   },
 );

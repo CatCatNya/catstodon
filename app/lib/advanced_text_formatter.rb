@@ -50,6 +50,8 @@ class AdvancedTextFormatter < TextFormatter
       end
     end
 
+    html = add_quote_fallback(html) if options[:quoted_status].present?
+
     html.html_safe # rubocop:disable Rails/OutputSafety
   end
 

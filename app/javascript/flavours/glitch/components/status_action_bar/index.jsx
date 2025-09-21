@@ -2,33 +2,35 @@ import PropTypes from 'prop-types';
 
 import { defineMessages, injectIntl } from 'react-intl';
 
-import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
+import AddReactionIcon from '@/material-icons/400-24px/add_reaction.svg?react';
 import BookmarkIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
 import BookmarkBorderIcon from '@/material-icons/400-24px/bookmark.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
-import RepeatIcon from '@/material-icons/400-24px/repeat.svg?react';
 import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import ReplyAllIcon from '@/material-icons/400-24px/reply_all.svg?react';
 import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import StarBorderIcon from '@/material-icons/400-24px/star.svg?react';
-import RepeatActiveIcon from '@/svg-icons/repeat_active.svg?react';
-import RepeatDisabledIcon from '@/svg-icons/repeat_disabled.svg?react';
-import RepeatPrivateIcon from '@/svg-icons/repeat_private.svg?react';
-import RepeatPrivateActiveIcon from '@/svg-icons/repeat_private_active.svg?react';
-import { identityContextPropShape, withIdentity } from 'mastodon/identity_context';
-import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/permissions';
-import { WithRouterPropTypes } from 'mastodon/utils/react_router';
+import VisibilityIcon from '@/material-icons/400-24px/visibility.svg?react';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
+import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'flavours/glitch/permissions';
+import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend_links';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
-import { Dropdown } from 'mastodon/components/dropdown_menu';
-import { me } from '../initial_state';
+import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
+import { me, maxReactions } from '../../initial_state';
+import EmojiPickerDropdown from '../features/compose/containers/emoji_picker_dropdown_container';
 
-import { IconButton } from './icon_button';
+import { IconButton } from '../icon_button';
+import { RelativeTimestamp } from '../relative_timestamp';
+import { isFeatureEnabled } from '../../utils/environment';
+import { BoostButton } from '../status/boost_button';
+import { RemoveQuoteHint } from './remove_quote_hint';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -42,11 +44,8 @@ const messages = defineMessages({
   share: { id: 'status.share', defaultMessage: 'Share' },
   more: { id: 'status.more', defaultMessage: 'More' },
   replyAll: { id: 'status.replyAll', defaultMessage: 'Reply to thread' },
-  reblog: { id: 'status.reblog', defaultMessage: 'Boost' },
-  reblog_private: { id: 'status.reblog_private', defaultMessage: 'Boost with original visibility' },
-  cancel_reblog_private: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
-  cannot_reblog: { id: 'status.cannot_reblog', defaultMessage: 'This post cannot be boosted' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favorite' },
+  react: { id: 'status.react', defaultMessage: 'React' },
   removeFavourite: { id: 'status.remove_favourite', defaultMessage: 'Remove from favorites' },
   bookmark: { id: 'status.bookmark', defaultMessage: 'Bookmark' },
   removeBookmark: { id: 'status.remove_bookmark', defaultMessage: 'Remove bookmark' },
@@ -61,19 +60,17 @@ const messages = defineMessages({
   admin_status: { id: 'status.admin_status', defaultMessage: 'Open this post in the moderation interface' },
   admin_domain: { id: 'status.admin_domain', defaultMessage: 'Open moderation interface for {domain}' },
   copy: { id: 'status.copy', defaultMessage: 'Copy link to post' },
-  blockDomain: { id: 'account.block_domain', defaultMessage: 'Block domain {domain}' },
-  unblockDomain: { id: 'account.unblock_domain', defaultMessage: 'Unblock domain {domain}' },
-  unmute: { id: 'account.unmute', defaultMessage: 'Unmute @{name}' },
-  unblock: { id: 'account.unblock', defaultMessage: 'Unblock @{name}' },
+  hide: { id: 'status.hide', defaultMessage: 'Hide post' },
+  edited: { id: 'status.edited', defaultMessage: 'Edited {date}' },
   filter: { id: 'status.filter', defaultMessage: 'Filter this post' },
   openOriginalPage: { id: 'account.open_original_page', defaultMessage: 'Open original page' },
   revokeQuote: { id: 'status.revoke_quote', defaultMessage: 'Remove my post from @{name}’s post' },
+  quotePolicyChange: { id: 'status.quote_policy_change', defaultMessage: 'Change who can quote' },
 });
 
 const mapStateToProps = (state, { status }) => {
   const quotedStatusId = status.getIn(['quote', 'quoted_status']);
   return ({
-    relationship: state.getIn(['relationships', status.getIn(['account', 'id'])]),
     quotedAccountId: quotedStatusId ? state.getIn(['statuses', quotedStatusId, 'account']) : null,
   });
 };
@@ -82,21 +79,18 @@ class StatusActionBar extends ImmutablePureComponent {
   static propTypes = {
     identity: identityContextPropShape,
     status: ImmutablePropTypes.map.isRequired,
-    relationship: ImmutablePropTypes.record,
-    quotedAccountId: ImmutablePropTypes.string,
+    quotedAccountId: PropTypes.string,
+    contextType: PropTypes.string,
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
-    onReblog: PropTypes.func,
+    onReactionAdd: PropTypes.func,
     onDelete: PropTypes.func,
     onRevokeQuote: PropTypes.func,
+    onQuotePolicyChange: PropTypes.func,
     onDirect: PropTypes.func,
     onMention: PropTypes.func,
     onMute: PropTypes.func,
-    onUnmute: PropTypes.func,
     onBlock: PropTypes.func,
-    onUnblock: PropTypes.func,
-    onBlockDomain: PropTypes.func,
-    onUnblockDomain: PropTypes.func,
     onReport: PropTypes.func,
     onEmbed: PropTypes.func,
     onMuteConversation: PropTypes.func,
@@ -107,6 +101,7 @@ class StatusActionBar extends ImmutablePureComponent {
     onInteractionModal: PropTypes.func,
     withDismiss: PropTypes.bool,
     withCounters: PropTypes.bool,
+    showReplyCount: PropTypes.bool,
     scrollKey: PropTypes.string,
     intl: PropTypes.object.isRequired,
     ...WithRouterPropTypes,
@@ -116,8 +111,9 @@ class StatusActionBar extends ImmutablePureComponent {
   // evaluate to false. See react-immutable-pure-component for usage.
   updateOnProps = [
     'status',
-    'relationship',
     'quotedAccountId',
+    'showReplyCount',
+    'withCounters',
     'withDismiss',
   ];
 
@@ -139,28 +135,22 @@ class StatusActionBar extends ImmutablePureComponent {
     });
   };
 
-  handleFavouriteClick = () => {
+  handleFavouriteClick = (e) => {
     const { signedIn } = this.props.identity;
 
     if (signedIn) {
-      this.props.onFavourite(this.props.status);
+      this.props.onFavourite(this.props.status, e);
     } else {
       this.props.onInteractionModal('favourite', this.props.status);
     }
   };
 
-  handleReblogClick = e => {
-    const { signedIn } = this.props.identity;
-
-    if (signedIn) {
-      this.props.onReblog(this.props.status, e);
-    } else {
-      this.props.onInteractionModal('reblog', this.props.status);
-    }
+  handleEmojiPick = data => {
+    this.props.onReactionAdd(this.props.status.get('id'), data.native.replace(/:/g, ''), data.imageUrl);
   };
 
-  handleBookmarkClick = () => {
-    this.props.onBookmark(this.props.status);
+  handleBookmarkClick = (e) => {
+    this.props.onBookmark(this.props.status, e);
   };
 
   handleDeleteClick = () => {
@@ -188,43 +178,19 @@ class StatusActionBar extends ImmutablePureComponent {
   };
 
   handleMuteClick = () => {
-    const { status, relationship, onMute, onUnmute } = this.props;
-    const account = status.get('account');
-
-    if (relationship && relationship.get('muting')) {
-      onUnmute(account);
-    } else {
-      onMute(account);
-    }
+    this.props.onMute(this.props.status.get('account'));
   };
 
   handleRevokeQuoteClick = () => {
     this.props.onRevokeQuote(this.props.status);
-  }
+  };
+
+  handleQuotePolicyChange = () => {
+    this.props.onQuotePolicyChange(this.props.status);
+  };
 
   handleBlockClick = () => {
-    const { status, relationship, onBlock, onUnblock } = this.props;
-    const account = status.get('account');
-
-    if (relationship && relationship.get('blocking')) {
-      onUnblock(account);
-    } else {
-      onBlock(status);
-    }
-  };
-
-  handleBlockDomain = () => {
-    const { status, onBlockDomain } = this.props;
-    const account = status.get('account');
-
-    onBlockDomain(account);
-  };
-
-  handleUnblockDomain = () => {
-    const { status, onUnblockDomain } = this.props;
-    const account = status.get('account');
-
-    onUnblockDomain(account.get('acct').split('@')[1]);
+    this.props.onBlock(this.props.status);
   };
 
   handleOpen = () => {
@@ -252,18 +218,23 @@ class StatusActionBar extends ImmutablePureComponent {
     navigator.clipboard.writeText(url);
   };
 
+  handleHideClick = () => {
+    this.props.onFilter();
+  };
+
   render () {
-    const { status, relationship, quotedAccountId, intl, withDismiss, withCounters, scrollKey } = this.props;
+    const { status, quotedAccountId, contextType, intl, withDismiss, withCounters, showReplyCount, scrollKey } = this.props;
     const { signedIn, permissions } = this.props.identity;
 
     const publicStatus       = ['public', 'unlisted'].includes(status.get('visibility'));
     const pinnableStatus     = ['public', 'unlisted', 'private'].includes(status.get('visibility'));
     const mutingConversation = status.get('muted');
-    const account            = status.get('account');
     const writtenByMe        = status.getIn(['account', 'id']) === me;
     const isRemote           = status.getIn(['account', 'username']) !== status.getIn(['account', 'acct']);
+    const isQuotingMe        = quotedAccountId === me;
 
     let menu = [];
+    let reblogIcon = 'retweet';
 
     menu.push({ text: intl.formatMessage(messages.open), action: this.handleOpen });
 
@@ -291,6 +262,9 @@ class StatusActionBar extends ImmutablePureComponent {
 
       if (writtenByMe || withDismiss) {
         menu.push({ text: intl.formatMessage(mutingConversation ? messages.unmuteConversation : messages.muteConversation), action: this.handleConversationMuteClick });
+        if (writtenByMe && isFeatureEnabled('outgoing_quotes') && !['private', 'direct'].includes(status.get('visibility'))) {
+          menu.push({ text: intl.formatMessage(messages.quotePolicyChange), action: this.handleQuotePolicyChange });
+        }
         menu.push(null);
       }
 
@@ -299,54 +273,35 @@ class StatusActionBar extends ImmutablePureComponent {
         menu.push({ text: intl.formatMessage(messages.delete), action: this.handleDeleteClick, dangerous: true });
         menu.push({ text: intl.formatMessage(messages.redraft), action: this.handleRedraftClick, dangerous: true });
       } else {
-        menu.push({ text: intl.formatMessage(messages.mention, { name: account.get('username') }), action: this.handleMentionClick });
-        menu.push({ text: intl.formatMessage(messages.direct, { name: account.get('username') }), action: this.handleDirectClick });
+        menu.push({ text: intl.formatMessage(messages.mention, { name: status.getIn(['account', 'username']) }), action: this.handleMentionClick });
+        menu.push({ text: intl.formatMessage(messages.direct, { name: status.getIn(['account', 'username']) }), action: this.handleDirectClick });
         menu.push(null);
 
-        if (quotedAccountId === me) {
-          menu.push({ text: intl.formatMessage(messages.revokeQuote, { name: account.get('username') }), action: this.handleRevokeQuoteClick, dangerous: true });
-        }
-
-        if (relationship && relationship.get('muting')) {
-          menu.push({ text: intl.formatMessage(messages.unmute, { name: account.get('username') }), action: this.handleMuteClick });
-        } else {
-          menu.push({ text: intl.formatMessage(messages.mute, { name: account.get('username') }), action: this.handleMuteClick, dangerous: true });
-        }
-
-        if (relationship && relationship.get('blocking')) {
-          menu.push({ text: intl.formatMessage(messages.unblock, { name: account.get('username') }), action: this.handleBlockClick });
-        } else {
-          menu.push({ text: intl.formatMessage(messages.block, { name: account.get('username') }), action: this.handleBlockClick, dangerous: true });
-        }
-
         if (!this.props.onFilter) {
-          menu.push(null);
           menu.push({ text: intl.formatMessage(messages.filter), action: this.handleFilterClick, dangerous: true });
           menu.push(null);
         }
 
-        menu.push({ text: intl.formatMessage(messages.report, { name: account.get('username') }), action: this.handleReport, dangerous: true });
-
-        if (account.get('acct') !== account.get('username')) {
-          const domain = account.get('acct').split('@')[1];
-
-          menu.push(null);
-
-          if (relationship && relationship.get('domain_blocking')) {
-            menu.push({ text: intl.formatMessage(messages.unblockDomain, { domain }), action: this.handleUnblockDomain });
-          } else {
-            menu.push({ text: intl.formatMessage(messages.blockDomain, { domain }), action: this.handleBlockDomain, dangerous: true });
-          }
+        if (isQuotingMe) {
+          menu.push({ text: intl.formatMessage(messages.revokeQuote, { name: status.getIn(['account', 'username']) }), action: this.handleRevokeQuoteClick, dangerous: true });
         }
 
-        if ((permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS || (isRemote && (permissions & PERMISSION_MANAGE_FEDERATION) === PERMISSION_MANAGE_FEDERATION)) {
+        menu.push({ text: intl.formatMessage(messages.mute, { name: status.getIn(['account', 'username']) }), action: this.handleMuteClick, dangerous: true });
+        menu.push({ text: intl.formatMessage(messages.block, { name: status.getIn(['account', 'username']) }), action: this.handleBlockClick, dangerous: true });
+        menu.push({ text: intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) }), action: this.handleReport, dangerous: true });
+
+        if (((permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS && (accountAdminLink || statusAdminLink)) || (isRemote && (permissions & PERMISSION_MANAGE_FEDERATION) === PERMISSION_MANAGE_FEDERATION)) {
           menu.push(null);
           if ((permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS) {
-            menu.push({ text: intl.formatMessage(messages.admin_account, { name: account.get('username') }), href: `/admin/accounts/${status.getIn(['account', 'id'])}` });
-            menu.push({ text: intl.formatMessage(messages.admin_status), href: `/admin/accounts/${status.getIn(['account', 'id'])}/statuses/${status.get('id')}` });
+            if (accountAdminLink !== undefined) {
+              menu.push({ text: intl.formatMessage(messages.admin_account, { name: status.getIn(['account', 'username']) }), href: accountAdminLink(status.getIn(['account', 'id'])) });
+            }
+            if (statusAdminLink !== undefined) {
+              menu.push({ text: intl.formatMessage(messages.admin_status), href: statusAdminLink(status.getIn(['account', 'id']), status.get('id')) });
+            }
           }
           if (isRemote && (permissions & PERMISSION_MANAGE_FEDERATION) === PERMISSION_MANAGE_FEDERATION) {
-            const domain = account.get('acct').split('@')[1];
+            const domain = status.getIn(['account', 'acct']).split('@')[1];
             menu.push({ text: intl.formatMessage(messages.admin_domain, { domain: domain }), href: `/admin/instances/${domain}` });
           }
         }
@@ -367,54 +322,69 @@ class StatusActionBar extends ImmutablePureComponent {
       replyTitle = intl.formatMessage(messages.replyAll);
     }
 
-    const reblogPrivate = status.getIn(['account', 'id']) === me && status.get('visibility') === 'private';
+    const filterButton = this.props.onFilter && (
+      <div className='status__action-bar__button-wrapper'>
+        <IconButton className='status__action-bar-button' title={intl.formatMessage(messages.hide)} icon='eye' iconComponent={VisibilityIcon} onClick={this.handleHideClick} />
+      </div>
+    );
 
-    let reblogTitle, reblogIconComponent;
-
-    if (status.get('reblogged')) {
-      reblogTitle = intl.formatMessage(messages.cancel_reblog_private);
-      reblogIconComponent = publicStatus ? RepeatActiveIcon : RepeatPrivateActiveIcon;
-    } else if (publicStatus) {
-      reblogTitle = intl.formatMessage(messages.reblog);
-      reblogIconComponent = RepeatIcon;
-    } else if (reblogPrivate) {
-      reblogTitle = intl.formatMessage(messages.reblog_private);
-      reblogIconComponent = RepeatPrivateIcon;
-    } else {
-      reblogTitle = intl.formatMessage(messages.cannot_reblog);
-      reblogIconComponent = RepeatDisabledIcon;
-    }
-
-
+    const canReact = permissions && status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
     const bookmarkTitle = intl.formatMessage(status.get('bookmarked') ? messages.removeBookmark : messages.bookmark);
     const favouriteTitle = intl.formatMessage(status.get('favourited') ? messages.removeFavourite : messages.favourite);
-    const isReply = status.get('in_reply_to_account_id') === status.getIn(['account', 'id']);
+
+    const shouldShowQuoteRemovalHint = isQuotingMe && contextType === 'notifications';
 
     return (
       <div className='status__action-bar'>
         <div className='status__action-bar__button-wrapper'>
-          <IconButton className='status__action-bar__button' title={replyTitle} icon={isReply ? 'reply' : replyIcon} iconComponent={isReply ? ReplyIcon : replyIconComponent} onClick={this.handleReplyClick} counter={status.get('replies_count')} />
-        </div>
-        <div className='status__action-bar__button-wrapper'>
-          <IconButton className={classNames('status__action-bar__button', { reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} title={reblogTitle} icon='retweet' iconComponent={reblogIconComponent} onClick={this.handleReblogClick} counter={withCounters ? status.get('reblogs_count') : undefined} />
-        </div>
-        <div className='status__action-bar__button-wrapper'>
-          <IconButton className='status__action-bar__button star-icon' animate active={status.get('favourited')} title={favouriteTitle} icon='star' iconComponent={status.get('favourited') ? StarIcon : StarBorderIcon} onClick={this.handleFavouriteClick} counter={withCounters ? status.get('favourites_count') : undefined} />
-        </div>
-        <div className='status__action-bar__button-wrapper'>
-          <IconButton className='status__action-bar__button bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={bookmarkTitle} icon='bookmark' iconComponent={status.get('bookmarked') ? BookmarkIcon : BookmarkBorderIcon} onClick={this.handleBookmarkClick} />
-        </div>
-        <div className='status__action-bar__button-wrapper'>
-          <Dropdown
-            scrollKey={scrollKey}
-            status={status}
-            items={menu}
-            icon='ellipsis-h'
-            iconComponent={MoreHorizIcon}
-            direction='right'
-            title={intl.formatMessage(messages.more)}
+          <IconButton
+            className='status__action-bar-button'
+            title={replyTitle}
+            icon={replyIcon}
+            iconComponent={replyIconComponent}
+            onClick={this.handleReplyClick}
+            counter={showReplyCount ? status.get('replies_count') : undefined}
+            obfuscateCount
           />
         </div>
+        <div className='status__action-bar__button-wrapper'>
+          <BoostButton status={status} counters={withCounters} />
+        </div>
+        <div className='status__action-bar__button-wrapper'>
+          <IconButton className='status__action-bar-button star-icon' animate active={status.get('favourited')} title={favouriteTitle} icon='star' iconComponent={status.get('favourited') ? StarIcon : StarBorderIcon} onClick={this.handleFavouriteClick} counter={withCounters ? status.get('favourites_count') : undefined} />
+        </div>
+        <div className='status__action-bar__button-wrapper'>
+          <EmojiPickerDropdown className='status__action-bar-button' onPickEmoji={this.handleEmojiPick} title={intl.formatMessage(messages.react)} icon={AddReactionIcon} disabled={!canReact} />
+        </div>
+        <div className='status__action-bar__button-wrapper'>
+          <IconButton className='status__action-bar-button bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={bookmarkTitle} icon='bookmark' iconComponent={status.get('bookmarked') ? BookmarkIcon : BookmarkBorderIcon} onClick={this.handleBookmarkClick} />
+        </div>
+
+        {filterButton}
+
+        <RemoveQuoteHint className='status__action-bar__button-wrapper' canShowHint={shouldShowQuoteRemovalHint}>
+          {(dismissQuoteHint) => (
+            <Dropdown
+              scrollKey={scrollKey}
+              status={status}
+              items={menu}
+              icon='ellipsis-h'
+              size={18}
+              iconComponent={MoreHorizIcon}
+              direction='right'
+              ariaLabel={intl.formatMessage(messages.more)}
+              onOpen={() => {
+                dismissQuoteHint();
+                return true;
+              }}
+            />
+          )}
+        </RemoveQuoteHint>
+
+        <div className='status__action-bar-spacer' />
+        <a href={status.get('url')} className='status__relative-time' target='_blank' rel='noopener'>
+          <RelativeTimestamp timestamp={status.get('created_at')} />{status.get('edited_at') && <abbr title={intl.formatMessage(messages.edited, { date: intl.formatDate(status.get('edited_at'), { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }) })}> *</abbr>}
+        </a>
       </div>
     );
   }

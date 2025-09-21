@@ -9,7 +9,6 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import FlagIcon from '@/material-icons/400-24px/flag-fill.svg?react';
-import FormatQuoteIcon from '@/material-icons/400-24px/format_quote.svg?react';
 import PersonIcon from '@/material-icons/400-24px/person-fill.svg?react';
 import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
 import { Account } from 'flavours/glitch/components/account';
@@ -45,8 +44,6 @@ class Notification extends ImmutablePureComponent {
   static propTypes = {
     notification: ImmutablePropTypes.map.isRequired,
     hidden: PropTypes.bool,
-    onMoveUp: PropTypes.func.isRequired,
-    onMoveDown: PropTypes.func.isRequired,
     onMention: PropTypes.func.isRequired,
     onFavourite: PropTypes.func.isRequired,
     onReblog: PropTypes.func.isRequired,
@@ -60,16 +57,6 @@ class Notification extends ImmutablePureComponent {
     onUnmount: PropTypes.func,
     unread: PropTypes.bool,
     ...WithRouterPropTypes,
-  };
-
-  handleMoveUp = () => {
-    const { notification, onMoveUp } = this.props;
-    onMoveUp(notification.get('id'));
-  };
-
-  handleMoveDown = () => {
-    const { notification, onMoveDown } = this.props;
-    onMoveDown(notification.get('id'));
   };
 
   handleOpen = () => {
@@ -112,8 +99,6 @@ class Notification extends ImmutablePureComponent {
       mention: this.handleMention,
       open: this.handleOpen,
       openProfile: this.handleOpenProfile,
-      moveUp: this.handleMoveUp,
-      moveDown: this.handleMoveDown,
     };
   }
 
@@ -164,8 +149,6 @@ class Notification extends ImmutablePureComponent {
         containerId={notification.get('id')}
         withDismiss
         hidden={this.props.hidden}
-        onMoveDown={this.handleMoveDown}
-        onMoveUp={this.handleMoveUp}
         onMention={this.props.onMention}
         contextType='notifications'
         getScrollPosition={this.props.getScrollPosition}
@@ -190,8 +173,6 @@ class Notification extends ImmutablePureComponent {
         muted
         withDismiss
         notification={notification}
-        onMoveDown={this.handleMoveDown}
-        onMoveUp={this.handleMoveUp}
         onMention={this.props.onMention}
         contextType='notifications'
         getScrollPosition={this.props.getScrollPosition}
@@ -312,6 +293,31 @@ class Notification extends ImmutablePureComponent {
         id={notification.get('status')}
         account={notification.get('account')}
         prepend='update'
+        muted
+        notification={notification}
+        onMoveDown={this.handleMoveDown}
+        onMoveUp={this.handleMoveUp}
+        onMention={this.props.onMention}
+        contextType='notifications'
+        getScrollPosition={this.props.getScrollPosition}
+        updateScrollBottom={this.props.updateScrollBottom}
+        cachedMediaWidth={this.props.cachedMediaWidth}
+        cacheMediaWidth={this.props.cacheMediaWidth}
+        onUnmount={this.props.onUnmount}
+        withDismiss
+        unread={this.props.unread}
+      />
+    );
+  }
+
+  renderQuotedUpdate (notification) {
+    return (
+      <StatusQuoteManager
+        containerId={notification.get('id')}
+        hidden={!!this.props.hidden}
+        id={notification.get('status')}
+        account={notification.get('account')}
+        prepend='quoted_update'
         muted
         notification={notification}
         onMoveDown={this.handleMoveDown}
@@ -493,6 +499,8 @@ class Notification extends ImmutablePureComponent {
       return this.renderStatus(notification);
     case 'update':
       return this.renderUpdate(notification);
+    case 'quoted_update':
+      return this.renderQuotedUpdate(notification);
     case 'poll':
       return this.renderPoll(notification);
     case 'severed_relationships':
