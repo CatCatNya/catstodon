@@ -56,7 +56,7 @@ const mapStateToProps = state => ({
   maxChars: state.getIn(['server', 'server', 'configuration', 'statuses', 'max_characters'], 500),
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, props) => ({
 
   onChange (text) {
     dispatch(changeCompose(text));
@@ -69,7 +69,11 @@ const mapDispatchToProps = (dispatch) => ({
         modalProps: { overridePrivacy },
       }));
     } else {
-      dispatch(submitCompose(overridePrivacy));
+      dispatch(submitCompose(overridePrivacy, (status) => {
+        if (props.redirectOnSuccess) {
+          window.location.assign(status.url);
+        }
+      }));
     }
   },
 

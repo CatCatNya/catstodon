@@ -101,12 +101,17 @@ export const ensureComposeIsVisible = (getState) => {
 };
 
 export function setComposeToStatus(status, text, spoiler_text, content_type) {
-  return{
-    type: COMPOSE_SET_STATUS,
-    status,
-    text,
-    spoiler_text,
-    content_type,
+  return (dispatch, getState) => {
+    const maxOptions = getState().server.getIn(['server', 'configuration', 'polls', 'max_options']);
+
+    dispatch({
+      type: COMPOSE_SET_STATUS,
+      status,
+      text,
+      spoiler_text,
+      content_type,
+      maxOptions
+    });
   };
 }
 
@@ -193,8 +198,9 @@ export function directCompose(account) {
 
 /**
  * @param {null | string} overridePrivacy
+ * @param {undefined | Function} successCallback
  */
-export function submitCompose(overridePrivacy = null) {
+export function submitCompose(overridePrivacy = null, successCallback = undefined) {
   return function (dispatch, getState) {
     let status     = getState().getIn(['compose', 'text'], '');
     const media    = getState().getIn(['compose', 'media_attachments']);
@@ -259,6 +265,9 @@ export function submitCompose(overridePrivacy = null) {
 
       dispatch(insertIntoTagHistory(response.data.tags, status));
       dispatch(submitComposeSuccess({ ...response.data }));
+      if (typeof successCallback === 'function') {
+        successCallback(response.data);
+      }
 
       // To make the app more responsive, immediately push the status
       // into the columns
