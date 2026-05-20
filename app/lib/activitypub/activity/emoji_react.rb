@@ -5,7 +5,7 @@ class ActivityPub::Activity::EmojiReact < ActivityPub::Activity
 
   def perform
     original_status = status_from_uri(object_uri)
-    name = @json['content'].dup
+    name = Emoji.normalize(@json['content'].dup)
     return if original_status.nil? || delete_arrived_first?(@json['id'])
 
     if CUSTOM_EMOJI_REGEX.match?(name)
