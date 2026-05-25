@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { Globals } from '@react-spring/web';
@@ -9,11 +10,7 @@ import { me, reduceMotion } from 'flavours/glitch/initial_state';
 import ready from 'flavours/glitch/ready';
 import { store } from 'flavours/glitch/store';
 
-import {
-  isProduction,
-  isDevelopment,
-  isModernEmojiEnabled,
-} from './utils/environment';
+import { isProduction, isDevelopment } from './utils/environment';
 
 function main() {
   perf.start('main()');
@@ -33,15 +30,15 @@ function main() {
       });
     }
 
-    if (isModernEmojiEnabled()) {
-      const { initializeEmoji } = await import(
-        '@/flavours/glitch/features/emoji'
-      );
-      initializeEmoji();
-    }
+    const { initializeEmoji } = await import('./features/emoji/index');
+    await initializeEmoji();
 
     const root = createRoot(mountNode);
-    root.render(<Mastodon {...props} />);
+    root.render(
+      <StrictMode>
+        <Mastodon {...props} />
+      </StrictMode>,
+    );
     store.dispatch(setupBrowserNotifications());
 
     if (isProduction() && me && 'serviceWorker' in navigator) {
@@ -63,9 +60,8 @@ function main() {
         'Notification' in window &&
         Notification.permission === 'granted'
       ) {
-        const registerPushNotifications = await import(
-          'flavours/glitch/actions/push_notifications'
-        );
+        const registerPushNotifications =
+          await import('flavours/glitch/actions/push_notifications');
 
         store.dispatch(registerPushNotifications.register());
       }

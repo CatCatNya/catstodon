@@ -436,6 +436,44 @@ namespace :dev do
         quoted_status: quoted,
         state: :accepted
       ).find_or_create_by!(id: 10_000_013)
+
+      Status.create_with(
+        text: 'This post has a manual quote policy',
+        account: remote_account,
+        visibility: :public,
+        quote_approval_policy: InteractionPolicy::POLICY_FLAGS[:public]
+      ).find_or_create_by!(id: 10_000_030)
+
+      showcase_collection = Collection.create_with(
+        account: showcase_account,
+        name: 'Showcase Collection',
+        description: 'super cool description',
+        local: true,
+        sensitive: false,
+        discoverable: true
+      ).find_or_create_by!(id: 10_000_031)
+
+      another_collection = Collection.create_with(
+        account: showcase_account,
+        name: 'Another Collection',
+        description: 'super cool description',
+        local: true,
+        sensitive: false,
+        discoverable: true
+      ).find_or_create_by!(id: 10_000_032)
+
+      report = Report.create_with(
+        action_taken_at: nil
+      ).find_or_create_by!(account: showcase_sidekick_account, target_account: showcase_account, comment: 'not very nice')
+
+      CollectionReport.find_or_create_by!(collection: showcase_collection, report: report)
+
+      CollectionReport.find_or_create_by!(collection: another_collection, report: report)
+
+      Report.create_with(
+        status_ids: [10_000_028, 10_000_027],
+        action_taken_at: nil
+      ).find_or_create_by!(account: showcase_sidekick_account, target_account: showcase_account, comment: 'very unique comment')
     end
   end
 end

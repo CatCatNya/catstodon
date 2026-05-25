@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import { withRouter } from 'react-router-dom';
 
@@ -20,12 +20,14 @@ import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/
 import { WithRouterPropTypes } from 'mastodon/utils/react_router';
 
 import { Dropdown } from 'mastodon/components/dropdown_menu';
-import { me } from '../../initial_state';
+import { me, quickBoosting } from '../../initial_state';
 
 import { IconButton } from '../icon_button';
-import { isFeatureEnabled } from '../../utils/environment';
+import { injectIntl } from '../intl';
 import { BoostButton } from '../status/boost_button';
 import { RemoveQuoteHint } from './remove_quote_hint';
+import { quoteItemState, selectStatusState } from '../status/boost_button_utils';
+
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -69,6 +71,7 @@ const mapStateToProps = (state, { status }) => {
   return ({
     relationship: state.getIn(['relationships', status.getIn(['account', 'id'])]),
     quotedAccountId: quotedStatusId ? state.getIn(['statuses', quotedStatusId, 'account']) : null,
+    statusQuoteState: selectStatusState(state, status),
   });
 };
 
@@ -77,6 +80,7 @@ class StatusActionBar extends ImmutablePureComponent {
     identity: identityContextPropShape,
     status: ImmutablePropTypes.map.isRequired,
     relationship: ImmutablePropTypes.record,
+    statusQuoteState: PropTypes.object,
     quotedAccountId: PropTypes.string,
     contextType: PropTypes.string,
     onReply: PropTypes.func,
@@ -122,8 +126,12 @@ class StatusActionBar extends ImmutablePureComponent {
     if (signedIn) {
       this.props.onReply(this.props.status);
     } else {
-      this.props.onInteractionModal('reply', this.props.status);
+      this.props.onInteractionModal(this.props.status, 'reply');
     }
+  };
+
+  handleQuoteClick = () => {
+    this.props.onQuote(this.props.status);
   };
 
   handleShareClick = () => {
@@ -140,7 +148,7 @@ class StatusActionBar extends ImmutablePureComponent {
     if (signedIn) {
       this.props.onFavourite(this.props.status);
     } else {
-      this.props.onInteractionModal('favourite', this.props.status);
+      this.props.onInteractionModal(this.props.status, 'favourite');
     }
   };
 
@@ -242,7 +250,7 @@ class StatusActionBar extends ImmutablePureComponent {
   };
 
   render () {
-    const { status, relationship, quotedAccountId, contextType, intl, withDismiss, withCounters, scrollKey } = this.props;
+    const { status, relationship, statusQuoteState, quotedAccountId, contextType, intl, withDismiss, withCounters, scrollKey } = this.props;
     const { signedIn, permissions } = this.props.identity;
 
     const publicStatus       = ['public', 'unlisted'].includes(status.get('visibility'));
@@ -271,6 +279,19 @@ class StatusActionBar extends ImmutablePureComponent {
       menu.push({ text: intl.formatMessage(messages.embed), action: this.handleEmbed });
     }
 
+    if (quickBoosting && signedIn) {
+      const quoteItem = quoteItemState(statusQuoteState);
+      menu.push(null);
+      menu.push({
+        text: intl.formatMessage(quoteItem.title),
+        description: quoteItem.meta
+          ? intl.formatMessage(quoteItem.meta)
+          : undefined,
+        disabled: quoteItem.disabled,
+        action: this.handleQuoteClick,
+      });
+    }
+
     if (signedIn) {
       menu.push(null);
 
@@ -281,7 +302,7 @@ class StatusActionBar extends ImmutablePureComponent {
 
       if (writtenByMe || withDismiss) {
         menu.push({ text: intl.formatMessage(mutingConversation ? messages.unmuteConversation : messages.muteConversation), action: this.handleConversationMuteClick });
-        if (writtenByMe && isFeatureEnabled('outgoing_quotes') && !['private', 'direct'].includes(status.get('visibility'))) {
+        if (writtenByMe && !['private', 'direct'].includes(status.get('visibility'))) {
           menu.push({ text: intl.formatMessage(messages.quotePolicyChange), action: this.handleQuotePolicyChange });
         }
         menu.push(null);
@@ -363,7 +384,7 @@ class StatusActionBar extends ImmutablePureComponent {
     const bookmarkTitle = intl.formatMessage(status.get('bookmarked') ? messages.removeBookmark : messages.bookmark);
     const favouriteTitle = intl.formatMessage(status.get('favourited') ? messages.removeFavourite : messages.favourite);
     const isReply = status.get('in_reply_to_account_id') === status.getIn(['account', 'id']);
-  
+
     const shouldShowQuoteRemovalHint = isQuotingMe && contextType === 'notifications';
 
     return (
@@ -385,16 +406,21 @@ class StatusActionBar extends ImmutablePureComponent {
             <Dropdown
               scrollKey={scrollKey}
               status={status}
+              needsStatusRefresh={quickBoosting && status.get('quote_approval') === null}
               items={menu}
-              icon='ellipsis-h'
-              iconComponent={MoreHorizIcon}
               direction='right'
-              title={intl.formatMessage(messages.more)}
               onOpen={() => {
                 dismissQuoteHint();
                 return true;
               }}
-            />
+            >
+              <IconButton
+                className='status__action-bar__button'
+                icon='ellipsis-h'
+                iconComponent={MoreHorizIcon}
+                title={intl.formatMessage(messages.more)}
+              />
+            </Dropdown>
           )}
         </RemoveQuoteHint>
       </div>

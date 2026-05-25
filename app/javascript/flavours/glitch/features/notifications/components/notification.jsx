@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
@@ -12,9 +12,10 @@ import FlagIcon from '@/material-icons/400-24px/flag-fill.svg?react';
 import PersonIcon from '@/material-icons/400-24px/person-fill.svg?react';
 import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
 import { Account } from 'flavours/glitch/components/account';
+import { LinkedDisplayName } from '@/flavours/glitch/components/display_name';
 import { Icon }  from 'flavours/glitch/components/icon';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { Hotkeys } from 'flavours/glitch/components/hotkeys';
-import { Permalink } from 'flavours/glitch/components/permalink';
 import { StatusQuoteManager } from 'flavours/glitch/components/status_quoted';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
@@ -432,19 +433,10 @@ class Notification extends ImmutablePureComponent {
     }
 
     const targetAccount = report.get('target_account');
-    const targetDisplayNameHtml = { __html: targetAccount.get('display_name_html') };
-    const targetLink = (
-      <bdi>
-        <Permalink
-          className='notification__display-name'
-          href={targetAccount.get('url')}
-          title={targetAccount.get('acct')}
-          to={`/@${targetAccount.get('acct')}`}
-          dangerouslySetInnerHTML={targetDisplayNameHtml}
-          data-hover-card-account={targetAccount.get('id')}
-        />
-      </bdi>
-    );
+    const targetLink = <LinkedDisplayName
+      className='notification__display-name'
+      displayProps={{account:targetAccount, variant: 'simple'}}
+    />;
 
     return (
       <Hotkeys handlers={this.getHandlers()}>
@@ -466,19 +458,7 @@ class Notification extends ImmutablePureComponent {
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
-    const displayNameHtml  = { __html: account.get('display_name_html') };
-    const link             = (
-      <bdi>
-        <Permalink
-          className='notification__display-name'
-          href={`/@${account.get('acct')}`}
-          title={account.get('acct')}
-          to={`/@${account.get('acct')}`}
-          dangerouslySetInnerHTML={displayNameHtml}
-          data-hover-card-account={account.get('id')}
-        />
-      </bdi>
-    );
+    const link             = <LinkedDisplayName className='notification__display-name' displayProps={{account, variant: 'simple'}} />;
 
     switch(notification.get('type')) {
     case 'follow':

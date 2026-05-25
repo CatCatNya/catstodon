@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
@@ -13,14 +13,15 @@ import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import ReplyAllIcon from '@/material-icons/400-24px/reply_all.svg?react';
 import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import StarBorderIcon from '@/material-icons/400-24px/star.svg?react';
+import { injectIntl } from '@/mastodon/components/intl';
 import { identityContextPropShape, withIdentity } from 'mastodon/identity_context';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/permissions';
 
 import { IconButton } from '../../../components/icon_button';
 import { Dropdown } from 'mastodon/components/dropdown_menu';
-import { me } from '../../../initial_state';
-import { isFeatureEnabled } from '@/mastodon/utils/environment';
+import { me, quickBoosting } from '../../../initial_state';
 import { BoostButton } from '@/mastodon/components/status/boost_button';
+import { quoteItemState, selectStatusState } from '@/mastodon/components/status/boost_button_utils';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -61,6 +62,7 @@ const mapStateToProps = (state, { status }) => {
   return ({
     relationship: state.getIn(['relationships', status.getIn(['account', 'id'])]),
     quotedAccountId: quotedStatusId ? state.getIn(['statuses', quotedStatusId, 'account']) : null,
+    statusQuoteState: selectStatusState(state, status),
   });
 };
 
@@ -69,6 +71,7 @@ class ActionBar extends PureComponent {
     identity: identityContextPropShape,
     status: ImmutablePropTypes.map.isRequired,
     relationship: ImmutablePropTypes.record,
+    statusQuoteState: PropTypes.object,
     quotedAccountId: ImmutablePropTypes.string,
     onReply: PropTypes.func.isRequired,
     onReblog: PropTypes.func.isRequired,
@@ -115,6 +118,10 @@ class ActionBar extends PureComponent {
 
   handleRevokeQuoteClick = () => {
     this.props.onRevokeQuote(this.props.status);
+  };
+
+  handleQuoteClick = () => {
+    this.props.onQuote(this.props.status);
   };
 
   handleQuotePolicyChange = () => {
@@ -201,7 +208,7 @@ class ActionBar extends PureComponent {
   };
 
   render () {
-    const { status, relationship, quotedAccountId, intl } = this.props;
+    const { status, relationship, statusQuoteState, quotedAccountId, intl } = this.props;
     const { signedIn, permissions } = this.props.identity;
 
     const publicStatus       = ['public', 'unlisted'].includes(status.get('visibility'));
@@ -227,6 +234,19 @@ class ActionBar extends PureComponent {
       menu.push({ text: intl.formatMessage(messages.embed), action: this.handleEmbed });
     }
 
+    if (quickBoosting && signedIn) {
+      const quoteItem = quoteItemState(statusQuoteState);
+      menu.push(null);
+      menu.push({
+        text: intl.formatMessage(quoteItem.title),
+        description: quoteItem.meta
+          ? intl.formatMessage(quoteItem.meta)
+          : undefined,
+        disabled: quoteItem.disabled,
+        action: this.handleQuoteClick,
+      });
+    }
+
     if (signedIn) {
       menu.push(null);
 
@@ -237,7 +257,7 @@ class ActionBar extends PureComponent {
         }
 
         menu.push({ text: intl.formatMessage(mutingConversation ? messages.unmuteConversation : messages.muteConversation), action: this.handleConversationMuteClick });
-        if (isFeatureEnabled('outgoing_quotes') && !['private', 'direct'].includes(status.get('visibility'))) {
+        if (!['private', 'direct'].includes(status.get('visibility'))) {
           menu.push({ text: intl.formatMessage(messages.quotePolicyChange), action: this.handleQuotePolicyChange });
         }
         menu.push(null);

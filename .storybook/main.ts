@@ -3,7 +3,18 @@ import { resolve } from 'node:path';
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
-  stories: ['../app/javascript/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    {
+      directory: '../app/javascript/mastodon',
+      files: '**/*.stories.@(js|jsx|mjs|ts|tsx)',
+      titlePrefix: 'Vanilla',
+    },
+    {
+      directory: '../app/javascript/flavours/glitch',
+      files: '**/*.stories.@(js|jsx|mjs|ts|tsx)',
+      titlePrefix: 'Glitch',
+    },
+  ],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-a11y',
@@ -27,11 +38,12 @@ const config: StorybookConfig = {
       'oops.gif',
       'oops.png',
     ].map((path) => ({ from: `../public/${path}`, to: `/${path}` })),
+    { from: '../app/javascript/images/logo.svg', to: '/custom-emoji/logo.svg' },
   ],
   viteFinal(config) {
     // For an unknown reason, Storybook does not use the root
     // from the Vite config so we need to set it manually.
-    config.root = resolve(__dirname, '../app/javascript');
+    config.root = resolve(import.meta.dirname, '../app/javascript');
     return config;
   },
 };

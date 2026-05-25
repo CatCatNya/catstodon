@@ -1,5 +1,11 @@
 # Catstodon
 
+## Project status
+
+Note: Only the `main` branch is supported now. Catstodon has stopped doing stable branches and changelogs.
+This is because its maintainer wants to eventually migrate CatCatNya~ to (either a fork of, or vanilla) Iceshrimp.NET,
+and because the Mastodon project is taking directions that are increasingly hard to patch away.
+
 ## Introduction
 
 This Mastodon fork is based on the [glitch-soc Fork of Mastodon](https://github.com/glitch-soc/mastodon), historically
@@ -10,18 +16,6 @@ To install, take a look at [glitch-soc.github.io/docs/](https://glitch-soc.githu
 features are the same, except for the differences outlined below.
 
 Contributing guidelines are available [here](CONTRIBUTING.md).
-
-Note: **Use the `main` branch only for forks.** The `develop` and `stable-develop/*` branches are experimental, have no
-stable state, and are only used for testing changes e.g. [the staging instance](https://cts.kescher.at) or temporary
-test instances.
-For production, it is suggested you run:
-
-- any of the `stable/*` branches or stable tags
-  - do note, however, that these branches/tags have a similar support cycle to upstream, and therefore also to vanilla
-    Mastodon!
-  - New Catstodon-exclusive features will only be introduced to the `main` branch. The `stable` branches will _not_ get
-    backports of new features once `main` diverges from them significantly.
-- the `main` branch, which is comparable to "nightly" versions in vanilla Mastodon.
 
 ## Differences
 
@@ -47,10 +41,6 @@ For production, it is suggested you run:
 - Adds the ability to disable the suspicious sign in detection entirely.
   - Useful for situations where the instance may not have up-to-date IP information, such as when the period of IP
     address retention is set to a low value (see _Previous differences now merged into vanilla Mastodon_)
-- Environment variable `MASTODON_USE_LIBVIPS` is true by default.
-  - This is a minor change, but it _requires_ all systems running Catstodon to run a recent libvips version (8.13+),
-    except if this variable is explicitly set to false.
-  - Vanilla Mastodon intends to deprecate ImageMagick anyway, so sooner or later, this change will cease being one.
 - Allow dashes in emoji shortcodes
   - This is simply to allow custom emoji compat with other fedi software.
   - Original patch by hazycora: https://github.com/TheEssem/mastodon/commit/2dde7a25a47a23f827e2fd2d07f55438f9985181

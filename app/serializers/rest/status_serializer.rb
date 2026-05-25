@@ -31,13 +31,14 @@ class REST::StatusSerializer < ActiveModel::Serializer
   has_many :tags
   has_many :emojis, serializer: REST::CustomEmojiSerializer
   has_many :reactions, serializer: REST::ReactionSerializer
+  has_many :tagged_collections, serializer: REST::CollectionSerializer
 
   # Due to a ActiveModel::Serializer quirk, if you change any of the following, have a look at
   # updating `app/serializers/rest/shallow_status_serializer.rb` as well
   has_one :quote, key: :quote, serializer: REST::QuoteSerializer
   has_one :preview_card, key: :card, serializer: REST::PreviewCardSerializer
   has_one :preloadable_poll, key: :poll, serializer: REST::PollSerializer
-  has_one :quote_approval, if: -> { Mastodon::Feature.outgoing_quotes_enabled? }
+  has_one :quote_approval
 
   delegate :local?, to: :object
 
@@ -160,7 +161,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
     current_user? &&
       current_user.account_id == object.account_id &&
       !object.reblog? &&
-      %w(public unlisted private).include?(object.visibility)
+      StatusRelationshipsPresenter::PINNABLE_VISIBILITIES.include?(object.visibility)
   end
 
   def source_requested?
@@ -175,11 +176,15 @@ class REST::StatusSerializer < ActiveModel::Serializer
     object.reactions(current_user&.account&.id)
   end
 
+  def tagged_collections
+    object.tagged_objects.filter_map { |tagged_object| tagged_object.object if tagged_object.ap_type == 'FeaturedCollection' }
+  end
+
   def quote_approval
     {
-      automatic: object.quote_policy_as_keys(:automatic),
-      manual: object.quote_policy_as_keys(:manual),
-      current_user: object.quote_policy_for_account(current_user&.account),
+      automatic: object.proper.quote_policy_as_keys(:automatic),
+      manual: object.proper.quote_policy_as_keys(:manual),
+      current_user: object.proper.quote_policy_for_account(current_user&.account),
     }
   end
 
@@ -217,13 +222,5 @@ class REST::StatusSerializer < ActiveModel::Serializer
     end
   end
 
-  class TagSerializer < ActiveModel::Serializer
-    include RoutingHelper
-
-    attributes :name, :url
-
-    def url
-      tag_url(object)
-    end
-  end
+  class TagSerializer < REST::ShallowTagSerializer; end
 end

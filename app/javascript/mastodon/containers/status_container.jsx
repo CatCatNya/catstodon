@@ -1,5 +1,3 @@
-import { injectIntl } from 'react-intl';
-
 import { connect } from 'react-redux';
 
 import {
@@ -43,11 +41,10 @@ import {
   undoStatusTranslation,
 } from '../actions/statuses';
 import { setStatusQuotePolicy } from '../actions/statuses_typed';
+import { injectIntl } from '../components/intl';
 import Status from '../components/status';
 import { deleteModal } from '../initial_state';
 import { makeGetStatus, makeGetPictureInPicture } from '../selectors';
-
-import { isFeatureEnabled } from 'mastodon/utils/environment';
 
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
@@ -79,11 +76,9 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
   onReblog (status, e) {
     dispatch(toggleReblog(status.get('id'), e.shiftKey));
   },
-  
+
   onQuote (status) {
-    if (isFeatureEnabled('outgoing_quotes')) {
-      dispatch(quoteComposeById(status.get('id')));
-    }
+    dispatch(quoteComposeById(status.get('id')));
   },
 
   onFavourite (status) {
@@ -235,11 +230,11 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
     dispatch(deployPictureInPicture({statusId: status.get('id'), accountId: status.getIn(['account', 'id']), playerType: type, props: mediaProps}));
   },
 
-  onInteractionModal (type, status) {
+  onInteractionModal (status, intent) {
     dispatch(openModal({
       modalType: 'INTERACTION',
       modalProps: {
-        type,
+        intent,
         accountId: status.getIn(['account', 'id']),
         url: status.get('uri'),
       },

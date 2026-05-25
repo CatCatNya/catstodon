@@ -117,6 +117,7 @@ class Sanitize
       elements: %w(p br span a abbr del s pre blockquote code b strong u sub sup i em h1 h2 h3 h4 h5 ul ol li ruby rt rp),
 
       attributes: {
+        :all => %w(lang),
         'a' => %w(href rel class title translate),
         'abbr' => %w(title),
         'span' => %w(class translate),

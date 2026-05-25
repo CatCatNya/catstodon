@@ -2,31 +2,19 @@
 
 class Api::V1::StatusesController < Api::BaseController
   include Authorization
-  include AsyncRefreshesConcern
   include Api::InteractionPoliciesConcern
 
   before_action -> { authorize_if_got_token! :read, :'read:statuses' }, except: [:create, :update, :destroy]
   before_action -> { doorkeeper_authorize! :write, :'write:statuses' }, only:   [:create, :update, :destroy]
-  before_action :require_user!, except:      [:index, :show, :context]
+  before_action :require_user!, except:      [:index, :show]
   before_action :set_statuses, only:         [:index]
-  before_action :set_status, only:           [:show, :context]
+  before_action :set_status, only:           [:show]
   before_action :set_thread, only:           [:create]
   before_action :set_quoted_status, only:    [:create]
   before_action :check_statuses_limit, only: [:index]
 
   override_rate_limit_headers :create, family: :statuses
   override_rate_limit_headers :update, family: :statuses
-
-  # This API was originally unlimited, pagination cannot be introduced without
-  # breaking backwards-compatibility. Arbitrarily high number to cover most
-  # conversations as quasi-unlimited, it would be too much work to render more
-  # than this anyway
-  CONTEXT_LIMIT = 4_096
-
-  # This remains expensive and we don't want to show everything to logged-out users
-  ANCESTORS_LIMIT         = 40
-  DESCENDANTS_LIMIT       = 60
-  DESCENDANTS_DEPTH_LIMIT = 20
 
   def index
     @statuses = preload_collection(@statuses, Status)
@@ -37,44 +25,6 @@ class Api::V1::StatusesController < Api::BaseController
     cache_if_unauthenticated!
     @status = preload_collection([@status], Status).first
     render json: @status, serializer: REST::StatusSerializer
-  end
-
-  def context
-    cache_if_unauthenticated!
-
-    ancestors_limit         = CONTEXT_LIMIT
-    descendants_limit       = CONTEXT_LIMIT
-    descendants_depth_limit = nil
-
-    if current_account.nil?
-      ancestors_limit         = ANCESTORS_LIMIT
-      descendants_limit       = DESCENDANTS_LIMIT
-      descendants_depth_limit = DESCENDANTS_DEPTH_LIMIT
-    end
-
-    ancestors_results   = @status.in_reply_to_id.nil? ? [] : @status.ancestors(ancestors_limit, current_account)
-    descendants_results = @status.descendants(descendants_limit, current_account, descendants_depth_limit)
-    loaded_ancestors    = preload_collection(ancestors_results, Status)
-    loaded_descendants  = preload_collection(descendants_results, Status)
-
-    @context = Context.new(ancestors: loaded_ancestors, descendants: loaded_descendants)
-    statuses = [@status] + @context.ancestors + @context.descendants
-
-    refresh_key = "context:#{@status.id}:refresh"
-    async_refresh = AsyncRefresh.new(refresh_key)
-
-    if async_refresh.running?
-      add_async_refresh_header(async_refresh)
-    elsif !current_account.nil? && @status.should_fetch_replies?
-      add_async_refresh_header(AsyncRefresh.create(refresh_key))
-
-      WorkerBatch.new.within do |batch|
-        batch.connect(refresh_key, threshold: 1.0)
-        ActivityPub::FetchAllRepliesWorker.perform_async(@status.id, { 'batch_id' => batch.id })
-      end
-    end
-
-    render json: @context, serializer: REST::ContextSerializer, relationships: StatusRelationshipsPresenter.new(statuses, current_user&.account_id)
   end
 
   def create
@@ -93,6 +43,7 @@ class Api::V1::StatusesController < Api::BaseController
       application: doorkeeper_token.application,
       poll: status_params[:poll],
       content_type: status_params[:content_type],
+      local_only: status_params[:local_only],
       allowed_mentions: status_params[:allowed_mentions],
       idempotency: request.headers['Idempotency-Key'],
       with_rate_limit: true
@@ -107,9 +58,7 @@ class Api::V1::StatusesController < Api::BaseController
     @status = Status.where(account: current_account).find(params[:id])
     authorize @status, :update?
 
-    UpdateStatusService.new.call(
-      @status,
-      current_account.id,
+    update_options = {
       text: status_params[:status],
       media_ids: status_params[:media_ids],
       media_attributes: status_params[:media_attributes],
@@ -117,9 +66,12 @@ class Api::V1::StatusesController < Api::BaseController
       language: status_params[:language],
       spoiler_text: status_params[:spoiler_text],
       poll: status_params[:poll],
-      quote_approval_policy: quote_approval_policy,
-      content_type: status_params[:content_type]
-    )
+      content_type: status_params[:content_type],
+    }
+
+    update_options[:quote_approval_policy] = quote_approval_policy if status_params[:quote_approval_policy].present?
+
+    UpdateStatusService.new.call(@status, current_account.id, update_options)
 
     render json: @status, serializer: REST::StatusSerializer
   end
@@ -128,10 +80,13 @@ class Api::V1::StatusesController < Api::BaseController
     @status = Status.where(account: current_account).find(params[:id])
     authorize @status, :destroy?
 
+    # JSON is generated before `discard_with_reblogs` in order to have the proper URL
+    # for media attachments, as it would otherwise redirect to the media proxy
+    json = render_to_body json: @status, serializer: REST::StatusSerializer, source_requested: true
+
     @status.discard_with_reblogs
     StatusPin.find_by(status: @status)&.destroy
     @status.account.statuses_count = @status.account.statuses_count - 1
-    json = render_to_body json: @status, serializer: REST::StatusSerializer, source_requested: true
 
     RemovalWorker.perform_async(@status.id, { 'redraft' => !truthy_param?(:delete_media) })
 
@@ -147,7 +102,7 @@ class Api::V1::StatusesController < Api::BaseController
   def set_status
     @status = Status.find(params[:id])
     authorize @status, :show?
-  rescue Mastodon::NotPermittedError
+  rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     not_found
   end
 
@@ -159,9 +114,7 @@ class Api::V1::StatusesController < Api::BaseController
   end
 
   def set_quoted_status
-    return unless Mastodon::Feature.outgoing_quotes_enabled?
-
-    @quoted_status = Status.find(status_params[:quoted_status_id]) if status_params[:quoted_status_id].present?
+    @quoted_status = Status.find(status_params[:quoted_status_id])&.proper if status_params[:quoted_status_id].present?
     authorize(@quoted_status, :quote?) if @quoted_status.present?
   rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     # TODO: distinguish between non-existing and non-quotable posts
@@ -192,6 +145,7 @@ class Api::V1::StatusesController < Api::BaseController
       :language,
       :scheduled_at,
       :content_type,
+      :local_only,
       allowed_mentions: [],
       media_ids: [],
       media_attributes: [

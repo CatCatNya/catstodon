@@ -9,7 +9,7 @@ module Mastodon
     end
 
     def minor
-      5
+      6
     end
 
     def patch
@@ -17,7 +17,7 @@ module Mastodon
     end
 
     def default_prerelease
-      'alpha.2'
+      'alpha.8'
     end
 
     def catstodon_revision
@@ -50,7 +50,8 @@ module Mastodon
 
     def api_versions
       {
-        mastodon: Mastodon::Feature.outgoing_quotes_enabled? ? 7 : 6,
+        mastodon: 9,
+        glitch: 1,
       }
     end
 

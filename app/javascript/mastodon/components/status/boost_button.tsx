@@ -8,13 +8,14 @@ import classNames from 'classnames';
 import { quoteComposeById } from '@/mastodon/actions/compose_typed';
 import { toggleReblog } from '@/mastodon/actions/interactions';
 import { openModal } from '@/mastodon/actions/modal';
+import { fetchStatus } from '@/mastodon/actions/statuses';
+import { quickBoosting } from '@/mastodon/initial_state';
 import type { ActionMenuItem } from '@/mastodon/models/dropdown_menu';
 import type { Status } from '@/mastodon/models/status';
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
-import { isFeatureEnabled } from '@/mastodon/utils/environment';
 import type { SomeRequired } from '@/mastodon/utils/types';
 
-import type { RenderItemFn, RenderItemFnHandlers } from '../dropdown_menu';
+import type { RenderItemFn } from '../dropdown_menu';
 import { Dropdown, DropdownMenuItemContent } from '../dropdown_menu';
 import { IconButton } from '../icon_button';
 
@@ -25,18 +26,63 @@ import {
   selectStatusState,
 } from './boost_button_utils';
 
-const renderMenuItem: RenderItemFn<ActionMenuItem> = (
-  item,
-  index,
-  handlers,
-  focusRefCallback,
-) => (
+const StandaloneBoostButton: FC<ReblogButtonProps> = ({ status, counters }) => {
+  const intl = useIntl();
+  const dispatch = useAppDispatch();
+
+  const statusState = useAppSelector((state) =>
+    selectStatusState(state, status),
+  );
+  const { title, meta, iconComponent, disabled } = useMemo(
+    () => boostItemState(statusState),
+    [statusState],
+  );
+
+  const handleClick: MouseEventHandler = useCallback(
+    (event) => {
+      if (statusState.isLoggedIn) {
+        dispatch(toggleReblog(status.get('id') as string, event.shiftKey));
+      } else {
+        dispatch(
+          openModal({
+            modalType: 'INTERACTION',
+            modalProps: {
+              intent: 'reblog',
+              accountId: status.getIn(['account', 'id']),
+              url: status.get('uri'),
+            },
+          }),
+        );
+      }
+    },
+    [dispatch, status, statusState.isLoggedIn],
+  );
+
+  return (
+    <IconButton
+      disabled={disabled}
+      active={!!status.get('reblogged')}
+      title={intl.formatMessage(meta ?? title)}
+      icon='retweet'
+      iconComponent={iconComponent}
+      className='status__action-bar__button'
+      onClick={!disabled ? handleClick : undefined}
+      counter={
+        counters
+          ? (status.get('reblogs_count') as number) +
+            (status.get('quotes_count') as number)
+          : undefined
+      }
+    />
+  );
+};
+
+const renderMenuItem: RenderItemFn<ActionMenuItem> = (item, index, onClick) => (
   <ReblogMenuItem
     index={index}
     item={item}
-    handlers={handlers}
+    onClick={onClick}
     key={`${item.text}-${index}`}
-    focusRefCallback={focusRefCallback}
   />
 );
 
@@ -47,10 +93,7 @@ interface ReblogButtonProps {
 
 type ActionMenuItemWithIcon = SomeRequired<ActionMenuItem, 'icon'>;
 
-export const StatusBoostButton: FC<ReblogButtonProps> = ({
-  status,
-  counters,
-}) => {
+const BoostOrQuoteMenu: FC<ReblogButtonProps> = ({ status, counters }) => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
   const statusState = useAppSelector((state) =>
@@ -71,6 +114,20 @@ export const StatusBoostButton: FC<ReblogButtonProps> = ({
 
   const statusId = status.get('id') as string;
   const wasBoosted = !!status.get('reblogged');
+  const quoteApproval = status.get('quote_approval');
+
+  const showLoginPrompt = useCallback(() => {
+    dispatch(
+      openModal({
+        modalType: 'INTERACTION',
+        modalProps: {
+          intent: 'reblog',
+          accountId: status.getIn(['account', 'id']),
+          url: status.get('uri'),
+        },
+      }),
+    );
+  }, [dispatch, status]);
 
   const items = useMemo(() => {
     const boostItem = boostItemState(statusState);
@@ -85,9 +142,7 @@ export const StatusBoostButton: FC<ReblogButtonProps> = ({
         highlighted: wasBoosted,
         disabled: boostItem.disabled,
         action: (event) => {
-          if (isLoggedIn) {
-            dispatch(toggleReblog(statusId, event.shiftKey));
-          }
+          dispatch(toggleReblog(statusId, event.shiftKey));
         },
       },
       {
@@ -98,40 +153,41 @@ export const StatusBoostButton: FC<ReblogButtonProps> = ({
         icon: quoteItem.iconComponent,
         disabled: quoteItem.disabled,
         action: () => {
-          if (isLoggedIn) {
-            dispatch(quoteComposeById(statusId));
-          }
+          dispatch(quoteComposeById(statusId));
         },
       },
     ] satisfies [ActionMenuItemWithIcon, ActionMenuItemWithIcon];
-  }, [dispatch, intl, isLoggedIn, statusId, statusState, wasBoosted]);
+  }, [dispatch, intl, statusId, statusState, wasBoosted]);
 
   const boostIcon = items[0].icon;
 
   const handleDropdownOpen = useCallback(
     (event: MouseEvent | KeyboardEvent) => {
       if (!isLoggedIn) {
-        dispatch(
-          openModal({
-            modalType: 'INTERACTION',
-            modalProps: {
-              type: 'reblog',
-              accountId: status.getIn(['account', 'id']),
-              url: status.get('uri'),
-            },
-          }),
-        );
-      } else if (event.shiftKey) {
+        showLoginPrompt();
+        return false;
+      }
+
+      if (event.shiftKey) {
         dispatch(toggleReblog(status.get('id'), true));
         return false;
       }
+
+      if (quoteApproval === null) {
+        dispatch(
+          fetchStatus(statusId, { forceFetch: true, alsoFetchContext: false }),
+        );
+      }
+
       return true;
     },
-    [dispatch, isLoggedIn, status],
+    [dispatch, isLoggedIn, showLoginPrompt, status, quoteApproval, statusId],
   );
 
   return (
     <Dropdown
+      placement='bottom-start'
+      offset={[-19, 5]} // This aligns button icon with menu icons
       items={items}
       renderItem={renderMenuItem}
       onOpen={handleDropdownOpen}
@@ -142,6 +198,7 @@ export const StatusBoostButton: FC<ReblogButtonProps> = ({
           isMenuDisabled ? messages.all_disabled : messages.reblog_or_quote,
         )}
         icon='retweet'
+        className='status__action-bar__button'
         iconComponent={boostIcon}
         counter={
           counters
@@ -158,16 +215,10 @@ export const StatusBoostButton: FC<ReblogButtonProps> = ({
 interface ReblogMenuItemProps {
   item: ActionMenuItem;
   index: number;
-  handlers: RenderItemFnHandlers;
-  focusRefCallback?: (c: HTMLAnchorElement | HTMLButtonElement | null) => void;
+  onClick: React.MouseEventHandler;
 }
 
-const ReblogMenuItem: FC<ReblogMenuItemProps> = ({
-  index,
-  item,
-  handlers,
-  focusRefCallback,
-}) => {
+const ReblogMenuItem: FC<ReblogMenuItemProps> = ({ index, item, onClick }) => {
   const { text, highlighted, disabled } = item;
 
   return (
@@ -178,10 +229,10 @@ const ReblogMenuItem: FC<ReblogMenuItemProps> = ({
       key={`${text}-${index}`}
     >
       <button
-        {...handlers}
-        ref={focusRefCallback}
-        disabled={disabled}
+        onClick={onClick}
+        aria-disabled={disabled}
         data-index={index}
+        type='button'
       >
         <DropdownMenuItemContent item={item} />
       </button>
@@ -189,65 +240,8 @@ const ReblogMenuItem: FC<ReblogMenuItemProps> = ({
   );
 };
 
-// Legacy helpers
-
-// Switch between the legacy and new reblog button based on feature flag.
-export const BoostButton: FC<ReblogButtonProps> = (props) => {
-  if (isFeatureEnabled('outgoing_quotes')) {
-    return <StatusBoostButton {...props} />;
-  }
-  return <LegacyReblogButton {...props} />;
-};
-
-export const LegacyReblogButton: FC<ReblogButtonProps> = ({
-  status,
-  counters,
-}) => {
-  const intl = useIntl();
-  const statusState = useAppSelector((state) =>
-    selectStatusState(state, status),
-  );
-
-  const { title, meta, iconComponent, disabled } = useMemo(
-    () => boostItemState(statusState),
-    [statusState],
-  );
-
-  const dispatch = useAppDispatch();
-  const handleClick: MouseEventHandler = useCallback(
-    (event) => {
-      if (statusState.isLoggedIn) {
-        dispatch(toggleReblog(status.get('id') as string, event.shiftKey));
-      } else {
-        dispatch(
-          openModal({
-            modalType: 'INTERACTION',
-            modalProps: {
-              type: 'reblog',
-              accountId: status.getIn(['account', 'id']),
-              url: status.get('uri'),
-            },
-          }),
-        );
-      }
-    },
-    [dispatch, status, statusState.isLoggedIn],
-  );
-
-  return (
-    <IconButton
-      disabled={disabled}
-      active={!!status.get('reblogged')}
-      title={intl.formatMessage(meta ?? title)}
-      icon='retweet'
-      iconComponent={iconComponent}
-      onClick={!disabled ? handleClick : undefined}
-      counter={
-        counters
-          ? (status.get('reblogs_count') as number) +
-            (status.get('quotes_count') as number)
-          : undefined
-      }
-    />
-  );
-};
+// Switch between the standalone boost button or the
+// "Boost or quote" menu based on the quickBoosting preference
+export const BoostButton = quickBoosting
+  ? StandaloneBoostButton
+  : BoostOrQuoteMenu;

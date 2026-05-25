@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { createRef } from 'react';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -15,6 +15,7 @@ import { missingAltTextModal } from 'mastodon/initial_state';
 import AutosuggestInput from 'mastodon/components/autosuggest_input';
 import AutosuggestTextarea from 'mastodon/components/autosuggest_textarea';
 import { Button } from 'mastodon/components/button';
+import { injectIntl } from '@/mastodon/components/intl';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
 import PollButtonContainer from '../containers/poll_button_container';
 import SpoilerButtonContainer from '../containers/spoiler_button_container';
@@ -64,6 +65,7 @@ class ComposeForm extends ImmutablePureComponent {
     onSuggestionSelected: PropTypes.func.isRequired,
     onChangeSpoilerText: PropTypes.func.isRequired,
     onPaste: PropTypes.func.isRequired,
+    onDrop: PropTypes.func.isRequired,
     onPickEmoji: PropTypes.func.isRequired,
     autoFocus: PropTypes.bool,
     withoutNavigation: PropTypes.bool,
@@ -78,10 +80,6 @@ class ComposeForm extends ImmutablePureComponent {
 
   static defaultProps = {
     autoFocus: false,
-  };
-
-  state = {
-    highlighted: false,
   };
 
   constructor(props) {
@@ -102,6 +100,7 @@ class ComposeForm extends ImmutablePureComponent {
   handleKeyDownPost = (e) => {
     if (e.key.toLowerCase() === 'enter' && (e.ctrlKey || e.metaKey)) {
         this.handleSubmit();
+        e.preventDefault();
     }
     this.blurOnEscape(e);
   };
@@ -123,11 +122,10 @@ class ComposeForm extends ImmutablePureComponent {
   };
 
   canSubmit = () => {
-    const { isSubmitting, isChangingUpload, isUploading, anyMedia, maxChars } = this.props;
+    const { isSubmitting, isChangingUpload, isUploading, maxChars } = this.props;
     const fulltext = this.getFulltextForCharacterCounting();
-    const isOnlyWhitespace = fulltext.length !== 0 && fulltext.trim().length === 0;
 
-    return !(isSubmitting || isUploading || isChangingUpload || length(fulltext) > maxChars || (isOnlyWhitespace && !anyMedia));
+    return !(isSubmitting || isUploading || isChangingUpload || length(fulltext) > maxChars);
   };
 
   handleSubmit = (e) => {
@@ -141,7 +139,10 @@ class ComposeForm extends ImmutablePureComponent {
       return;
     }
 
-    this.props.onSubmit(missingAltTextModal && this.props.missingAltText && this.props.privacy !== 'direct');
+    this.props.onSubmit({
+      missingAltText: missingAltTextModal && this.props.missingAltText && this.props.privacy !== 'direct',
+      quoteToPrivate: this.props.quoteToPrivate,
+    });
 
     if (e) {
       e.preventDefault();
@@ -215,8 +216,6 @@ class ComposeForm extends ImmutablePureComponent {
       Promise.resolve().then(() => {
         this.textareaRef.current.setSelectionRange(selectionStart, selectionEnd);
         this.textareaRef.current.focus();
-        this.setState({ highlighted: true });
-        this.timeout = setTimeout(() => this.setState({ highlighted: false }), 700);
       }).catch(console.error);
     } else if(prevProps.isSubmitting && !this.props.isSubmitting) {
       this.textareaRef.current.focus();
@@ -246,8 +245,7 @@ class ComposeForm extends ImmutablePureComponent {
   };
 
   render () {
-    const { intl, onPaste, autoFocus, withoutNavigation, maxChars, isSubmitting } = this.props;
-    const { highlighted } = this.state;
+    const { intl, onPaste, onDrop, autoFocus, withoutNavigation, maxChars, isSubmitting } = this.props;
 
     return (
       <form className='compose-form' onSubmit={this.handleSubmit}>
@@ -255,7 +253,7 @@ class ComposeForm extends ImmutablePureComponent {
         {!withoutNavigation && <NavigationBar />}
         <Warning />
 
-        <div className={classNames('compose-form__highlightable', { active: highlighted })} ref={this.setRef}>
+        <div className='compose-form__highlightable' ref={this.setRef}>
           <EditIndicator />
 
           <div className='compose-form__dropdowns'>
@@ -303,6 +301,7 @@ class ComposeForm extends ImmutablePureComponent {
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
             onSuggestionSelected={this.onSuggestionSelected}
             onPaste={onPaste}
+            onDrop={onDrop}
             autoFocus={autoFocus}
             lang={this.props.lang}
             className='compose-form__input'

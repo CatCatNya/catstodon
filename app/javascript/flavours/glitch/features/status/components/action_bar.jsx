@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
@@ -13,16 +13,17 @@ import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import ReplyAllIcon from '@/material-icons/400-24px/reply_all.svg?react';
 import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import StarBorderIcon from '@/material-icons/400-24px/star.svg?react';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'flavours/glitch/permissions';
 import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend_links';
 
 import { IconButton } from '../../../components/icon_button';
 import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
-import { me, maxReactions } from '../../../initial_state';
+import { me, maxReactions, quickBoosting } from '../../../initial_state';
 import EmojiPickerDropdown from '../../compose/containers/emoji_picker_dropdown_container';
-import { isFeatureEnabled } from '@/flavours/glitch/utils/environment';
 import { BoostButton } from '@/flavours/glitch/components/status/boost_button';
+import { quoteItemState, selectStatusState } from '@/flavours/glitch/components/status/boost_button_utils';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -59,6 +60,7 @@ const mapStateToProps = (state, { status }) => {
   const quotedStatusId = status.getIn(['quote', 'quoted_status']);
   return ({
     quotedAccountId: quotedStatusId ? state.getIn(['statuses', quotedStatusId, 'account']) : null,
+    statusQuoteState: selectStatusState(state, status),
   });
 };
 
@@ -66,6 +68,7 @@ class ActionBar extends PureComponent {
   static propTypes = {
     identity: identityContextPropShape,
     status: ImmutablePropTypes.map.isRequired,
+    statusQuoteState: PropTypes.object,
     quotedAccountId: ImmutablePropTypes.string,
     onReply: PropTypes.func.isRequired,
     onReblog: PropTypes.func.isRequired,
@@ -113,6 +116,10 @@ class ActionBar extends PureComponent {
 
   handleRevokeQuoteClick = () => {
     this.props.onRevokeQuote(this.props.status);
+  };
+
+  handleQuoteClick = () => {
+    this.props.onQuote(this.props.status);
   };
 
   handleQuotePolicyChange = () => {
@@ -176,7 +183,7 @@ class ActionBar extends PureComponent {
   };
 
   render () {
-    const { status, quotedAccountId, intl } = this.props;
+    const { status, statusQuoteState, quotedAccountId, intl } = this.props;
     const { signedIn, permissions } = this.props.identity;
 
     const publicStatus       = ['public', 'unlisted'].includes(status.get('visibility'));
@@ -205,6 +212,19 @@ class ActionBar extends PureComponent {
       menu.push({ text: intl.formatMessage(messages.embed), action: this.handleEmbed });
     }
 
+    if (quickBoosting && signedIn) {
+      const quoteItem = quoteItemState(statusQuoteState);
+      menu.push(null);
+      menu.push({
+        text: intl.formatMessage(quoteItem.title),
+        description: quoteItem.meta
+          ? intl.formatMessage(quoteItem.meta)
+          : undefined,
+        disabled: quoteItem.disabled,
+        action: this.handleQuoteClick,
+      });
+    }
+
     if (signedIn) {
       menu.push(null);
 
@@ -215,7 +235,7 @@ class ActionBar extends PureComponent {
         }
 
         menu.push({ text: intl.formatMessage(mutingConversation ? messages.unmuteConversation : messages.muteConversation), action: this.handleConversationMuteClick });
-        if (isFeatureEnabled('outgoing_quotes') && !['private', 'direct'].includes(status.get('visibility'))) {
+        if (!['private', 'direct'].includes(status.get('visibility'))) {
           menu.push({ text: intl.formatMessage(messages.quotePolicyChange), action: this.handleQuotePolicyChange });
         }
         menu.push(null);

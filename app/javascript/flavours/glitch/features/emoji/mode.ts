@@ -1,14 +1,75 @@
 // Credit to Nolan Lawson for the original implementation.
 // See: https://github.com/nolanlawson/emoji-picker-element/blob/master/src/picker/utils/testColorEmojiSupported.js
 
+import { createAppSelector, useAppSelector } from '@/flavours/glitch/store';
+import { assetHost } from '@/flavours/glitch/utils/config';
 import { isDevelopment } from '@/flavours/glitch/utils/environment';
+import { isDarkMode } from '@/flavours/glitch/utils/theme';
 
 import {
   EMOJI_MODE_NATIVE,
   EMOJI_MODE_NATIVE_WITH_FLAGS,
   EMOJI_MODE_TWEMOJI,
 } from './constants';
-import type { EmojiMode } from './types';
+import { toSupportedLocale } from './locale';
+import type { EmojiAppState, EmojiMode } from './types';
+
+const modeSelector = createAppSelector(
+  [(state) => state.meta.get('emoji_style') as string],
+  (emoji_style) => determineEmojiMode(emoji_style),
+);
+
+export function useEmojiAppState(): EmojiAppState {
+  const locale = useAppSelector((state) =>
+    toSupportedLocale(state.meta.get('locale') as string),
+  );
+  const mode = useAppSelector(modeSelector);
+
+  return {
+    currentLocale: locale,
+    locales: [locale],
+    mode,
+    darkTheme: isDarkMode(),
+    assetHost,
+  };
+}
+
+export function getEmojiAppState(): EmojiAppState {
+  const currentLocale = toSupportedLocale(document.documentElement.lang);
+
+  let emojiStyle = 'auto';
+  const initialStateText =
+    document.getElementById('initial-state')?.textContent;
+  if (initialStateText) {
+    try {
+      const state = JSON.parse(initialStateText) as unknown;
+      if (
+        state !== null &&
+        typeof state === 'object' &&
+        'meta' in state &&
+        state.meta !== null &&
+        typeof state.meta === 'object' &&
+        'emoji_style' in state.meta &&
+        typeof state.meta.emoji_style === 'string'
+      ) {
+        emojiStyle = state.meta.emoji_style;
+      }
+    } catch (err: unknown) {
+      console.warn(
+        'Failed to parse initial state for emoji, defaulting to auto. Error:',
+        err,
+      );
+    }
+  }
+
+  return {
+    currentLocale,
+    locales: [currentLocale],
+    mode: determineEmojiMode(emojiStyle),
+    darkTheme: isDarkMode(),
+    assetHost,
+  };
+}
 
 type Feature = Uint8ClampedArray;
 
@@ -55,7 +116,7 @@ function testEmojiSupport(text: string) {
   return compareFeatures(feature1, feature2);
 }
 
-const EMOJI_VERSION_TEST_EMOJI = '🫨'; // shaking head, from v15
+const EMOJI_VERSION_TEST_EMOJI = '🫩'; // face with bags under eyes, from Unicode 16.0.
 const EMOJI_FLAG_TEST_EMOJI = '🇨🇭';
 
 export function determineEmojiMode(style: string): EmojiMode {

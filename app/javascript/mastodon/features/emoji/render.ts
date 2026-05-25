@@ -1,212 +1,40 @@
-import { autoPlayGif } from '@/mastodon/initial_state';
-import { createLimitedCache } from '@/mastodon/utils/cache';
-import { assetHost } from '@/mastodon/utils/config';
-import * as perf from '@/mastodon/utils/performance';
-
 import {
   EMOJI_MODE_NATIVE,
   EMOJI_MODE_NATIVE_WITH_FLAGS,
   EMOJI_TYPE_UNICODE,
   EMOJI_TYPE_CUSTOM,
-  EMOJI_STATE_MISSING,
 } from './constants';
-import {
-  searchCustomEmojisByShortcodes,
-  searchEmojisByHexcodes,
-} from './database';
-import {
-  emojiToUnicodeHex,
-  twemojiHasBorder,
-  unicodeToTwemojiHex,
-} from './normalize';
+import { emojiToInversionClassName, unicodeHexToUrl } from './normalize';
 import type {
-  CustomEmojiToken,
   EmojiAppState,
   EmojiLoadedState,
   EmojiMode,
   EmojiState,
-  EmojiStateMap,
-  EmojiToken,
+  EmojiStateCustom,
+  EmojiStateUnicode,
   ExtraCustomEmojiMap,
-  LocaleOrCustom,
-  UnicodeEmojiToken,
 } from './types';
 import {
   anyEmojiRegex,
   emojiLogger,
-  stringHasAnyEmoji,
+  emojiToUnicodeHex,
+  isCustomEmoji,
+  isUnicodeEmoji,
   stringHasUnicodeFlags,
 } from './utils';
 
 const log = emojiLogger('render');
 
+type TokenizedText = (string | EmojiState)[];
+
 /**
- * Emojifies an element. This modifies the element in place, replacing text nodes with emojified versions.
+ * Tokenizes text into strings and emoji states.
+ * @param text Text to tokenize.
+ * @returns Array of strings and emoji states.
  */
-export async function emojifyElement<Element extends HTMLElement>(
-  element: Element,
-  appState: EmojiAppState,
-  extraEmojis: ExtraCustomEmojiMap = {},
-): Promise<Element | null> {
-  const cacheKey = createCacheKey(element, appState, extraEmojis);
-  const cached = getCached(cacheKey);
-  if (cached !== undefined) {
-    log('Cache hit on %s', element.outerHTML);
-    if (cached === null) {
-      return null;
-    }
-    element.innerHTML = cached;
-    return element;
-  }
-  if (!stringHasAnyEmoji(element.innerHTML)) {
-    updateCache(cacheKey, null);
-    return null;
-  }
-  perf.start('emojifyElement()');
-  const queue: (HTMLElement | Text)[] = [element];
-  while (queue.length > 0) {
-    const current = queue.shift();
-    if (
-      !current ||
-      current instanceof HTMLScriptElement ||
-      current instanceof HTMLStyleElement
-    ) {
-      continue;
-    }
-
-    if (
-      current.textContent &&
-      (current instanceof Text || !current.hasChildNodes())
-    ) {
-      const renderedContent = await textToElementArray(
-        current.textContent,
-        appState,
-        extraEmojis,
-      );
-      if (renderedContent) {
-        if (!(current instanceof Text)) {
-          current.textContent = null; // Clear the text content if it's not a Text node.
-        }
-        current.replaceWith(renderedToHTML(renderedContent));
-      }
-      continue;
-    }
-
-    for (const child of current.childNodes) {
-      if (child instanceof HTMLElement || child instanceof Text) {
-        queue.push(child);
-      }
-    }
-  }
-  updateCache(cacheKey, element.innerHTML);
-  perf.stop('emojifyElement()');
-  return element;
-}
-
-export async function emojifyText(
-  text: string,
-  appState: EmojiAppState,
-  extraEmojis: ExtraCustomEmojiMap = {},
-): Promise<string | null> {
-  const cacheKey = createCacheKey(text, appState, extraEmojis);
-  const cached = getCached(cacheKey);
-  if (cached !== undefined) {
-    log('Cache hit on %s', text);
-    return cached ?? text;
-  }
-  if (!stringHasAnyEmoji(text)) {
-    updateCache(cacheKey, null);
-    return text;
-  }
-  const eleArray = await textToElementArray(text, appState, extraEmojis);
-  if (!eleArray) {
-    updateCache(cacheKey, null);
-    return text;
-  }
-  const rendered = renderedToHTML(eleArray, document.createElement('div'));
-  updateCache(cacheKey, rendered.innerHTML);
-  return rendered.innerHTML;
-}
-
-// Private functions
-
-const {
-  set: updateCache,
-  get: getCached,
-  clear: cacheClear,
-} = createLimitedCache<string | null>({ log: log.extend('cache') });
-
-function createCacheKey(
-  input: HTMLElement | string,
-  appState: EmojiAppState,
-  extraEmojis: ExtraCustomEmojiMap,
-) {
-  return JSON.stringify([
-    input instanceof HTMLElement ? input.outerHTML : input,
-    appState,
-    extraEmojis,
-  ]);
-}
-
-type EmojifiedTextArray = (string | HTMLImageElement)[];
-
-async function textToElementArray(
-  text: string,
-  appState: EmojiAppState,
-  extraEmojis: ExtraCustomEmojiMap = {},
-): Promise<EmojifiedTextArray | null> {
-  // Exit if no text to convert.
-  if (!text.trim()) {
-    return null;
-  }
-
-  const tokens = tokenizeText(text);
-
-  // If only one token and it's a string, exit early.
-  if (tokens.length === 1 && typeof tokens[0] === 'string') {
-    return null;
-  }
-
-  // Get all emoji from the state map, loading any missing ones.
-  await loadMissingEmojiIntoCache(tokens, appState, extraEmojis);
-
-  const renderedFragments: EmojifiedTextArray = [];
-  for (const token of tokens) {
-    if (typeof token !== 'string' && shouldRenderImage(token, appState.mode)) {
-      let state: EmojiState | undefined;
-      if (token.type === EMOJI_TYPE_CUSTOM) {
-        const extraEmojiData = extraEmojis[token.code];
-        if (extraEmojiData) {
-          state = { type: EMOJI_TYPE_CUSTOM, data: extraEmojiData };
-        } else {
-          state = emojiForLocale(token.code, EMOJI_TYPE_CUSTOM);
-        }
-      } else {
-        state = emojiForLocale(
-          emojiToUnicodeHex(token.code),
-          appState.currentLocale,
-        );
-      }
-
-      // If the state is valid, create an image element. Otherwise, just append as text.
-      if (state && typeof state !== 'string') {
-        const image = stateToImage(state, appState);
-        renderedFragments.push(image);
-        continue;
-      }
-    }
-    const text = typeof token === 'string' ? token : token.code;
-    renderedFragments.push(text);
-  }
-
-  return renderedFragments;
-}
-
-type TokenizedText = (string | EmojiToken)[];
-
 export function tokenizeText(text: string): TokenizedText {
   if (!text.trim()) {
-    return [];
+    return [text];
   }
 
   const tokens = [];
@@ -221,15 +49,15 @@ export function tokenizeText(text: string): TokenizedText {
     if (code.startsWith(':') && code.endsWith(':')) {
       // Custom emoji
       tokens.push({
+        code,
         type: EMOJI_TYPE_CUSTOM,
-        code: code.slice(1, -1), // Remove the colons
-      } satisfies CustomEmojiToken);
+      } satisfies EmojiStateCustom);
     } else {
       // Unicode emoji
       tokens.push({
+        code,
         type: EMOJI_TYPE_UNICODE,
-        code: code,
-      } satisfies UnicodeEmojiToken);
+      } satisfies EmojiStateUnicode);
     }
     lastIndex = match.index + code.length;
   }
@@ -239,107 +67,183 @@ export function tokenizeText(text: string): TokenizedText {
   return tokens;
 }
 
-const localeCacheMap = new Map<LocaleOrCustom, EmojiStateMap>([
-  [
-    EMOJI_TYPE_CUSTOM,
-    createLimitedCache<EmojiState>({ log: log.extend('custom') }),
-  ],
-]);
+/**
+ * Parses emoji string to extract emoji state.
+ * @param code Hex code or custom shortcode.
+ * @param customEmoji Extra custom emojis.
+ */
+export function stringToEmojiState(
+  code: string,
+  customEmoji: ExtraCustomEmojiMap = {},
+): EmojiStateUnicode | Required<EmojiStateCustom> | null {
+  if (isUnicodeEmoji(code)) {
+    return {
+      code: emojiToUnicodeHex(code),
+      type: EMOJI_TYPE_UNICODE,
+    };
+  }
 
-function cacheForLocale(locale: LocaleOrCustom): EmojiStateMap {
-  return (
-    localeCacheMap.get(locale) ??
-    createLimitedCache<EmojiState>({ log: log.extend(locale) })
+  if (isCustomEmoji(code)) {
+    const shortCode = code.slice(1, -1);
+    if (customEmoji[shortCode]) {
+      return {
+        type: EMOJI_TYPE_CUSTOM,
+        code: shortCode,
+        data: customEmoji[shortCode],
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Takes an element and emojifies all native emoji.
+ */
+export async function updateHtmlWithEmoji({
+  assetHost,
+  darkTheme,
+  element,
+  mode,
+  locale,
+}: {
+  element: Element;
+  locale: string;
+} & Omit<EmojiAppState, 'currentLocale' | 'locales'>) {
+  if (mode === EMOJI_MODE_NATIVE) {
+    return;
+  }
+
+  const tokens = tokenizeText(element.innerHTML);
+  const newChildren: (string | Element)[] = [];
+  for (const token of tokens) {
+    if (typeof token === 'string') {
+      newChildren.push(token);
+      continue;
+    }
+
+    const state = await loadEmojiDataToState(token, locale);
+    // Ignore custom emoji if we encounter them.
+    if (!state || state.type === EMOJI_TYPE_CUSTOM) {
+      newChildren.push(token.code);
+      continue;
+    }
+
+    if (!shouldRenderImage(state, mode)) {
+      newChildren.push(state.data.unicode);
+      continue;
+    }
+
+    const img = document.createElement('img');
+    img.src = unicodeHexToUrl({
+      assetHost,
+      darkTheme,
+      unicodeHex: state.data.hexcode,
+    });
+    img.alt = state.data.unicode;
+    img.title = state.data.label;
+    img.classList.add('emojione');
+
+    const inversionClass = emojiToInversionClassName(state.data.unicode);
+    if (inversionClass) {
+      img.classList.add(inversionClass);
+    }
+
+    newChildren.push(img);
+  }
+
+  element.innerHTML = newChildren.reduce<string>(
+    (prev, curr) =>
+      typeof curr === 'string' ? prev + curr : prev + curr.outerHTML,
+    '',
   );
 }
 
-function emojiForLocale(
-  code: string,
-  locale: LocaleOrCustom,
-): EmojiState | undefined {
-  const cache = cacheForLocale(locale);
-  return cache.get(code);
-}
-
-async function loadMissingEmojiIntoCache(
-  tokens: TokenizedText,
-  { mode, currentLocale }: EmojiAppState,
-  extraEmojis: ExtraCustomEmojiMap,
-) {
-  const missingUnicodeEmoji = new Set<string>();
-  const missingCustomEmoji = new Set<string>();
-
-  // Iterate over tokens and check if they are in the cache already.
-  for (const token of tokens) {
-    if (typeof token === 'string') {
-      continue; // Skip plain strings.
-    }
-
-    // If this is a custom emoji, check it separately.
-    if (token.type === EMOJI_TYPE_CUSTOM) {
-      const code = token.code;
-      if (code in extraEmojis) {
-        continue; // We don't care about extra emoji.
-      }
-      const emojiState = emojiForLocale(code, EMOJI_TYPE_CUSTOM);
-      if (!emojiState) {
-        missingCustomEmoji.add(code);
-      }
-      // Otherwise this is a unicode emoji, so check it against all locales.
-    } else if (shouldRenderImage(token, mode)) {
-      const code = emojiToUnicodeHex(token.code);
-      if (missingUnicodeEmoji.has(code)) {
-        continue; // Already marked as missing.
-      }
-      const emojiState = emojiForLocale(code, currentLocale);
-      if (!emojiState) {
-        // If it's missing in one locale, we consider it missing for all.
-        missingUnicodeEmoji.add(code);
-      }
-    }
+/**
+ * Loads emoji data into the given state if not already loaded.
+ * @param state Emoji state to load data for.
+ * @param locale Locale to load data for. Only for Unicode emoji.
+ * @param retry Internal. Whether this is a retry after loading the locale.
+ */
+export async function loadEmojiDataToState(
+  state: EmojiState,
+  locale: string,
+  retry = false,
+): Promise<EmojiLoadedState | null> {
+  if (isStateLoaded(state)) {
+    return state;
   }
 
-  if (missingUnicodeEmoji.size > 0) {
-    const missingEmojis = Array.from(missingUnicodeEmoji).toSorted();
-    const emojis = await searchEmojisByHexcodes(missingEmojis, currentLocale);
-    const cache = cacheForLocale(currentLocale);
-    for (const emoji of emojis) {
-      cache.set(emoji.hexcode, { type: EMOJI_TYPE_UNICODE, data: emoji });
-    }
-    const notFoundEmojis = missingEmojis.filter((code) =>
-      emojis.every((emoji) => emoji.hexcode !== code),
-    );
-    for (const code of notFoundEmojis) {
-      cache.set(code, EMOJI_STATE_MISSING); // Mark as missing if not found, as it's probably not a valid emoji.
-    }
-    localeCacheMap.set(currentLocale, cache);
+  // Don't try to load data for custom emoji.
+  if (state.type === EMOJI_TYPE_CUSTOM) {
+    return null;
   }
 
-  if (missingCustomEmoji.size > 0) {
-    const missingEmojis = Array.from(missingCustomEmoji).toSorted();
-    const emojis = await searchCustomEmojisByShortcodes(missingEmojis);
-    const cache = cacheForLocale(EMOJI_TYPE_CUSTOM);
-    for (const emoji of emojis) {
-      cache.set(emoji.shortcode, { type: EMOJI_TYPE_CUSTOM, data: emoji });
+  const {
+    loadLegacyShortcodesByShortcode,
+    loadEmojiByHexcode,
+    LocaleNotLoadedError,
+  } = await import('./database');
+
+  const code = isUnicodeEmoji(state.code)
+    ? emojiToUnicodeHex(state.code)
+    : state.code;
+
+  // First, try to load the data from IndexedDB.
+  try {
+    const legacyCode = await loadLegacyShortcodesByShortcode(code);
+    // This is duplicative, but that's because TS can't distinguish the state type easily.
+    const data = await loadEmojiByHexcode(legacyCode?.hexcode ?? code, locale);
+    if (data) {
+      return {
+        ...state,
+        code,
+        type: EMOJI_TYPE_UNICODE,
+        data,
+        // TODO: Use CLDR shortcodes when the picker supports them.
+        shortcode: legacyCode?.shortcodes.at(0),
+      };
     }
-    const notFoundEmojis = missingEmojis.filter((code) =>
-      emojis.every((emoji) => emoji.shortcode !== code),
-    );
-    for (const code of notFoundEmojis) {
-      cache.set(code, EMOJI_STATE_MISSING); // Mark as missing if not found, as it's probably not a valid emoji.
+
+    // If not found, assume it's not an emoji and return null.
+    log('Could not find emoji %s for locale %s', code, locale);
+    return null;
+  } catch (err: unknown) {
+    // If the locale is not loaded, load it and retry once.
+    if (!retry && err instanceof LocaleNotLoadedError) {
+      log(
+        'Error loading emoji %s for locale %s, loading locale and retrying.',
+        code,
+        locale,
+      );
+      const { importEmojiData } = await import('./loader');
+      await importEmojiData(locale); // Use this from the loader file as it can be awaited.
+      return loadEmojiDataToState(state, locale, true);
     }
-    localeCacheMap.set(EMOJI_TYPE_CUSTOM, cache);
+
+    console.warn('Error loading emoji data, not retrying:', state, locale, err);
+    return null;
   }
 }
 
-function shouldRenderImage(token: EmojiToken, mode: EmojiMode): boolean {
-  if (token.type === EMOJI_TYPE_UNICODE) {
+export function isStateLoaded(state: EmojiState): state is EmojiLoadedState {
+  return !!state.data;
+}
+
+/**
+ * Determines if the given token should be rendered as an image based on the emoji mode.
+ * @param state Emoji state to parse.
+ * @param mode Rendering mode.
+ * @returns Whether to render as an image.
+ */
+export function shouldRenderImage(state: EmojiState, mode: EmojiMode): boolean {
+  if (state.type === EMOJI_TYPE_UNICODE) {
     // If the mode is native or native with flags for non-flag emoji
     // we can just append the text node directly.
     if (
       mode === EMOJI_MODE_NATIVE ||
       (mode === EMOJI_MODE_NATIVE_WITH_FLAGS &&
-        !stringHasUnicodeFlags(token.code))
+        !stringHasUnicodeFlags(state.code))
     ) {
       return false;
     }
@@ -347,61 +251,3 @@ function shouldRenderImage(token: EmojiToken, mode: EmojiMode): boolean {
 
   return true;
 }
-
-function stateToImage(state: EmojiLoadedState, appState: EmojiAppState) {
-  const image = document.createElement('img');
-  image.draggable = false;
-  image.classList.add('emojione');
-
-  if (state.type === EMOJI_TYPE_UNICODE) {
-    const emojiInfo = twemojiHasBorder(unicodeToTwemojiHex(state.data.hexcode));
-    let fileName = emojiInfo.hexCode;
-    if (
-      (appState.darkTheme && emojiInfo.hasDarkBorder) ||
-      (!appState.darkTheme && emojiInfo.hasLightBorder)
-    ) {
-      fileName = `${emojiInfo.hexCode}_border`;
-    }
-
-    image.alt = state.data.unicode;
-    image.title = state.data.label;
-    image.src = `${assetHost}/emoji/${fileName}.svg`;
-  } else {
-    // Custom emoji
-    const shortCode = `:${state.data.shortcode}:`;
-    image.classList.add('custom-emoji');
-    image.alt = shortCode;
-    image.title = shortCode;
-    image.src = autoPlayGif ? state.data.url : state.data.static_url;
-    image.dataset.original = state.data.url;
-    image.dataset.static = state.data.static_url;
-  }
-
-  return image;
-}
-
-function renderedToHTML(renderedArray: EmojifiedTextArray): DocumentFragment;
-function renderedToHTML<ParentType extends ParentNode>(
-  renderedArray: EmojifiedTextArray,
-  parent: ParentType,
-): ParentType;
-function renderedToHTML(
-  renderedArray: EmojifiedTextArray,
-  parent: ParentNode | null = null,
-) {
-  const fragment = parent ?? document.createDocumentFragment();
-  for (const fragmentItem of renderedArray) {
-    if (typeof fragmentItem === 'string') {
-      fragment.appendChild(document.createTextNode(fragmentItem));
-    } else if (fragmentItem instanceof HTMLImageElement) {
-      fragment.appendChild(fragmentItem);
-    }
-  }
-  return fragment;
-}
-
-// Testing helpers
-export const testCacheClear = () => {
-  cacheClear();
-  localeCacheMap.clear();
-};

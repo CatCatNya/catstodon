@@ -20,6 +20,7 @@ class UserSettings
   setting :hide_followers_count, default: false
   setting :visible_reactions, default: 6
   setting :default_quote_policy, default: 'public', in: %w(public followers nobody)
+  setting :email_subscriptions, default: false
 
   setting_inverse_alias :indexable, :noindex
   setting_inverse_alias :show_followers_count, :hide_followers_count
@@ -36,13 +37,15 @@ class UserSettings
     setting :delete_modal, default: true
     setting :reblog_modal, default: false
     setting :favourite_modal, default: false
+    setting :quick_boosting, default: false
     setting :missing_alt_text_modal, default: true
     setting :reduce_motion, default: false
     setting :expand_content_warnings, default: false
-    setting :display_media, default: 'default', in: %w(default show_all hide_all)
+    setting :display_media, default: 'default', in: %w(hide_all default show_all)
     setting :auto_play, default: false
-    setting :use_system_emoji_font, default: false
     setting :emoji_style, default: 'auto', in: %w(auto native twemoji)
+    setting :color_scheme, default: 'auto', in: %w(auto light dark)
+    setting :contrast, default: 'auto', in: %w(auto high)
   end
 
   namespace :notification_emails do

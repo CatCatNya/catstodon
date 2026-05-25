@@ -5,18 +5,18 @@
 # Table name: status_edits
 #
 #  id                           :bigint(8)        not null, primary key
-#  status_id                    :bigint(8)        not null
-#  account_id                   :bigint(8)
-#  text                         :text             default(""), not null
-#  spoiler_text                 :text             default(""), not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
 #  content_type                 :string
-#  ordered_media_attachment_ids :bigint(8)        is an Array
 #  media_descriptions           :text             is an Array
+#  ordered_media_attachment_ids :bigint(8)        is an Array
 #  poll_options                 :string           is an Array
 #  sensitive                    :boolean
+#  spoiler_text                 :text             default(""), not null
+#  text                         :text             default(""), not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  account_id                   :bigint(8)
 #  quote_id                     :bigint(8)
+#  status_id                    :bigint(8)        not null
 #
 
 class StatusEdit < ApplicationRecord
@@ -51,6 +51,10 @@ class StatusEdit < ApplicationRecord
     return if underlying_quote.nil? || underlying_quote.id != quote_id
 
     underlying_quote
+  end
+
+  def with_preview_card?
+    false
   end
 
   def with_media?

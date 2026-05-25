@@ -17,7 +17,7 @@ import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
 import { me } from 'flavours/glitch/initial_state';
 
-import { Permalink } from './permalink';
+import { LinkedDisplayName } from './display_name';
 
 export default class StatusPrepend extends PureComponent {
 
@@ -31,20 +31,12 @@ export default class StatusPrepend extends PureComponent {
   Message = () => {
     const { type, account } = this.props;
     let link = (
-      <Permalink
-        to={`/@${account.get('acct')}`}
-        href={account.get('url')}
-        className='status__display-name'
-        data-hover-card-account={account.get('id')}
-      >
-        <bdi>
-          <strong
-            dangerouslySetInnerHTML={{
-              __html : account.get('display_name_html') || account.get('username'),
-            }}
-          />
-        </bdi>
-      </Permalink>
+      <LinkedDisplayName
+        displayProps={{
+          account: account,
+          variant: 'simple'
+        }}
+      />
     );
     switch (type) {
     case 'reblogged_by':
@@ -182,7 +174,9 @@ export default class StatusPrepend extends PureComponent {
             icon={iconComponent}
           />
         </div>
-        <Message />
+        <span>
+          <Message />
+        </span>
         {children}
       </aside>
     );
