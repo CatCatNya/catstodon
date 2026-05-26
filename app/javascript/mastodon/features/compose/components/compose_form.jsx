@@ -260,7 +260,6 @@ class ComposeForm extends ImmutablePureComponent {
             <VisibilityButton disabled={this.props.isEditing} />
             <LanguageDropdown />
           </div>
-          <CharacterCounter max={maxChars} text={this.getFulltextForCharacterCounting()} />
 
           {this.props.spoiler && (
             <div className='spoiler-input'>
@@ -319,6 +318,8 @@ class ComposeForm extends ImmutablePureComponent {
                 <SpoilerButtonContainer />
                 <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} />
               </div>
+
+              <CharacterCounter max={maxChars} text={this.getFulltextForCharacterCounting()} />
 
               <div className='compose-form__submit'>
                 <Button
