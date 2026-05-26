@@ -35,6 +35,8 @@ class NormalizeStatusReactionVariationSelectors < ActiveRecord::Migration[8.1]
 
       source.delete
 
+      # If the migration were to be interrupted here, there would be "data loss" only for these timestamps.
+      # Everything else in this migration runs idempotently.
       target.update_columns(
         created_at: [target.created_at, source_created_at].min,
         updated_at: [target.updated_at, source_updated_at].max
