@@ -336,7 +336,7 @@ export const QuotedStatus: React.FC<QuotedStatusProps> = ({
 
   return (
     <div className='status__quote'>
-      {/* @ts-expect-error Status is not yet typed */}
+      {/* @ts-expect-error Does not fail here on glitch-soc, but does on Catstodon. Does seem to be a very WIP component either way. Let's see what happens next. */}
       <StatusContainer
         isQuotedPost
         id={quotedStatusId}
