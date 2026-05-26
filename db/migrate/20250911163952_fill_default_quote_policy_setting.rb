@@ -21,9 +21,6 @@ class FillDefaultQuotePolicySetting < ActiveRecord::Migration[8.0]
       if settings['default_privacy'] == 'private' && settings['default_quote_policy'] != 'nobody'
         settings['default_quote_policy'] = 'nobody'
         should_update_settings = true
-      elsif settings['default_quote_policy'].nil? && settings['default_privacy'] == 'unlisted'
-        settings['default_quote_policy'] = 'followers'
-        should_update_settings = true
       end
 
       user.update_column('settings', JSON.generate(settings)) if should_update_settings
