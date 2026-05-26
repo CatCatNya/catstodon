@@ -60,6 +60,14 @@ interface IntialStateRole {
   collection_limit: number;
 }
 
+interface PollLimits {
+  min_options: number;
+  max_options: number;
+  max_option_chars: number;
+  min_expiration: number;
+  max_expiration: number;
+}
+
 interface InitialStateWrapstodon {
   year: number;
   state: ApiAnnualReportState;
@@ -82,6 +90,7 @@ export interface InitialState {
   meta: InitialStateMeta;
   role?: IntialStateRole;
   features: string[];
+  poll_limits: PollLimits;
 }
 
 const element = document.getElementById('initial-state');
@@ -166,6 +175,9 @@ export const languages = initialState?.languages.map((lang) => {
     lang[2],
   ] as InitialStateLanguage;
 });
+
+// Glitch-soc-specific settings
+export const pollLimits = initialState?.poll_limits;
 
 export function getAccessToken(): string | undefined {
   return getMeta('access_token');
