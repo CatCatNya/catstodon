@@ -30,12 +30,15 @@ class NormalizeStatusReactionVariationSelectors < ActiveRecord::Migration[8.1]
     StatusReaction.transaction do
       merge_notifications!(source: source, target: target)
 
-      target.update_columns(
-        created_at: [target.created_at, source.created_at].min,
-        updated_at: [target.updated_at, source.updated_at].max
-      )
+      source_created_at = source.created_at
+      source_updated_at = source.updated_at
 
       source.delete
+
+      target.update_columns(
+        created_at: [target.created_at, source_created_at].min,
+        updated_at: [target.updated_at, source_updated_at].max
+      )
     end
   end
 
