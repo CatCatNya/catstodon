@@ -72,7 +72,7 @@ class ActivityPub::ProcessAccountService < BaseService
     unless @options[:only_key] || @account.suspended?
       check_featured_collection! if @json['featured'].present?
       check_featured_tags_collection! if @json['featuredTags'].present?
-      check_featured_collections_collection! if @json['featuredCollections'].present? && Mastodon::Feature.collections_enabled?
+      check_featured_collections_collection! if @json['featuredCollections'].present?
       check_links! if @account.fields.any?(&:requires_verification?)
     end
 
@@ -121,7 +121,7 @@ class ActivityPub::ProcessAccountService < BaseService
     @account.uri                     = @uri
     @account.actor_type              = actor_type
     @account.created_at              = @json['published'] if @json['published'].present?
-    @account.feature_approval_policy = feature_approval_policy if Mastodon::Feature.collections_enabled?
+    @account.feature_approval_policy = feature_approval_policy
   end
 
   def valid_collection_uri(uri)
@@ -150,7 +150,7 @@ class ActivityPub::ProcessAccountService < BaseService
     @account.show_featured           = @json['showFeatured'] if @json.key?('showFeatured')
     @account.show_media              = @json['showMedia'] if @json.key?('showMedia')
     @account.show_media_replies      = @json['showRepliesInMedia'] if @json.key?('showRepliesInMedia')
-    @account.attribution_domains     = as_array(@json['attributionDomains'] || []).take(Account::ATTRIBUTION_DOMAINS_HARD_LIMIT).map { |item| value_or_id(item) }
+    @account.attribution_domains     = as_array(@json['attributionDomains'] || []).take(Account::ATTRIBUTION_DOMAINS_HARD_LIMIT).grep(String)
   end
 
   def set_fetchable_key!
@@ -287,16 +287,20 @@ class ActivityPub::ProcessAccountService < BaseService
       end
 
       key_id = value
+      next if non_matching_uri_hosts?(@account.uri, key_id)
 
       # Key is fetched without ID validation because of a GoToSocial bug
       value = fetch_resource_without_id_validation(key_id)
+      next if value.blank?
 
       # Special handling for GoToSocial which returns the whole actor for the key ID
       value = first_of_value(value['publicKey']) if value.is_a?(Hash) && value.key?('publicKey')
 
-      next unless value['owner'] == @account.uri
+      next unless value.present? && value['owner'] == @account.uri
 
       key = value['publicKeyPem']
+      next if key.nil?
+
       { type: :rsa, public_key: key, uri: key_id }
     end
   end

@@ -2,17 +2,18 @@ import { SUPPORTED_LOCALES } from 'emojibase';
 import type { CompactEmoji, Locale, ShortcodesDataset } from 'emojibase';
 
 import type { ApiCustomEmojiJSON } from '@/flavours/glitch/api_types/custom_emoji';
+import { onceAsync } from '@/flavours/glitch/utils/promises';
 
 import { openEmojiDB } from './db-schema';
 import type { Database } from './db-schema';
+import { importEmojiData } from './loader';
 import { localeToSegmenter, toSupportedLocale } from './locale';
 import {
-  extractTokens,
   skinHexcodeToEmoji,
   transformCustomEmojiData,
   transformEmojiData,
 } from './normalize';
-import type { AnyEmojiData, CacheKey } from './types';
+import type { CacheKey } from './types';
 import { emojiLogger } from './utils';
 
 const loadedLocales = new Set<Locale>();
@@ -21,8 +22,6 @@ const log = emojiLogger('database');
 
 // Loads the database in a way that ensures it's only loaded once.
 const loadDB = (() => {
-  let dbPromise: Promise<Database> | null = null;
-
   // Actually load the DB.
   async function initDB() {
     const db = await openEmojiDB();
@@ -31,131 +30,34 @@ const loadDB = (() => {
     return db;
   }
 
+  let dbPromise = onceAsync(initDB);
+
   // Loads the database, or returns the existing promise if it hasn't resolved yet.
-  const loadPromise = async (): Promise<Database> => {
-    if (dbPromise) {
-      return dbPromise;
-    }
-    dbPromise = initDB();
-    return dbPromise;
-  };
+  const loadPromise = () => dbPromise();
+
   // Special way to reset the database, used for unit testing.
   loadPromise.reset = () => {
-    dbPromise = null;
+    dbPromise = onceAsync(initDB);
   };
   return loadPromise;
 })();
 
-type ScoreMap = Map<string, AnyEmojiData & { score: number }>;
-
-export async function search({
-  query,
-  locale: localeString,
-  limit = 0,
-}: {
-  query: string;
-  locale: string;
-  limit?: number;
-}) {
-  performance.mark('emoji-search-start');
-
-  // Get the locale, and extract tokens from the query.
-  const locale = await toLoadedLocale(localeString);
-  const segmenter = localeToSegmenter(locale);
-  const queryTokens = extractTokens(query, segmenter);
-
-  if (queryTokens.length === 0) {
-    log('no tokens extracted from query "%s"', query);
-    return [];
-  }
-  const lastToken = queryTokens.at(-1);
-  if (!lastToken) {
-    throw new Error('Missing tokens from query');
-  }
-
-  log('searching for tokens %o in locale %s', queryTokens, locale);
-
-  // Create an array of emoji results
+export async function rawSearch(query: string, locale: Locale, prefix = true) {
+  await toLoadedLocale(locale);
   const db = await loadDB();
-  const resultArrays: ScoreMap[] = [];
-  for (let i = 0; i < queryTokens.length; i++) {
-    const token = queryTokens[i];
-    if (!token) continue;
-
-    // Only query the range for the last token to allow partial matches.
-    const range =
-      i === queryTokens.length - 1
-        ? IDBKeyRange.bound(token, token + '\uffff')
-        : IDBKeyRange.only(token);
-
-    const [unicodeResults, customResults] = await Promise.all([
-      db.getAllFromIndex(locale, 'tokens', range),
-      db.getAllFromIndex('custom', 'tokens', range),
-    ]);
-    const resultMap: ScoreMap = new Map();
-    for (const emoji of unicodeResults) {
-      const score = getScoreForEmoji(emoji, token);
-      if (score === null) {
-        continue;
-      }
-      resultMap.set(emoji.hexcode, { ...emoji, score });
-    }
-    for (const emoji of customResults) {
-      const score = getScoreForEmoji(emoji, token);
-      if (score === null) {
-        continue;
-      }
-      resultMap.set(emoji.shortcode, { ...emoji, score });
-    }
-    log('found %d results for token "%s"', resultMap.size, token);
-    resultArrays.push(resultMap);
-  }
-
-  // Utilize maps to find the intersection of all result sets.
-  const results = Array.from(
-    resultArrays
-      .reduce((prev, curr) => {
-        const intersection: ScoreMap = new Map();
-        for (const [code, emoji] of prev) {
-          if (curr.has(code)) {
-            intersection.set(code, emoji);
-          }
-        }
-        return intersection;
-      })
-      .values(),
-  ).toSorted((a, b) => a.score - b.score);
-
-  const time = performance.measure('emoji-search-end', 'emoji-search-start');
-  log(
-    'search for "%s" in locale %s returned %d results and took %dms',
-    query,
-    locale,
-    results.length,
-    time.duration,
-  );
-  if (limit > 0) {
-    return results.slice(0, limit);
-  }
-  return results;
-}
-
-function getScoreForEmoji(emoji: AnyEmojiData, query: string) {
-  const id = 'shortcode' in emoji ? emoji.shortcode : emoji.label;
-  if (id === query) {
-    return 0;
-  }
-
-  let index = 1;
-  for (const token of [id, emoji.tokens]) {
-    const tokenIndex = token.indexOf(query);
-    if (tokenIndex !== -1) {
-      return index + tokenIndex / token.length;
-    }
-    index++;
-  }
-
-  return null;
+  const range = prefix
+    ? IDBKeyRange.lowerBound(query)
+    : IDBKeyRange.only(query);
+  const [unicodeResults, customResults, shortcodeResults] = await Promise.all([
+    db.getAllFromIndex(locale, 'tokens', range),
+    db.getAllFromIndex('custom', 'tokens', range),
+    db.getAllFromIndex('shortcodes', 'shortcodes', range),
+  ]);
+  return {
+    unicodeResults,
+    customResults,
+    shortcodeResults,
+  };
 }
 
 export async function putEmojiData(emojis: CompactEmoji[], locale: Locale) {
@@ -265,6 +167,9 @@ export async function loadCustomEmojiByShortcode(shortcode: string) {
 }
 
 export async function searchCustomEmojisByShortcodes(shortcodes: string[]) {
+  if (shortcodes.length === 0) {
+    return [];
+  }
   const db = await loadDB();
   const sortedCodes = shortcodes.toSorted();
   const results = await db.getAll(
@@ -272,6 +177,15 @@ export async function searchCustomEmojisByShortcodes(shortcodes: string[]) {
     IDBKeyRange.bound(sortedCodes.at(0), sortedCodes.at(-1)),
   );
   return results.filter((emoji) => shortcodes.includes(emoji.shortcode));
+}
+
+export async function loadCustomEmojiKeys(
+  query?: string | null,
+  chunkSize = 1_000,
+) {
+  const db = await loadDB();
+  const keyRange = query ? IDBKeyRange.lowerBound(query, true) : null;
+  return db.getAllKeys('custom', keyRange, chunkSize);
 }
 
 export async function loadAllCustomEmoji() {
@@ -323,8 +237,6 @@ async function toLoadedLocale(localeString: string) {
   }
   if (!loadedLocales.has(locale)) {
     log('Locale %s not loaded, importing...', locale);
-    // Ignore the INEFFECTIVE_DYNAMIC_IMPORT Vite warning, since the static import location is inside an inlined web worker.
-    const { importEmojiData } = await import(/* @vite-ignore */ './loader');
     await importEmojiData(locale);
     return locale;
   }

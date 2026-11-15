@@ -326,6 +326,18 @@ eu:
       unpublish: Desargitaratu
       unpublished_msg: Iragarpena ongi desargitaratu da!
       updated_msg: Iragarpena ongi eguneratu da!
+    collections:
+      accounts: Kontuak
+      back_to_account: Atzera kontuaren orrira
+      back_to_report: Atzera txostenaren orrira
+      batch:
+        remove_from_report: Kendu txostenetik
+        report: Salatu
+      collection_title: "%{name}-(r)en bildumak"
+      contents: Edukiak
+      no_collection_selected: Ez da bildumarik aldatu ez delako bat ere hautatu
+      open: Ireki
+      view_publicly: Publikoki ikusi
     critical_update_pending: Eguneraketa kritikoa egiteke
     custom_emojis:
       assign_category: Esleitu kategoria
@@ -460,9 +472,14 @@ eu:
         title: Posta domeinu berria blokeatu
       no_email_domain_block_selected: Ez da eposta domeinu blokeorik aldatu ez delako bat ere hautatu
       not_permitted: Baimendu gabea
+      reset: Berrezarri
       resolved_dns_records_hint_html: Domeinu-izena ondorengo MX domeinuetara ebazten da, zeinek eposta onartzeko ardura duten. MX domeinu bat blokeatzeak MX domeinu hori erabiltzen duen edozein helbide elektronikotatik izena-ematea blokeatzen du, baita ikusgai dagoen domeinu-izena beste bat bada ere. <strong>Kontuz ibili eposta hornitzaile nagusiak blokeatu gabe.</strong>
       resolved_through_html: "%{domain} domeinuaren bidez ebatzia"
+      search: Bilatu
       title: Email domeinua blokeatuta
+    email_subscriptions:
+      accounts:
+        account: Kontua
     export_domain_allows:
       new:
         title: Baimendutako domeinuak inportatu
@@ -647,7 +664,6 @@ eu:
       action_log: Auditoria-egunkaria
       action_taken_by: Neurrien hartzailea
       actions:
-        delete_description_html: Salatutako bidalketak ezabatuko dira eta neurria gordeko da, etorkizunean kontu berarekin elkarrekintzarik baduzu kontuan izan dezazun.
         mark_as_sensitive_description_html: Salatutako bidalketetako multimedia edukia hunkigarri bezala eta neurria gordeko da, etorkizunean kontu honek arau-hausterik egiten badu kontuan izan dezazun.
         other_description_html: Ikusi kontuaren portaera kontrolatzeko eta salatutako kontuarekin komunikazioa pertsonalizatzeko aukera gehiago.
         resolve_description_html: Ez da ekintzarik hartuko salatutako kontuaren aurka, ez da neurria gordeko eta salaketa itxiko da.
@@ -673,7 +689,6 @@ eu:
       confirm: Berretsi
       confirm_action: Berretsi @%{acct} kontuaren aurkako moderazio-ekintza
       created_at: Salatua
-      delete_and_resolve: Ezabatu bidalketak
       forwarded: Birbidalia
       forwarded_replies_explanation: Salaketa hau beste instantzia bateko erabiltzaile baten edukiari buruzkoa da, eta zure instantziako erabiltzaile bati egidako erantzuna delako bidali dizugu mezu hau.
       forwarded_to: 'Hona birbidalia: %{domain}'
@@ -841,11 +856,6 @@ eu:
           authenticated: Saioa hasi duten erabiltzaileentzat soilik
           disabled: Erabiltzaile-rol jakin bat behar da
           public: Edonork
-      landing_page:
-        values:
-          about: Honi buruz
-          local_feed: Jario lokala
-          trends: Joerak
       registrations:
         moderation_recommandation: Mesedez, ziurtatu moderazio-talde egokia eta erreaktiboa duzula erregistroak guztiei ireki aurretik!
         preamble: Kontrolatu nork sortu dezakeen kontua zerbitzarian.
@@ -1293,7 +1303,6 @@ eu:
   deletes:
     challenge_not_passed: Sartu duzun informazioa ez da zuzena
     confirm_password: Sartu zure oraingo pasahitza zure identitatea egiaztatzeko
-    confirm_username: Sartu zure erabiltzaile-izena prozedura berresteko
     proceed: Ezabatu kontua
     success_msg: Zure kontua ongi ezabatu da
     warning:
@@ -1775,7 +1784,6 @@ eu:
     appearance: Itxura
     authorized_apps: Baimendutako aplikazioak
     back: Itzuli Mastodon-era
-    delete: Kontuaren ezabaketa
     development: Garapena
     edit_profile: Editatu profila
     export: Esportatu

@@ -4,6 +4,7 @@ gl:
     about_mastodon_html: 'A rede social do futuro: Sen publicidade, sen seguimento por empresas, deseño ético e descentralización! En Mastodon ti posúes os teus datos!'
     contact_missing: Non establecido
     contact_unavailable: Non dispoñíbel
+    default_thumbnail_description: Dous mastodóns sorrintes debuxados (que semellan elefantes) tiran un avión de papel polo aire entre eles. De fondo vese o ceo azul con planetas flotando entre árbores e máis mastodóns neles.
     hosted_on: Mastodon aloxado en %{domain}
     title: Sobre
   accounts:
@@ -197,6 +198,7 @@ gl:
         create_user_role: Crear Rol
         create_username_block: Crear regra para Identificadores
         demote_user: Degradar usuaria
+        destroy_account: Eliminar os datos da conta
         destroy_announcement: Eliminar anuncio
         destroy_canonical_email_block: Eliminar bloqueo do correo
         destroy_custom_emoji: Eliminar emoticona personalizada
@@ -265,6 +267,7 @@ gl:
         create_user_role_html: "%{name} creou o rol %{target}"
         create_username_block_html: "%{name} engadiu unha regra para identificadores que contén %{target}"
         demote_user_html: "%{name} degradou a usuaria %{target}"
+        destroy_account_html: "%{name} eliminou os datos da conta %{target}"
         destroy_announcement_html: "%{name} eliminou o anuncio %{target}"
         destroy_canonical_email_block_html: "%{name} desbloqueou o correo con suma de comprobación %{target}"
         destroy_collection_html: "%{name} eliminou a colección de %{target}"
@@ -500,13 +503,26 @@ gl:
     email_subscriptions:
       accounts:
         account: Conta
-        active: Activa
         empty:
           hint: Aínda non hai contas con subscritoras.
           no_lists_yet: Aínda non hai listas
-        inactive: Inactiva
         last_email: Último correo
         lead: Aquí móstranse as contas que activaron esta ferramenta e teñen subscritoras.
+        show:
+          confirm_disable_feature: Desactivar o boletín para %{name}? Non se van enviar máis novidades desta conta por correo. A usuaria poderá reactivar esta ferramenta nos axustes da súa conta. Para quitar de xeito permanente o acceso á ferramenta, edita os permisos da conta en Roles.
+          confirm_remove_subscriber: "%{email} non vai seguir recibindo correos de %{name}. Esta acción non é reversible."
+          consent: As subscritoras consentiron exclusivamente recibir no correo as publicacións. Non uses esta lista para outros propósitos.
+          date: Data da subscrición
+          disable_feature: Desactivar a ferramenta
+          disabled: Esta ferramenta desactivouse e non se van seguir enviando correos a esta lista.
+          email: Enderezo de correo
+          empty:
+            hint: Aínda non hai subscricións a esta conta.
+            no_subscribers_yet: Sen subscricións
+          enable_feature: Activar a ferramenta
+          no_access_html: Esta conta xa non ten os permisos requeridos para activar a ferramenta. Cambiaos en <a href="%{roles_path}">Roles</a>.
+          title: Boletín por correo de %{name}
+          view_account: Ver conta
         status: Estado
         subscribers: Subscritoras
         title: Listas de correo
@@ -746,7 +762,7 @@ gl:
       action_log: Rexistro de auditoría
       action_taken_by: Acción tomada por
       actions:
-        delete_description_html: As publicacións denunciadas van ser eliminadas e gárdase un aviso para axudarche a xestionar futuras infraccións desta conta.
+        delete_description_html: As publicacións e/ou coleccións denunciadas van ser eliminadas e gárdase un aviso para axudarche a xestionar futuras infraccións desta conta.
         mark_as_sensitive_description_html: Os multimedia das publicacións denunciadas serán marcados como sensibles e engadirase un aviso para axudarche a xestionar futuras infraccións da mesma conta.
         other_description_html: Mira máis opcións para controlar o comportamento da conta e personalizar as comunicacións coa conta denunciada.
         resolve_description_html: Non se van tomar accións contra a conta denunciada, nin se gardarán avisos, e pecharase a denuncia.
@@ -773,7 +789,7 @@ gl:
       confirm: Confirmar
       confirm_action: Confirma a acción de moderación contra @%{acct}
       created_at: Denunciado
-      delete_and_resolve: Eliminar publicacións
+      delete_and_resolve: Eliminar contido
       forwarded: Reenviado
       forwarded_replies_explanation: Esta denuncia procede dunha usuaria remota e sobre contido remoto. Enviouseche unha copia porque o contido denunciado é unha resposta a unha das túas usuarias.
       forwarded_to: Reenviado a %{domain}
@@ -956,10 +972,16 @@ gl:
           disabled: Requerir un rol da usuaria específico
           public: Para calquera
       landing_page:
+        hints:
+          about_html: Unha páxina coa descrición, información de contacto, regras e outra información relativa a este servidor.
+          local_feed_html: Unha cronoloxía actual que mostra as publicacións máis recentes das usuarias deste servidor.
+          overview_html: Unha páxina que mostra a descrición do teu servidor xunto ás publicacións locais máis recentes das usuarias do servidor.
+          trends_html: Unha páxina que mostra as publicacións populares no servidor neste momento.
         values:
-          about: Sobre
-          local_feed: Cronoloxía Local
-          trends: Tendencias
+          about: Páxina sobre
+          local_feed: Cronoloxía local en directo
+          overview: Visión xeral
+          trends: Popular
       registrations:
         moderation_recommandation: Por favor, pon interese en crear un equipo de moderación competente e reactivo antes de permitir que calquera poida crear unha conta!
         preamble: Xestiona quen pode crear unha conta no teu servidor.
@@ -979,6 +1001,7 @@ gl:
     site_uploads:
       delete: Eliminar o ficheiro subido
       destroyed_msg: Eliminado correctamente o subido!
+    skip_to_content: Ir ao contido
     software_updates:
       critical_update: Crítica - actualiza axiña
       description: Aconsellamos manter actualizado o teu servidor Mastodon para beneficiarte dos últimos arranxos e características. A maiores, de cando en vez hai actualizacións para evitar problemas importantes de seguridade. Debido a isto, Mastodon comproba cada 30 minutos se hai actualizacións e avisarate seguindo as túas preferencias de notificación por correo electrónico.
@@ -1205,6 +1228,7 @@ gl:
           other: Utilizado por %{count} persoas na última semana
       title: Recomendacións e Suxestións
       trending: Popularidade
+    update_available: Actualización dispoñible
     username_blocks:
       add_new: Engadir nova
       block_registrations: Bloqueo dos rexistros
@@ -1448,7 +1472,6 @@ gl:
   deletes:
     challenge_not_passed: A información introducida non é correcta
     confirm_password: Escribe o contrasinal actual para verificar a túa identidade
-    confirm_username: Introduce o nome de usuaria para confirmar o procedemento
     proceed: Eliminar conta
     success_msg: A súa conta eliminouse correctamente
     warning:
@@ -1494,6 +1517,7 @@ gl:
       your_appeal_rejected: A apelación foi rexeitada
   edit_profile:
     other: Outros
+    privacy_redesign_body: A opción para mostrar a quen segues e quen te segue agora está no teu perfil.
     redesign_body: Agora podes acceder á edición do perfil directamente desde a páxina do perfil.
     redesign_button: Ir á edición
     redesign_title: Hai novidades no xeito en que podes editar o perfil
@@ -1526,7 +1550,9 @@ gl:
         success_html: Vas comezar a recibir correos cando %{name} publique novas publicacións. Engade %{sender} á túa libreta de enderezos para que os correos non vaian directamente ao cartafol de Spam.
         title: Subscribícheste
         unsubscribe: Anular subscrición
+    disabled: Desactivado
     inactive: Inactiva
+    no_access: Sen acceso
     status: Estado
     subscribers: Subscritoras
   emoji_styles:
@@ -1562,7 +1588,9 @@ gl:
     blocks: Bloqueadas
     bookmarks: Marcadores
     csv: CSV
+    custom_filters: Filtros
     domain_blocks: Bloqueos de dominio
+    json: JSON
     lists: Listaxes
     mutes: Silenciadas
     storage: Almacenamento de multimedia
@@ -1640,7 +1668,9 @@ gl:
       empty: Ficheiro CSV de baleiro
       incompatible_type: Non é compatible co tipo de importación seleccionado
       invalid_csv_file: 'Ficheiro CSV non válido. Erro: %{error}'
+      invalid_json_file: 'Ficheiro JSON non válido. Erro: %{error}'
       over_rows_processing_limit: contén máis de %{count} filas
+      status_not_found_warning: Algún dos teus filtros oculta publicacións concretas que non son coñecidas por este servidor. Estas publicacións non se van filtrar automaticamente se son descubertas máis tarde polo servidor.
       too_large: O ficheiro é demasiado grande
     failures: Erros
     imported: Importado
@@ -1657,6 +1687,9 @@ gl:
       bookmarks_html:
         one: Vas <strong>substituír os marcadores</strong> por <strong>%{count} publicación</strong> desde <strong>%{filename}</strong>.
         other: Vas <strong>substituír os marcadores</strong> por <strong>%{count} publicacións</strong> desde <strong>%{filename}</strong>.
+      custom_filters_html:
+        one: Vas <strong>substituír os teus filtros</strong> co contido de <strong>%{filename}</strong>. Vaise engadir só <strong>%{count} filtro</strong> aos novos filtros.
+        other: Vas <strong>substituír os teus filtros</strong> co contido de <strong>%{filename}</strong>. Vaise engadir <strong>%{count} filtros</strong> aos novos filtros.
       domain_blocking_html:
         one: Vas <strong>substituír a lista de dominios bloqueados</strong> por <strong>%{count} dominio</strong> desde <strong>%{filename}</strong>.
         other: Vas <strong>substituír a lista de dominios bloqueados</strong> por <strong>%{count} dominios</strong> desde <strong>%{filename}</strong>.
@@ -1676,6 +1709,9 @@ gl:
       bookmarks_html:
         one: Vas engadir <strong>%{count} publicación</strong> desde <strong>%{filename}</strong> aos teus <strong>marcadores</strong>.
         other: Vas engadir <strong>%{count} publicacións</strong> desde <strong>%{filename}</strong> aos teus <strong>marcadores</strong>.
+      custom_filters_html:
+        one: Vas a engadir <strong>%{count} filtro</strong> desde <strong>%{filename}</strong> aos teus <strong>filtros</strong>.
+        other: Vas a engadir <strong>%{count} filtros</strong> desde <strong>%{filename}</strong> aos teus <strong>filtros</strong>.
       domain_blocking_html:
         one: Vas <strong>bloquear</strong> a <strong>%{count} dominio</strong> desde <strong>%{filename}</strong>.
         other: Vas <strong>bloquear</strong> a <strong>%{count} dominios</strong> desde <strong>%{filename}</strong>.
@@ -1712,6 +1748,7 @@ gl:
     types:
       blocking: Lista de bloqueo
       bookmarks: Marcadores
+      custom_filters: Filtros
       domain_blocking: Lista de bloqueo de dominios
       following: Lista de seguimento
       lists: Listas
@@ -1849,7 +1886,7 @@ gl:
     mention:
       action: Responder
       body: "%{name} mencionoute en:"
-      subject: Foches mencionada por %{name}
+      subject: "%{name} mencionoute"
       title: Nova mención
     moderation_warning:
       subject: Recibiches unha advertencia da moderación
@@ -2029,7 +2066,6 @@ gl:
     appearance: Aparencia
     authorized_apps: Apps autorizadas
     back: Volver a Mastodon
-    delete: Eliminación da conta
     development: Desenvolvemento
     edit_profile: Editar perfil
     export: Exportar

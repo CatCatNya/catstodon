@@ -66,7 +66,6 @@ de:
         setting_display_media_show_all: Alle Medien anzeigen – auch Medien, die eine Inhaltswarnung enthalten
         setting_emoji_style: 'Wie Emojis dargestellt werden: „Automatisch“ verwendet native Emojis, für veraltete Browser wird jedoch Twemoji verwendet.'
         setting_quick_boosting_html: Dadurch wird der Beitrag beim Anklicken des %{boost_icon} Teilen-Symbols sofort geteilt, anstatt das Drop-down-Menü zu öffnen. Die Möglichkeit zum Zitieren wird dabei in %{options_icon} Mehr verschoben.
-        setting_system_scrollbars_ui: Betrifft nur Desktop-Browser, die auf Chrome oder Safari basieren
         setting_use_blurhash: Der Farbverlauf basiert auf den Farben der ausgeblendeten Medien, verschleiert aber jegliche Details
         setting_use_pending_items: Neue Beiträge hinter einem Klick verstecken, anstatt automatisch zu scrollen
         username: Du kannst Buchstaben, Zahlen und Unterstriche verwenden
@@ -176,7 +175,7 @@ de:
       webhook:
         events: Zu sendende Ereignisse auswählen
         template: Erstelle deine eigenen JSON-Nutzdaten mit Hilfe von Variablen-Interpolation. Leer lassen für Standard-JSON.
-        url: Wohin Ereignisse gesendet werden
+        url: Wohin Ereignisse geschickt werden
     labels:
       account:
         attribution_domains: Websites, die auf dich verweisen dürfen
@@ -325,7 +324,7 @@ de:
         trends: Trends aktivieren
         wrapstodon: Wrapstodon aktivieren
       form_email_subscriptions_confirmation:
-        agreement_email_volume: Ich verstehe, dass das Aktivieren dieser Funktion die Anzahl versendeter E-Mails drastisch erhöhen kann. Ich übernehme die Verantwortung für mögliche Zusatzkosten.
+        agreement_email_volume: Ich verstehe, dass das Aktivieren dieser Funktion die Anzahl verschickter E-Mails drastisch erhöhen kann. Ich übernehme die Verantwortung für mögliche Zusatzkosten.
         agreement_privacy_and_terms: Datenschutzerklärung und Nutzungsbedingungen wurden im Vorfeld aktualisiert.
       interactions:
         must_be_follower: Benachrichtigungen von Profilen, die mir nicht folgen, ausblenden

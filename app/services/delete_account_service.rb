@@ -3,13 +3,15 @@
 class DeleteAccountService < BaseService
   include Payloadable
 
-  ASSOCIATIONS_ON_SUSPEND = %w(
+  ASSOCIATIONS_ON_PURGE = %w(
     account_notes
     account_pins
     active_relationships
     aliases
     block_relationships
     blocked_by_relationships
+    collections
+    collection_items
     conversation_mutes
     conversations
     custom_filters
@@ -26,6 +28,8 @@ class DeleteAccountService < BaseService
     report_notes
     scheduled_statuses
     status_pins
+    tag_follows
+    generated_annual_reports
   ).freeze
 
   # The following associations have no important side-effects
@@ -51,6 +55,7 @@ class DeleteAccountService < BaseService
     scheduled_statuses
     status_pins
     tag_follows
+    generated_annual_reports
   ).freeze
 
   ASSOCIATIONS_ON_DESTROY = %w(
@@ -159,6 +164,8 @@ class DeleteAccountService < BaseService
   end
 
   def purge_statuses!
+    @account.statuses.reorder(nil).where(id: reported_status_ids).in_batches.update_all('deleted_at = COALESCE(statuses.deleted_at, NOW())')
+
     @account.statuses.reorder(nil).where.not(id: reported_status_ids).in_batches do |statuses|
       BatchedRemoveStatusService.new.call(statuses, skip_side_effects: skip_side_effects?)
     end
@@ -253,6 +260,8 @@ class DeleteAccountService < BaseService
     @account.also_known_as       = []
     @account.avatar.destroy
     @account.header.destroy
+    @account.avatar_description = ''
+    @account.header_description = ''
     @account.save!
   end
 
@@ -312,9 +321,9 @@ class DeleteAccountService < BaseService
 
   def associations_for_destruction
     if keep_account_record?
-      ASSOCIATIONS_ON_SUSPEND
+      ASSOCIATIONS_ON_PURGE
     else
-      ASSOCIATIONS_ON_SUSPEND + ASSOCIATIONS_ON_DESTROY
+      ASSOCIATIONS_ON_PURGE + ASSOCIATIONS_ON_DESTROY
     end
   end
 

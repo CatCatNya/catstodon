@@ -8,10 +8,13 @@ import { Helmet } from '@unhead/react/helmet';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
+import { domain } from 'flavours/glitch/initial_state';
+
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import { fetchServer, fetchExtendedDescription, fetchDomainBlocks  } from 'flavours/glitch/actions/server';
 import { Account } from 'flavours/glitch/components/account';
 import Column from 'flavours/glitch/components/column';
+import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { ServerHeroImage } from 'flavours/glitch/components/server_hero_image';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import { LinkFooter} from 'flavours/glitch/features/ui/components/link_footer';
@@ -91,7 +94,9 @@ class About extends PureComponent {
               srcSet={Object.keys(server.item?.thumbnail.versions ?? {}).map((key) => `${server.item?.thumbnail.versions && server.item.thumbnail.versions[key]} ${key.replace('@', '')}`).join(', ')}
               className='about__header__hero'
             />
-            <h1>{isLoading ? <Skeleton width='10ch' /> : server.domain}</h1>
+            <NavigationFocusTarget as='h1'>
+              {isLoading ? <Skeleton width='10ch' /> : domain}
+            </NavigationFocusTarget>
             <p><FormattedMessage id='about.powered_by' defaultMessage='Decentralized social media powered by {mastodon}' values={{ mastodon: <a href='https://joinmastodon.org' className='about__mail' target='_blank' rel='noopener'>Mastodon</a> }} /></p>
           </div>
 
@@ -169,7 +174,7 @@ class About extends PureComponent {
 
           <div className='about__footer'>
             <p><FormattedMessage id='about.fork_disclaimer' defaultMessage='Glitch-soc is free open source software forked from Mastodon.' /></p>
-            <p><FormattedMessage id='about.disclaimer' defaultMessage='Mastodon is free, open-source software, and a trademark of Mastodon gGmbH.' /></p>
+            <p><FormattedMessage id='about.disclaimer' defaultMessage='Mastodon is free, open-source software, and a trademark of Mastodon GmbH.' /></p>
           </div>
         </div>
 

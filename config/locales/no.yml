@@ -573,7 +573,6 @@
       action_log: Revisjon logg
       action_taken_by: Handling utført av
       actions:
-        delete_description_html: De rapporterte innleggene vil bli slettet, og en advarsel vil bli tatt vare på for å hjelpe deg eskalere ved fremtidige overtredelser fra samme konto.
         mark_as_sensitive_description_html: Mediene i de rapporterte innleggene vil bli merket som følsomme, og en advarsel vil bli notert for å hjelpe deg eskalere ved fremtidige overtredelser fra samme konto.
         other_description_html: Se flere alternativer for å kontrollere kontoens atferd og tilpasse kommunikasjonen til den oppgitte kontoen.
         resolve_description_html: Ingen handling utføres mot den rapporterte kontoen, ingen advarsel gis, og rapporten lukkes.
@@ -594,7 +593,6 @@
       confirm: Bekreft
       confirm_action: Bekreft moderasjonshandling mot @%{acct}
       created_at: Rapportert
-      delete_and_resolve: Slettede innlegg
       forwarded: Videresendt
       forwarded_replies_explanation: Denne rapporten er fra en ekstern bruker og handler om eksternt innhold. Den er videresendt til deg fordi det rapporterte innholdet svarer til en av brukerne dine.
       forwarded_to: Videresendt til %{domain}
@@ -1123,7 +1121,6 @@
   deletes:
     challenge_not_passed: Informasjonen du oppga var ikke korrekt
     confirm_password: Skriv inn ditt passord for å verifisere din identitet
-    confirm_username: Skriv inn brukernavnet ditt for å bekrefte prosedyren
     proceed: Slett konto
     success_msg: Din konto ble slettet
     warning:
@@ -1575,7 +1572,6 @@
     appearance: Utseende
     authorized_apps: Autoriserte applikasjoner
     back: Tilbake til Mastodon
-    delete: Kontosletting
     development: Utvikling
     edit_profile: Endre profil
     featured_tags: Utvalgte emneknagger

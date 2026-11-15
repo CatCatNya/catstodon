@@ -3,6 +3,7 @@ import {
   forwardRef,
   useCallback,
   useContext,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -100,6 +101,10 @@ interface ComboboxProps<
    * Icon to be displayed in the text input
    */
   icon?: TextInputProps['icon'] | null;
+  /**
+   * Set to true to open as soon as there is focus
+   */
+  openOnFocus?: boolean;
   /**
    * Set to false to keep the menu open when an item is selected
    */
@@ -217,8 +222,10 @@ const ComboboxWithRef = <Item extends ComboboxItem, GroupKey extends string>(
     renderGroupTitle,
     renderItem,
     onSelectItem,
+    onFocus,
     onChange,
     onKeyDown,
+    openOnFocus = false,
     closeOnSelect = true,
     suppressMenu = false,
     icon = SearchIcon,
@@ -231,6 +238,11 @@ const ComboboxWithRef = <Item extends ComboboxItem, GroupKey extends string>(
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement | null>();
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  // This ref tracks whether the menu was just closed following a
+  // selection, and prevents the menu from re-opening again
+  // when focus is returned to the input.
+  const wasMenuJustClosedRef = useRef(false);
 
   const [highlightedItemId, setHighlightedItemId] = useState<string | null>(
     null,
@@ -270,12 +282,6 @@ const ComboboxWithRef = <Item extends ComboboxItem, GroupKey extends string>(
     setShouldMenuOpen(false);
   }, []);
 
-  const resetHighlight = useCallback(() => {
-    const firstItem = flatItems[0];
-    const firstItemId = firstItem ? getItemId(firstItem) : null;
-    setHighlightedItemId(firstItemId);
-  }, [getItemId, flatItems]);
-
   const highlightItem = useCallback((id: string | null) => {
     setHighlightedItemId(id);
     if (id) {
@@ -287,6 +293,29 @@ const ComboboxWithRef = <Item extends ComboboxItem, GroupKey extends string>(
       }
     }
   }, []);
+
+  const resetHighlight = useCallback(() => {
+    const firstItem = flatItems[0];
+    const firstItemId = firstItem ? getItemId(firstItem) : null;
+    highlightItem(firstItemId);
+  }, [flatItems, getItemId, highlightItem]);
+
+  // Reset scroll & highlight when menu items change
+  useEffect(() => {
+    if (flatItems.length) {
+      resetHighlight();
+    }
+  }, [flatItems, resetHighlight]);
+
+  const handleFocus: React.FocusEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      if (openOnFocus && !wasMenuJustClosedRef.current) {
+        setShouldMenuOpen(true);
+      }
+      onFocus?.(e);
+    },
+    [onFocus, openOnFocus],
+  );
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -317,6 +346,10 @@ const ComboboxWithRef = <Item extends ComboboxItem, GroupKey extends string>(
 
           if (closeOnSelect) {
             closeMenu();
+            wasMenuJustClosedRef.current = true;
+            setTimeout(() => {
+              wasMenuJustClosedRef.current = false;
+            }, 50);
           }
         }
       }
@@ -487,6 +520,7 @@ const ComboboxWithRef = <Item extends ComboboxItem, GroupKey extends string>(
         autoComplete='off'
         spellCheck='false'
         value={value}
+        onFocus={handleFocus}
         onChange={handleInputChange}
         onKeyDown={handleInputKeyDown}
         icon={icon ?? undefined}

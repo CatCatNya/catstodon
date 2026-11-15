@@ -518,7 +518,7 @@ body > [data-popper-placement] {
 }
 
 .autosuggest-account .account__avatar,
-.autosuggest-emoji img {
+.autosuggest-emoji .emojione {
   display: block;
   width: 24px;
   height: 24px;
@@ -618,6 +618,7 @@ body > [data-popper-placement] {
     display: block;
     box-sizing: border-box;
     width: 100%;
+    max-height: 300px;
     margin: 0;
     color: var(--color-text-primary);
     background: transparent;
@@ -1424,6 +1425,7 @@ body > [data-popper-placement] {
   // this element inherits a text direction that is opposite to its own,
   // the start of this element's text is cut off.
 
+  // Posts on the timeline
   .status:not(.status--is-quote)
     > .status__content
     > .status__content__text:lang(#{$lang}),
@@ -1438,6 +1440,7 @@ body > [data-popper-placement] {
     overflow-x: hidden; // read more
   }
 
+  // Post editor
   .autosuggest-textarea > .autosuggest-textarea__textarea:lang(#{$lang}) {
     writing-mode: vertical-lr;
     min-height: 209px; // writable
@@ -1446,6 +1449,18 @@ body > [data-popper-placement] {
     scrollbar-color: unset;
   }
 
+  // Alt text editor
+  .dialog-modal__content__form
+    > .input
+    > .label_input
+    > textarea#description:lang(#{$lang}) {
+    writing-mode: vertical-lr;
+    min-height: 150px; // writable
+    max-height: 150px; // suppress autosizing by react-textarea-autosize
+    overflow-x: auto;
+  }
+
+  // Detailed posts
   .detailed-status > .status__content > .status__content__text:lang(#{$lang}) {
     writing-mode: vertical-lr;
     width: 100%; // detecting overflow
@@ -1636,6 +1651,10 @@ body > [data-popper-placement] {
     top: 0;
     inset-inline-start: 14px + ((46px - 2px) * 0.5);
 
+    .status__wrapper:has(> .status__prepend) &:not(&--full, &--first) {
+      height: 50px;
+    }
+
     &--full {
       top: 0;
       height: 100%;
@@ -1666,6 +1685,7 @@ body > [data-popper-placement] {
     content: '';
     position: absolute;
     inset: 0;
+    z-index: -1;
     background: var(--color-bg-brand-softest);
     opacity: 0;
     animation: fade 0.7s reverse both 0.3s;
@@ -1721,7 +1741,6 @@ body > [data-popper-placement] {
 
 .status__quote-cancel {
   align-self: self-start;
-  order: 5;
 }
 
 .status__info {
@@ -1792,6 +1811,12 @@ body > [data-popper-placement] {
   line-height: 22px;
   font-weight: 500;
   color: var(--color-text-secondary);
+
+  .status__wrapper-reply.status__wrapper--in-thread & {
+    --thread-margin: calc(46px + 8px);
+
+    margin-inline-start: var(--thread-margin);
+  }
 
   &__icon {
     display: flex;
@@ -2563,7 +2588,7 @@ a.account__display-name {
   overflow: hidden;
 
   strong,
-  span {
+  span:not(.emojione) {
     display: block;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -3082,7 +3107,6 @@ a.account__display-name {
 
     &__pane {
       height: 100%;
-      overflow: hidden;
       display: flex;
       justify-content: flex-end;
       min-width: 285px;
@@ -3454,8 +3478,7 @@ a.account__display-name {
 
     .column-header,
     .column-back-button,
-    .scrollable,
-    .error-column {
+    .scrollable {
       border-radius: 0 !important;
     }
 
@@ -3656,6 +3679,8 @@ a.account__display-name {
   text-align: center;
   padding-bottom: 32px;
 
+  h1,
+  h2,
   h3 {
     font-size: 24px;
     line-height: 1.5;
@@ -3951,6 +3976,7 @@ a.account__display-name {
 }
 
 .scrollable {
+  container: column / inline-size;
   overflow-y: scroll;
   overflow-x: hidden;
   flex: 1 1 auto;
@@ -4145,9 +4171,8 @@ a.account__display-name {
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 10px;
-  padding-inline-start: 14px;
-  overflow: hidden;
+  padding: 12px;
+  padding-inline-start: 16px;
   font-size: 16px;
   font-weight: 400;
   text-decoration: none;
@@ -4158,7 +4183,7 @@ a.account__display-name {
     var(--color-text-secondary)
   );
   background: transparent;
-  border: 2px solid transparent;
+  border: none;
   border-radius: 4px;
 
   &:hover,
@@ -4172,14 +4197,14 @@ a.account__display-name {
   }
 
   &:focus-visible {
-    outline: none;
-    border-color: var(--color-border-brand);
+    outline: var(--outline-focus-default);
+    outline-offset: -2px;
     background: var(--color-bg-brand-softest);
   }
 
   &--logo {
-    padding: 8px;
-    padding-inline-start: 12px;
+    padding: 10px;
+    padding-inline-start: 14px;
   }
 }
 
@@ -4655,6 +4680,7 @@ a.status-card {
 }
 
 .column-header__wrapper {
+  container: column / inline-size;
   position: relative;
   flex: 0 0 auto;
   z-index: 1;
@@ -4727,10 +4753,17 @@ a.status-card {
   z-index: 2;
   outline: 0;
 
+  &__title-wrapper {
+    display: flex;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
   &__title {
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-grow: 1;
     margin: 0;
     border: 0;
     padding: 13px;
@@ -4739,10 +4772,11 @@ a.status-card {
     background: transparent;
     font: inherit;
     text-align: start;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    flex: 1;
+    min-width: 0;
+
+    &--with-back-button {
+      padding-inline-start: 0;
+    }
 
     &:focus-visible {
       outline: var(--outline-focus-default);
@@ -4753,8 +4787,10 @@ a.status-card {
     }
   }
 
-  .column-header__back-button + &__title {
-    padding-inline-start: 0;
+  &__text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .column-header__back-button {
@@ -5444,51 +5480,6 @@ a.status-card {
 .follow_requests-unlocked_explanation {
   margin: 16px;
   margin-bottom: 0;
-}
-
-.error-column {
-  padding: 20px;
-  border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  cursor: default;
-
-  &__image {
-    width: 70%;
-    max-width: 350px;
-    margin-top: -50px;
-  }
-
-  &__message {
-    text-align: center;
-    color: var(--color-text-secondary);
-    font-size: 15px;
-    line-height: 22px;
-
-    h1 {
-      font-size: 28px;
-      line-height: 33px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      color: var(--color-text-primary);
-    }
-
-    p {
-      max-width: 48ch;
-    }
-
-    &__actions {
-      margin-top: 30px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: center;
-    }
-  }
 }
 
 @keyframes heartbeat {
@@ -7581,6 +7572,7 @@ img.modal-warning {
   border-radius: 8px;
   position: relative;
   width: 100%;
+  max-width: 100%;
   min-height: 64px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -8620,6 +8612,10 @@ noscript {
   justify-content: center;
   align-items: center;
 
+  img {
+    user-select: none;
+  }
+
   &.dragging {
     cursor: grabbing;
   }
@@ -8631,7 +8627,7 @@ noscript {
     transform: translate(-50%, -50%);
     border: 2px solid var(--color-text-on-media);
     border-radius: 50%;
-    box-shadow: 0 0 0 9999em var(--color-shadow-primary);
+    box-shadow: 0 0 0 9999em rgb(from black r g b / 25%);
     pointer-events: none;
   }
 }
@@ -8934,7 +8930,7 @@ noscript {
   }
 
   &__pagination {
-    padding: 15px;
+    padding: 0 12px 15px 0;
     color: var(--color-text-secondary);
     position: absolute;
     bottom: 3px;
@@ -8959,7 +8955,10 @@ noscript {
   align-items: center;
   margin-top: 15px;
   margin-inline-start: -2px;
-  width: calc(100% - (90px - 33px));
+
+  --pagination-width: 70px;
+
+  width: calc(100% - var(--pagination-width));
 
   &__item {
     flex-shrink: 0;
@@ -9095,6 +9094,7 @@ noscript {
   bottom: 20px;
   inset-inline-end: 20px;
   width: 300px;
+  background-color: var(--color-bg-primary);
   box-shadow: var(--dropdown-shadow);
 
   // glitch: feature to chose which side the pop-in player is displayed
@@ -9528,6 +9528,8 @@ noscript {
     padding-bottom: 32px;
   }
 
+  h1,
+  h2,
   h3 {
     font-size: 22px;
     line-height: 33px;
@@ -9558,6 +9560,8 @@ noscript {
   &__lead {
     margin-bottom: 20px;
 
+    h1,
+    h2,
     h3 {
       margin-bottom: 15px;
     }
@@ -9633,6 +9637,8 @@ noscript {
       flex: 1;
       box-sizing: border-box;
 
+      h1,
+      h2,
       h3 {
         margin-bottom: 20px;
       }
@@ -10230,6 +10236,10 @@ noscript {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .notification-bar {
@@ -11149,6 +11159,7 @@ noscript {
     -webkit-box-orient: vertical;
     max-height: 2 * 20px;
     overflow: hidden;
+    overflow-wrap: anywhere;
 
     p {
       margin-bottom: 0;
@@ -11398,10 +11409,14 @@ noscript {
 }
 
 .column-footer {
-  padding: 16px;
   position: sticky;
   bottom: 0;
+  padding: 16px;
   background: var(--color-bg-primary);
+
+  @media (width <= $mobile-menu-breakpoint) {
+    padding-bottom: calc(16px + var(--mobile-bottom-nav-height, 0));
+  }
 }
 
 .lists-scrollable {

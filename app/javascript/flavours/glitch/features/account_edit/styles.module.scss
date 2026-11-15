@@ -25,7 +25,7 @@
 
 .avatar {
   margin-top: -64px;
-  margin-left: 22px;
+  margin-left: calc(16px - 2px);
   position: relative;
   width: 82px;
 
@@ -41,6 +41,7 @@
 
 .bio {
   unicode-bidi: plaintext;
+  overflow-wrap: anywhere;
 
   p:not(:last-child) {
     margin-bottom: 20px;
@@ -250,7 +251,7 @@
 // Section component
 
 .section {
-  padding: 24px;
+  padding: 24px 16px;
   border-bottom: 1px solid var(--color-border-primary);
   font-size: 15px;
 

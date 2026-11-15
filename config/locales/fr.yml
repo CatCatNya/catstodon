@@ -4,6 +4,7 @@ fr:
     about_mastodon_html: 'Le réseau social de l''avenir : pas de publicité, pas de surveillance institutionnelle, conception éthique et décentralisation ! Gardez le contrôle de vos données avec Mastodon !'
     contact_missing: Non défini
     contact_unavailable: Non disponible
+    default_thumbnail_description: Un dessin représentant deux mastodontes (qui ressemblent à des éléphants) souriants qui se lancent un avion en papier. Derrière eux flottent des planètes avec des arbres et d'autres mastodontes, et en fond un ciel bleu vif.
     hosted_on: Serveur Mastodon hébergé sur %{domain}
     title: À propos
   accounts:
@@ -122,11 +123,11 @@ fr:
       public: Public
       push_subscription_expires: Expiration de l’abonnement PuSH
       redownload: Rafraîchir le profil
-      redownloaded_msg: Le profil de %{username} a été actualisé avec succès depuis l’origine
+      redownloaded_msg: Le profil de %{username} a été actualisé avec succès depuis son serveur d'origine
       reject: Rejeter
       rejected_msg: La demande d’inscription de %{username} a été rejetée avec succès
       remote_suspension_irreversible: Les données de ce compte ont été supprimées définitivement.
-      remote_suspension_reversible_hint_html: Ce compte a été suspendu par son serveur d'accueil, et les données rattachées seront supprimées le %{date}. Jusqu'à cette date, il peut être restauré sans aucune perte par le serveur distant. Si vous souhaitez supprimer immédiatement toutes les données de ce compte, vous pouvez le faire ci-dessous.
+      remote_suspension_reversible_hint_html: Ce compte a été suspendu par son serveur, et les données rattachées seront supprimées le %{date}. Jusqu'à cette date, il peut être restauré sans aucune perte par le serveur distant. Si vous souhaitez supprimer immédiatement toutes les données de ce compte, vous pouvez le faire ci-dessous.
       remove_avatar: Supprimer l’avatar
       remove_header: Supprimer l'image de couverture
       removed_avatar_msg: L’avatar de %{username} a été supprimé avec succès
@@ -197,6 +198,7 @@ fr:
         create_user_role: Créer un rôle
         create_username_block: Créer une règle de nom d'utilisateur·rice
         demote_user: Rétrograder un·e utilisateur·ice
+        destroy_account: Supprimer les données de compte
         destroy_announcement: Supprimer une annonce
         destroy_canonical_email_block: Supprimer un blocage de courriel
         destroy_custom_emoji: Supprimer un émoji personnalisé
@@ -265,6 +267,7 @@ fr:
         create_user_role_html: "%{name} a créé le rôle %{target}"
         create_username_block_html: "%{name} a ajouté une règle pour les noms d'utilisateur·rice contenant %{target}"
         demote_user_html: "%{name} a rétrogradé l'utilisateur·rice %{target}"
+        destroy_account_html: "%{name} a supprimé les données de compte pour %{target}"
         destroy_announcement_html: "%{name} a supprimé l'annonce %{target}"
         destroy_canonical_email_block_html: "%{name} a débloqué l'adresse courriel ayant l'empreinte %{target}"
         destroy_collection_html: "%{name} a supprimé la collection de %{target}"
@@ -500,13 +503,26 @@ fr:
     email_subscriptions:
       accounts:
         account: Compte
-        active: Actif
         empty:
           hint: Aucun compte n'a d'abonné·e·s pour l'instant.
           no_lists_yet: Aucune liste pour l'instant
-        inactive: Inactif
         last_email: Dernier courriel
         lead: Les comptes ayant activé la fonctionnalité et qui ont des abonné·e·s apparaîtront ci-dessous.
+        show:
+          confirm_disable_feature: Désactiver les courriels d'information pour %{name} ? Les notifications par courriel ne seront plus envoyées pour ce compte. L'utilisateur·rice pourra toujours réactiver la fonctionnalité dans les paramètres de son compte. Pour supprimer définitivement l'accès à cette fonction, modifiez les permissions du compte dans Rôles.
+          confirm_remove_subscriber: "%{email} ne recevra plus de courriels de %{name}. Cette action ne peut pas être annulée."
+          consent: Les abonné·e·s ont uniquement consenti à recevoir des messages par courriels. N'utilisez pas cette liste à d'autres fins.
+          date: Date d'inscription
+          disable_feature: Désactiver la fonctionnalité
+          disabled: La fonctionnalité a été désactivée et les courriels ne sont plus envoyés à cette liste.
+          email: Adresse de courriel
+          empty:
+            hint: Personne ne s'est abonné à ce compte pour l'instant.
+            no_subscribers_yet: Pas d'abonné·e pour l'instant
+          enable_feature: Activer la fonctionnalité
+          no_access_html: Ce compte n'a plus l'autorisation nécessaire pour activer la fonctionnalité. Changez cela dans <a href="%{roles_path}">Rôles</a>.
+          title: Lettres d'information par courriel de %{name}
+          view_account: Afficher le compte
         status: État
         subscribers: Abonné·e·s
         title: Listes de diffusion
@@ -746,7 +762,7 @@ fr:
       action_log: Journal d’audit
       action_taken_by: Intervention de
       actions:
-        delete_description_html: Les messages signalés seront supprimés et une sanction sera enregistrée pour vous aider à prendre les mesures appropriées en cas d'infractions futures par le même compte.
+        delete_description_html: Les messages ou les collections signalés seront supprimés et une sanction sera enregistrée pour vous aider à prendre les mesures appropriées en cas de nouvelles infractions par le même compte.
         mark_as_sensitive_description_html: Les médias des messages signalés seront marqués comme sensibles et une sanction sera enregistrée pour vous aider à prendre les mesures appropriées en cas d'infractions futures par le même compte.
         other_description_html: Voir plus d'options pour contrôler le comportement du compte et personnaliser la communication vers le compte signalé.
         resolve_description_html: Aucune mesure ne sera prise contre le compte signalé, aucune sanction ne sera enregistrée et le sigalement sera clôturé.
@@ -773,7 +789,7 @@ fr:
       confirm: Confirmer
       confirm_action: Confirmer l'action de modération contre @%{acct}
       created_at: Signalé
-      delete_and_resolve: Supprimer les messages
+      delete_and_resolve: Supprimer le contenu
       forwarded: Transféré
       forwarded_replies_explanation: Ce rapport provient d'un utilisateur sur une autre instance et concerne du contenu non-local. Il vous a été transmis car le contenu signalé est en réponse à l'un de vos utilisateurs.
       forwarded_to: Transféré à %{domain}
@@ -956,9 +972,15 @@ fr:
           disabled: Nécessite un rôle spécifique
           public: Tout le monde
       landing_page:
+        hints:
+          about_html: Une page avec la description, les informations de contact, les règles et d'autres informations concernant ce serveur.
+          local_feed_html: Un flux en direct avec les messages les plus récents des utilisateur·rice·s sur ce serveur.
+          overview_html: Une page montrant la description de votre serveur avec les derniers messages locaux des utilisateur·rice·s sur ce serveur.
+          trends_html: Une page présentant ce qui est populaire sur ce serveur en ce moment.
         values:
-          about: À propos
-          local_feed: Fil local
+          about: Page À propos
+          local_feed: Flux local en direct
+          overview: Aperçu 
           trends: Tendances
       registrations:
         moderation_recommandation: Veuillez vous assurer d'avoir une équipe de modération adéquate et réactive avant d'ouvrir les inscriptions à tout le monde !
@@ -990,7 +1012,7 @@ fr:
       types:
         major: Mise à jour majeure
         minor: Mise à jour mineure
-        patch: Mise à jour « patch » — correctifs de bugs et changements faciles à faire
+        patch: Mise à jour corrective — corrections de bugs et changements faciles à appliquer
       version: Version
     statuses:
       account: Auteur·rice
@@ -1200,14 +1222,15 @@ fr:
         trendable: Peut apparaître sous les tendances
         trending_rank: 'Tendance #%{rank}'
         usable: Peut être utilisé
-        usage_comparison: Utilisé %{today} fois aujourd'hui, comparé à %{yesterday} hier
+        usage_comparison: Utilisé %{today} fois aujourd'hui, et %{yesterday} fois hier
         used_by_over_week:
           one: Utilisé par %{count} personne au cours de la dernière semaine
           other: Utilisé par %{count} personnes au cours de la dernière semaine
       title: Recommandations et tendances
       trending: Tendances
+    update_available: Mise à jour disponible
     username_blocks:
-      add_new: Ajouter un nouveau
+      add_new: Ajouter une règle
       block_registrations: Bloquer les inscriptions
       comparison:
         contains: Contient
@@ -1449,7 +1472,6 @@ fr:
   deletes:
     challenge_not_passed: Les renseignements que vous avez entrés n'étaient pas exacts
     confirm_password: Entrez votre mot de passe actuel pour vérifier votre identité
-    confirm_username: Entrez votre identifiant pour confirmer la procédure
     proceed: Supprimer le compte
     success_msg: Votre compte a été supprimé avec succès
     warning:
@@ -1495,6 +1517,7 @@ fr:
       your_appeal_rejected: Votre appel a été rejeté
   edit_profile:
     other: Autre
+    privacy_redesign_body: Le choix de montrer vos abonnements et vos abonné·e·s est maintenant fait directement depuis votre profil.
     redesign_body: La modification du profil est maintenant accessible directement depuis la page de profil.
     redesign_button: Accéder
     redesign_title: Nouvelle expérience de modification du profil
@@ -1527,7 +1550,9 @@ fr:
         success_html: Vous allez maintenant commencer à recevoir des courriels quand %{name} publie de nouveaux messages. Ajoutez %{sender} à vos contacts pour que ces messages ne soient pas considérés comme des courriels indésirables.
         title: Vous êtes abonné·e
         unsubscribe: Se désabonner
+    disabled: Désactivé
     inactive: Inactif
+    no_access: Pas d'accès
     status: État
     subscribers: Abonné·e·s
   emoji_styles:
@@ -1563,7 +1588,9 @@ fr:
     blocks: Vous bloquez
     bookmarks: Marque-pages
     csv: CSV
+    custom_filters: Filtres
     domain_blocks: Blocages de domaine
+    json: JSON
     lists: Listes
     mutes: Vous masquez
     storage: Médias stockés
@@ -1634,18 +1661,20 @@ fr:
       other: Sélectionnez tous l'ensemble des %{count} éléments correspondant à votre recherche.
     today: aujourd’hui
     validation_errors:
-      one: Quelque chose ne va pas ! Veuillez vérifiez l’erreur ci-dessous
+      one: Quelque chose ne va pas ! Veuillez vérifier l’erreur ci-dessous
       other: Certaines choses ne vont pas ! Veuillez vérifier les %{count} erreurs ci-dessous
   imports:
     errors:
       empty: Fichier CSV vide
       incompatible_type: Incompatible avec le type d’import sélectionné
       invalid_csv_file: 'Fichier CSV non valide. Erreur : %{error}'
+      invalid_json_file: 'Fichier JSON non valide. Erreur : %{error}'
       over_rows_processing_limit: contient plus de %{count} lignes
+      status_not_found_warning: Certains de vos filtres masquent des messages spécifiques qui ne sont pas connus par ce serveur. Ces messages ne seront pas filtrés automatiquement s'ils sont découverts plus tard par le serveur.
       too_large: Le fichier est trop lourd
     failures: Échecs
     imported: Importé
-    mismatched_types_warning: Il semblerait que vous avez sélectionné le mauvais type pour cet import, veuillez vérifier attentivement.
+    mismatched_types_warning: Il semblerait que vous avez sélectionné le mauvais type pour cet import, veuillez vérifier.
     modes:
       merge: Fusionner
       merge_long: Garder les enregistrements existants et ajouter les nouveaux
@@ -1653,43 +1682,49 @@ fr:
       overwrite_long: Remplacer les enregistrements actuels par les nouveaux
     overwrite_preambles:
       blocking_html:
-        one: Vous allez <strong>remplacer votre liste de blocage</strong> par près de <strong>%{count} compte</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>remplacer votre liste de blocage</strong> par près de <strong>%{count} comptes</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>remplacer votre liste de blocage</strong> par au maximum <strong>%{count} compte</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>remplacer votre liste de blocage</strong> par au maximum <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong>.
       bookmarks_html:
-        one: Vous allez <strong>remplacer vos signets</strong> par près de <strong>%{count} post</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>remplacer vos signets</strong> par près de <strong>%{count} posts</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>remplacer vos marque-pages</strong> par au maximum <strong>%{count} message</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>remplacer vos marque-pages</strong> par au maximum <strong>%{count} messages</strong> issus de <strong>%{filename}</strong>.
+      custom_filters_html:
+        one: Vous allez <strong>remplacer vos filtres</strong> par le contenu de <strong>%{filename}</strong>. Au maximum <strong>%{count} filtre</strong> sera ajouté aux nouveaux filtres.
+        other: Vous allez <strong>remplacer vos filtres</strong> par le contenu de <strong>%{filename}</strong>. Au maximum <strong>%{count} filtres</strong> seront ajoutés aux nouveaux filtres.
       domain_blocking_html:
-        one: Vous allez <strong>remplacer votre liste de blocage de domaines</strong> par près de <strong>%{count} domaine</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>remplacer votre liste de blocage de domaines</strong> par près de <strong>%{count} domaines</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>remplacer votre liste de domaines bloqués</strong> par au maximum <strong>%{count} domaine</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>remplacer votre liste de domaines bloqués</strong> par au maximum <strong>%{count} domaines</strong> issus de <strong>%{filename}</strong>.
       following_html:
-        one: Vous allez <strong>suivre</strong> jusqu’à <strong>%{count} compte</strong> depuis <strong>%{filename}</strong> et <strong>arrêter de suivre n’importe qui d’autre</strong>.
-        other: Vous allez <strong>suivre</strong> jusqu’à <strong>%{count} comptes</strong> depuis <strong>%{filename}</strong> et <strong>arrêter de suivre n’importe qui d’autre</strong>.
+        one: Vous allez <strong>suivre</strong> jusqu’à <strong>%{count} compte</strong> issu de <strong>%{filename}</strong> et <strong>arrêter de suivre n’importe qui d’autre</strong>.
+        other: Vous allez <strong>suivre</strong> jusqu’à <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong> et <strong>arrêter de suivre n’importe qui d’autre</strong>.
       lists_html:
-        one: Vous allez <strong>remplacer vos listes</strong> par le contenu de <strong>%{filename}</strong>. Près de <strong>%{count} compte</strong> sera ajouté à de nouvelles listes.
-        other: Vous allez <strong>remplacer vos listes</strong> par le contenu de <strong>%{filename}</strong>. Près de <strong>%{count} comptes</strong> seront ajoutés à de nouvelles listes.
+        one: Vous allez <strong>remplacer vos listes</strong> par le contenu de <strong>%{filename}</strong>. Au maximum <strong>%{count} compte</strong> sera ajouté aux nouvelles listes.
+        other: Vous allez <strong>remplacer vos listes</strong> par le contenu de <strong>%{filename}</strong>. Au maximum <strong>%{count} comptes</strong> seront ajoutés aux nouvelles listes.
       muting_html:
-        one: Vous allez <strong>remplacer votre liste de comptes masqués</strong> par près de <strong>%{count} compte</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>remplacer votre liste de comptes masqués</strong> par près de <strong>%{count} comptes</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>remplacer votre liste de comptes masqués</strong> par au maximum <strong>%{count} compte</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>remplacer votre liste de comptes masqués</strong> par au maximum <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong>.
     preambles:
       blocking_html:
-        one: Vous allez <strong>bloquer</strong> près de <strong>%{count} compte</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>bloquer</strong> près de <strong>%{count} comptes</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>bloquer</strong> jusqu'à <strong>%{count} compte</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>bloquer</strong> jusqu'à <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong>.
       bookmarks_html:
-        one: Vous allez ajouter près de <strong>%{count} message</strong> de <strong>%{filename}</strong> à vos <strong>signets</strong>.
-        other: Vous allez ajouter près de <strong>%{count} messages</strong> de <strong>%{filename}</strong> à vos <strong>signets</strong>.
+        one: Vous allez ajouter jusqu'à <strong>%{count} message</strong> de <strong>%{filename}</strong> à vos <strong>marque-pages</strong>.
+        other: Vous allez ajouter jusqu'à <strong>%{count} messages</strong> de <strong>%{filename}</strong> à vos <strong>marque-pages</strong>.
+      custom_filters_html:
+        one: Vous allez ajouter jusqu'à <strong>%{count} filtre</strong> de <strong>%{filename}</strong> à vos <strong>filtres</strong>.
+        other: Vous allez ajouter jusqu'à <strong>%{count} filtres</strong> de <strong>%{filename}</strong> à vos <strong>filtres</strong>.
       domain_blocking_html:
-        one: Vous allez <strong>bloquer</strong> près de <strong>%{count} domaine</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>bloquer</strong> près de <strong>%{count} domaines</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>bloquer</strong> jusqu'à <strong>%{count} domaine</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>bloquer</strong> jusqu'à <strong>%{count} domaines</strong> issus de <strong>%{filename}</strong>.
       following_html:
-        one: Vous allez <strong>suivre</strong> près de <strong>%{count} compte</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>suivre</strong> près de <strong>%{count} comptes</strong> tirés de <strong>%{filename}</strong>.
+        one: Vous allez <strong>suivre</strong> jusqu'à <strong>%{count} compte</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>suivre</strong> jusqu'à <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong>.
       lists_html:
-        one: Vous allez ajouter près de <strong>%{count} compte</strong> depuis <strong>%{filename}</strong> à vos <strong>listes</strong>. De nouvelles listes seront créées si besoin.
-        other: Vous allez ajouter près de <strong>%{count} comptes</strong> depuis <strong>%{filename}</strong> à vos <strong>listes</strong>. De nouvelles listes seront créées si besoin.
+        one: Vous allez ajouter jusqu'à <strong>%{count} compte</strong> issu de <strong>%{filename}</strong> à vos <strong>listes</strong>. De nouvelles listes seront créées si besoin.
+        other: Vous allez ajouter jusqu'à <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong> à vos <strong>listes</strong>. De nouvelles listes seront créées si besoin.
       muting_html:
-        one: Vous allez <strong>masquer</strong> près de <strong>%{count} compte</strong> tiré de <strong>%{filename}</strong>.
-        other: Vous allez <strong>masquer</strong> près de <strong>%{count} comptes</strong> tirés de <strong>%{filename}</strong>.
-    preface: Vous pouvez importer certaines données que vous avez exporté d’un autre serveur, comme une liste des personnes que vous suivez ou bloquez sur votre compte.
+        one: Vous allez <strong>masquer</strong> jusqu'à <strong>%{count} compte</strong> issu de <strong>%{filename}</strong>.
+        other: Vous allez <strong>masquer</strong> jusqu'à <strong>%{count} comptes</strong> issus de <strong>%{filename}</strong>.
+    preface: Vous pouvez importer certaines données que vous avez exportées d’un autre serveur, comme une liste des personnes que vous suivez ou bloquez sur votre compte.
     recent_imports: Récents imports
     states:
       finished: Terminé
@@ -1708,15 +1743,16 @@ fr:
       muting: En cours d’importation des comptes masqués
     type: Type d’import
     type_groups:
-      constructive: Abonnements et signets
-      destructive: Blocages et masquages
+      constructive: Abonnements et marque-pages
+      destructive: Comptes bloqués et masqués
     types:
       blocking: Liste de comptes bloqués
       bookmarks: Marque-pages
+      custom_filters: Filtres
       domain_blocking: Liste des serveurs bloqués
       following: Liste de comptes suivis
       lists: Listes
-      muting: Liste de comptes que vous masquez
+      muting: Liste de comptes masqués
     upload: Importer
   invites:
     delete: Désactiver
@@ -1902,7 +1938,7 @@ fr:
     truncate: "&hellip;"
   polls:
     errors:
-      already_voted: Vous avez déjà voté sur ce sondage
+      already_voted: Vous avez déjà participé à ce sondage
       duplicate_options: contient des doublons
       duration_too_long: est trop loin dans le futur
       duration_too_short: est trop tôt
@@ -2030,7 +2066,6 @@ fr:
     appearance: Apparence
     authorized_apps: Applications autorisées
     back: Retour vers Mastodon
-    delete: Suppression du compte
     development: Développement
     edit_profile: Modifier le profil
     export: Exportation

@@ -25,6 +25,21 @@ RSpec.describe User do
   describe 'Associations' do
     it { is_expected.to belong_to(:account).required }
     it { is_expected.to have_many(:login_activities) }
+    it { is_expected.to belong_to(:invite).optional }
+    it { is_expected.to have_many(:invites).inverse_of(:user).dependent(false) }
+    it { is_expected.to have_one(:invite_request).inverse_of(:user).dependent(:destroy).class_name(UserInviteRequest) }
+
+    describe 'invite' do
+      let(:invite) { Fabricate(:invite) }
+
+      it 'increments invite uses on creation but does not decrement it on deletion' do
+        expect { Fabricate(:user, email: 'alice@example.com', invite: invite) }
+          .to change { invite.reload.uses }.by(1)
+
+        expect { described_class.find_by(email: 'alice@example.com').destroy }
+          .to_not(change { invite.reload.uses })
+      end
+    end
   end
 
   describe 'Validations' do
@@ -462,7 +477,7 @@ RSpec.describe User do
         .and remove_user_web_subscriptions
 
       expect(user)
-        .to_not be_external_or_valid_password(original_password)
+        .to_not be_valid_password(original_password)
       expect { session_activation.reload }
         .to raise_error(ActiveRecord::RecordNotFound)
       expect { web_push_subscription.reload }

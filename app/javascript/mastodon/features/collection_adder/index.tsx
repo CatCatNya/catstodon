@@ -3,11 +3,14 @@ import { useCallback, useId, useState } from 'react';
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 
 import type { ApiCollectionJSON } from '@/mastodon/api_types/collections';
+import { EmptyState } from '@/mastodon/components/empty_state';
 import { LoadingIndicator } from '@/mastodon/components/loading_indicator';
+import { NavigationFocusTarget } from '@/mastodon/components/navigation_focus_target';
 import { useCurrentAccountId } from '@/mastodon/hooks/useAccountId';
 import type { Account } from '@/mastodon/models/account';
 import {
   addCollectionItem,
+  collectionEditorActions,
   removeCollectionItem,
 } from '@/mastodon/reducers/slices/collections';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
@@ -15,9 +18,13 @@ import { IconButton } from 'mastodon/components/icon_button';
 import { useAppDispatch, useAppSelector } from 'mastodon/store';
 
 import { MAX_COLLECTION_ACCOUNT_COUNT } from '../collections/editor/accounts';
-import { useCollectionsCreatedBy } from '../collections/overview/created_by_you';
+import {
+  NewCollectionButton,
+  useCollectionsCreatedBy,
+} from '../collections/overview/created_by_account';
 
 import { CollectionToggle } from './collection_toggle';
+import classes from './styles.module.scss';
 
 const messages = defineMessages({
   close: {
@@ -102,6 +109,23 @@ export const CollectionAdder: React.FC<{
   const account = useAppSelector((state) => state.accounts.get(accountId));
   const currentAccountId = useCurrentAccountId();
   const { collections, status } = useCollectionsCreatedBy(currentAccountId);
+  const dispatch = useAppDispatch();
+
+  const handleNewCollection = useCallback(() => {
+    if (account) {
+      dispatch(
+        collectionEditorActions.reset({
+          account_id: account.id,
+          state:
+            account.feature_approval.current_user === 'manual'
+              ? 'pending'
+              : 'accepted',
+        }),
+      );
+    }
+
+    onClose();
+  }, [account, dispatch, onClose]);
 
   return (
     <div className='modal-root__modal dialog-modal'>
@@ -114,13 +138,17 @@ export const CollectionAdder: React.FC<{
           onClick={onClose}
         />
 
-        <span className='dialog-modal__header__title' id={titleId}>
+        <NavigationFocusTarget
+          as='h1'
+          id={titleId}
+          className='dialog-modal__header__title'
+        >
           <FormattedMessage
             id='collections.add_to_collection'
             defaultMessage='Add {name} to collections'
             values={{ name: <strong>@{account?.acct}</strong> }}
           />
-        </span>
+        </NavigationFocusTarget>
       </div>
 
       <div className='dialog-modal__content'>
@@ -131,10 +159,37 @@ export const CollectionAdder: React.FC<{
         >
           {status === 'loading' || !account ? (
             <LoadingIndicator />
+          ) : collections.length === 0 ? (
+            <EmptyState
+              title={
+                <FormattedMessage
+                  id='empty_column.collections_self'
+                  defaultMessage='You have not created any collections yet.'
+                />
+              }
+              message={
+                <FormattedMessage
+                  id='empty_column.account_featured_self.showcase_accounts_desc'
+                  defaultMessage='Collections are curated lists of accounts to help others discover more of the Fediverse.'
+                />
+              }
+            >
+              <NewCollectionButton compact onClick={handleNewCollection} />
+            </EmptyState>
           ) : (
-            collections.map((item) => (
-              <ListItem key={item.id} collection={item} account={account} />
-            ))
+            <>
+              <div className={classes.newCollection}>
+                <NewCollectionButton secondary onClick={handleNewCollection}>
+                  <FormattedMessage
+                    id='collections.create_new_collection'
+                    defaultMessage='Create new collection'
+                  />
+                </NewCollectionButton>
+              </div>
+              {collections.map((item) => (
+                <ListItem key={item.id} collection={item} account={account} />
+              ))}
+            </>
           )}
         </div>
       </div>

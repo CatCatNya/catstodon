@@ -4,6 +4,7 @@ it:
     about_mastodon_html: 'Il social network del futuro: Nessuna pubblicità, zero sorveglianza aziendale, design etico e decentralizzazione! Sii il proprietario dei tuoi dati, con Mastodonte!'
     contact_missing: Non impostato
     contact_unavailable: N/D
+    default_thumbnail_description: Due mastodonti sorridenti dei cartoni animati (che sembrano elefanti) si lanciano in mezzo un aeroplanino di carta. Sono circondati da un cielo azzurro brillante e da pianeti fluttuanti con alberi e altri mastodonti su di essi.
     hosted_on: Mastodon ospitato su %{domain}
     title: Info
   accounts:
@@ -197,6 +198,7 @@ it:
         create_user_role: Crea Ruolo
         create_username_block: Crea regola del nome utente
         demote_user: Retrocedi Utente
+        destroy_account: Elimina i dati dell'account
         destroy_announcement: Elimina Annuncio
         destroy_canonical_email_block: Elimina il blocco dell'e-mail
         destroy_custom_emoji: Elimina Emoji Personalizzata
@@ -265,6 +267,7 @@ it:
         create_user_role_html: "%{name} ha creato il ruolo %{target}"
         create_username_block_html: "%{name} ha aggiunto la regola per i nomi utente contenenti %{target}"
         demote_user_html: "%{name} ha retrocesso l'utente %{target}"
+        destroy_account_html: "%{name} ha eliminato i dati dell'account per %{target}"
         destroy_announcement_html: "%{name} ha eliminato l'annuncio %{target}"
         destroy_canonical_email_block_html: "%{name} ha sbloccato l'e-mail con l'hash %{target}"
         destroy_collection_html: "%{name} ha rimosso la collezione di %{target}"
@@ -500,13 +503,26 @@ it:
     email_subscriptions:
       accounts:
         account: Account
-        active: Attivo
         empty:
           hint: Non ci sono ancora account con iscritti.
           no_lists_yet: Non ci sono ancora liste
-        inactive: Inattivo
         last_email: Ultima email
         lead: Di seguito verranno visualizzati gli account che hanno attivato la funzionalità e che hanno degli iscritti.
+        show:
+          confirm_disable_feature: Disabilitare le newsletter per %{name}? Gli aggiornamenti via email non verranno più inviati per questo account. L'utente potrà comunque riattivare la funzione nelle impostazioni del proprio account. Per rimuovere definitivamente l'accesso a questa funzione, modificare le autorizzazioni dell'account in Ruoli.
+          confirm_remove_subscriber: "%{email} non riceverà più email da %{name}. Questa azione non può essere annullata."
+          consent: Gli iscritti hanno acconsentito esclusivamente a ricevere i post via email. Non utilizzare questa lista per altri scopi.
+          date: Data di iscrizione
+          disable_feature: Disabilita la funzionalità
+          disabled: La funzionalità è stata disabilitata e le email non vengono più inviate a questa lista.
+          email: Indirizzo email
+          empty:
+            hint: Nessuno si è ancora iscritto a questo account.
+            no_subscribers_yet: Ancora nessun iscritto
+          enable_feature: Abilita la funzionalità
+          no_access_html: Questo account non dispone più delle autorizzazioni necessarie per abilitare la funzionalità. Modifica questa impostazione in <a href="%{roles_path}">Ruoli</a>.
+          title: Newsletter via email da %{name}
+          view_account: Visualizza l'account
         status: Stato
         subscribers: Iscritti
         title: Mailing list
@@ -746,7 +762,7 @@ it:
       action_log: Registro di controllo
       action_taken_by: Azione intrapresa da
       actions:
-        delete_description_html: I post segnalati saranno eliminati e la sanzione sarà registrata per aiutarti a prendere ulteriori provvedimenti sulle future infrazioni dello stesso account.
+        delete_description_html: I post e/o le collezioni segnalate saranno eliminate e una sanzione verrà registrata per aiutarti a prendere ulteriori provvedimenti sulle future infrazioni da parte dello stesso account.
         mark_as_sensitive_description_html: I contenuti nei post segnalati saranno segnati come sensibili e verrà registrata una sanzione per aiutarti a prendere ulteriori provvedimenti sulle future infrazioni dello stesso account.
         other_description_html: Vedi altre opzioni per controllare il comportamento dell'account e personalizzare la comunicazione all'account segnalato.
         resolve_description_html: Nessuna azione sarà intrapresa contro l'account segnalato, nessuna sanzione registrata, e la segnalazione sarà chiusa.
@@ -773,7 +789,7 @@ it:
       confirm: Conferma
       confirm_action: Conferma l'azione di moderazione contro @%{acct}
       created_at: Segnalato
-      delete_and_resolve: Cancella post
+      delete_and_resolve: Elimina il contenuto
       forwarded: Inoltrato
       forwarded_replies_explanation: Questa segnalazione proviene da un utente remoto e tratta di contenuti remoti. È stato inoltrato a voi perché il contenuto riportato è in risposta a uno dei vostri utenti.
       forwarded_to: Inoltrato a %{domain}
@@ -956,10 +972,16 @@ it:
           disabled: Richiedi un ruolo utente specifico
           public: Tutti
       landing_page:
+        hints:
+          about_html: Una pagina con la descrizione, informazioni di contatto, regole e altre informazioni riguardanti questo server.
+          local_feed_html: Un feed in diretta con i post più recenti da parte degli utenti su questo server.
+          overview_html: Una pagina che mostra la descrizione del tuo server insieme ai post locali più recenti da parte degli utenti su questo server.
+          trends_html: Una pagina che mostra i contenuti popolari su questo server in questo momento.
         values:
-          about: Info
-          local_feed: Feed locale
-          trends: Tendenze
+          about: Pagina delle Info
+          local_feed: Feed locale in diretta
+          overview: Panoramica
+          trends: Di tendenza
       registrations:
         moderation_recommandation: Assicurati di avere un team di moderazione adeguato e reattivo prima di aprire le registrazioni a tutti!
         preamble: Controlla chi può creare un account sul tuo server.
@@ -979,6 +1001,7 @@ it:
     site_uploads:
       delete: Cancella il file caricato
       destroyed_msg: Caricamento sito eliminato!
+    skip_to_content: Vai al contenuto
     software_updates:
       critical_update: 'Critico: ti preghiamo di aggiornare rapidamente'
       description: Si consiglia di mantenere aggiornata l'installazione di Mastodon per beneficiare delle ultime correzioni e funzionalità. Inoltre, a volte è fondamentale aggiornare Mastodon in modo tempestivo per evitare problemi di sicurezza. Per queste ragioni, Mastodon verifica la presenza di aggiornamenti ogni 30 minuti e ti avviserà in base alle tue preferenze di notifica e-mail.
@@ -1205,6 +1228,7 @@ it:
           other: Usato da %{count} persone nell'ultima settimana
       title: Raccomandazioni & Tendenze
       trending: Di tendenza
+    update_available: Aggiornamento disponibile
     username_blocks:
       add_new: Aggiungi una nuova
       block_registrations: Blocco delle registrazioni
@@ -1418,9 +1442,9 @@ it:
     invalid_password: Password non valida
     prompt: Conferma la tua password per continuare
   color_scheme:
-    auto: Automatica
-    dark: Scura
-    light: Chiara
+    auto: Automatico
+    dark: Scuro
+    light: Chiaro
   contrast:
     auto: Automatico
     high: Alto
@@ -1448,9 +1472,11 @@ it:
   deletes:
     challenge_not_passed: Le informazioni che hai inserito non sono corrette
     confirm_password: Inserisci la tua password attuale per verificare la tua identità
-    confirm_username: Inserisci il tuo nome utente per confermare la procedura
+    confirm_username: Conferma il nome utente
+    confirm_username_hint_html: Per favore digita <code>%{username}</code> per confermare l'account che vuoi eliminare
     proceed: Cancella l'account
     success_msg: Il tuo account è stato cancellato
+    title: Elimina l'account %{acct}
     warning:
       before: 'Prima di procedere, per favore leggi attentamente queste note:'
       caches: Il contenuto che è stato memorizzato in cache da altri server può continuare ad esistere
@@ -1494,6 +1520,7 @@ it:
       your_appeal_rejected: Il tuo appello è stato respinto
   edit_profile:
     other: Altro
+    privacy_redesign_body: Ora puoi scegliere se mostrare i tuoi account seguiti e i follower direttamente dal tuo profilo.
     redesign_body: Ora è possibile modificare il profilo direttamente dalla pagina del profilo stesso.
     redesign_button: Vai lì
     redesign_title: È disponibile una nuova esperienza di modifica del profilo
@@ -1526,7 +1553,9 @@ it:
         success_html: Ora inizierai a ricevere email quando %{name} pubblicherà nuovi post. Aggiungi %{sender} ai tuoi contatti in modo che questi post non finiscano nella cartella Spam.
         title: Ti sei registrato/a
         unsubscribe: Disiscriviti
+    disabled: Disabilitata
     inactive: Inattiva
+    no_access: Nessun accesso
     status: Stato
     subscribers: Iscritti
   emoji_styles:
@@ -1562,7 +1591,9 @@ it:
     blocks: Stai bloccando
     bookmarks: Segnalibri
     csv: CSV
+    custom_filters: Filtri
     domain_blocks: Blocchi di dominio
+    json: JSON
     lists: Elenchi
     mutes: Stai silenziando
     storage: Archiviazione media
@@ -1640,7 +1671,9 @@ it:
       empty: File CSV vuoto
       incompatible_type: Incompatibile con il tipo di importazione selezionato
       invalid_csv_file: 'File CSV non valido. Errore: %{error}'
+      invalid_json_file: 'File JSON non valido. Errore: %{error}'
       over_rows_processing_limit: contiene più di %{count} righe
+      status_not_found_warning: Alcuni dei tuoi filtri nascondono post specifici che non sono noti a questo server. Questi post non verranno filtrati automaticamente se vengono scoperti in seguito dal server.
       too_large: Il file è troppo grande
     failures: Fallimenti
     imported: Importato
@@ -1657,6 +1690,9 @@ it:
       bookmarks_html:
         one: Stai per <strong>sostituire i tuoi segnalibri</strong> con <strong>%{count} post</strong> da <strong>%{filename}</strong>.
         other: Stai per <strong>sostituire i tuoi segnalibri</strong> con <strong>%{count} post</strong> da <strong>%{filename}</strong>.
+      custom_filters_html:
+        one: Stai per <strong>sostituire i tuoi filtri</strong> con i contenuti di <strong>%{filename}</strong>. Ai nuovi filtri sarà aggiunto fino a un massimo di <strong>%{count} filtro</strong>.
+        other: Stai per <strong>sostituire i tuoi filtri</strong> con i contenuti di <strong>%{filename}</strong>. Ai nuovi filtri saranno aggiunti fino a un massimo di <strong>%{count} filtri</strong>.
       domain_blocking_html:
         one: Stai per <strong>sostituire la tua lista di domini bloccati</strong> con <strong>%{count} dominio</strong> da <strong>%{filename}</strong>.
         other: Stai per <strong>sostituire la tua lista di domini bloccati</strong> con <strong>%{count} domini</strong> da <strong>%{filename}</strong>.
@@ -1676,6 +1712,9 @@ it:
       bookmarks_html:
         one: Stai per aggiungere <strong>%{count} post</strong> da <strong>%{filename}</strong> ai tuoi <strong>segnalibri</strong>.
         other: Stai per aggiungere <strong>%{count} post</strong> da <strong>%{filename}</strong> ai tuoi <strong>segnalibri</strong>.
+      custom_filters_html:
+        one: Stai per aggiungere fino a un massimo di <strong>%{count} filtro</strong> da <strong>%{filename}</strong> ai tuoi <strong>filtri</strong>.
+        other: Stai per aggiungere fino a un massimo di <strong>%{count} filtri</strong> da <strong>%{filename}</strong> ai tuoi <strong>filtri</strong>.
       domain_blocking_html:
         one: Stai per <strong>bloccare</strong> <strong>%{count} dominio</strong> da <strong>%{filename}</strong>.
         other: Stai per <strong>bloccare</strong> <strong>%{count} domini</strong> da <strong>%{filename}</strong>.
@@ -1712,6 +1751,7 @@ it:
     types:
       blocking: Lista dei bloccati
       bookmarks: Segnalibri
+      custom_filters: Filtri
       domain_blocking: Lista dei domini bloccati
       following: Lista dei seguiti
       lists: Elenchi
@@ -1949,7 +1989,7 @@ it:
     followers: Follower
     following: Seguiti
     invited: Invitato
-    last_active: Ultima volta attivo
+    last_active: Ultima attività
     most_recent: Più recente
     moved: Trasferito
     mutual: Reciproco
@@ -2028,8 +2068,7 @@ it:
     aliases: Alias dell'account
     appearance: Interfaccia
     authorized_apps: Applicazioni autorizzate
-    back: Torna a Mastodon
-    delete: Cancellazione account
+    back: Torna su Mastodon
     development: Sviluppo
     edit_profile: Modifica profilo
     export: Esporta

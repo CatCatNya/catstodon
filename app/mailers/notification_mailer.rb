@@ -19,17 +19,15 @@ class NotificationMailer < ApplicationMailer
 
   default to: -> { email_address_with_name(@user.email, @me.username) }
 
+  rescue_from(ActiveRecord::RecordNotFound) { false }
+
   layout 'mailer'
 
   def mention
-    return if @status.blank?
-
     mail subject: default_i18n_subject(name: @status.account.acct)
   end
 
   def quote
-    return if @status.blank?
-
     mail subject: default_i18n_subject(name: @status.account.acct)
   end
 
@@ -38,8 +36,6 @@ class NotificationMailer < ApplicationMailer
   end
 
   def favourite
-    return if @status.blank?
-
     mail subject: default_i18n_subject(name: @account.acct)
   end
 
@@ -52,8 +48,6 @@ class NotificationMailer < ApplicationMailer
   end
 
   def reblog
-    return if @status.blank?
-
     mail subject: default_i18n_subject(name: @account.acct)
   end
 
@@ -72,7 +66,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def set_status
-    @status = @notification.target_status
+    @status = @notification.target_status || raise(ActiveRecord::RecordNotFound)
   end
 
   def set_account
