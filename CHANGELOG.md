@@ -3,7 +3,20 @@
 All notable changes to glitch-soc will be documented in this file.
 Catstodon has stopped doing changelogs. See project status in README.
 
+## [4.6.12] - 2026-11-19
+
+### Security
+
+- Updated dependencies `ruby`, `puma`, `rails`, `sanitize`, `msgpack` and `omniauth`
+
+### Fixed
+
+- Fix missing `featuredCollections` definition to JSON-LD context (#41728 by @oneiros)
+- Fix improper use of translation strings in email notification unsubscription page (#41555 by @ClearlyClaire)
+
 ## [4.6.11] - 2026-11-03
+
+### Security
 
 - Fix DoS through JSON-LD compaction (#41482 by @ClearlyClaire, [GHSA-cf49-73r7-rxj6](https://github.com/mastodon/mastodon/security/advisories/GHSA-cf49-73r7-rxj6))
 - Fix `Forwarded` header taking precedence over `X-Forwarded-For` (#41481 by @ClearlyClaire, [GHSA-qp4r-p842-mw5c](https://github.com/mastodon/mastodon/security/advisories/GHSA-qp4r-p842-mw5c))
